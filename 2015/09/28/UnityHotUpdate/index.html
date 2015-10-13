@@ -43,7 +43,7 @@
 <meta property="og:url" content="http://yoursite.com/2015/09/28/UnityHotUpdate/index.html">
 <meta property="og:site_name" content="学无止境">
 <meta property="og:description" content="所谓资源代码更新，就是当我们重启游戏的时候，游戏会根据当前服务器版本与客户端版本下载更新资源。游戏里面经常会使用到资源更新技术，特别是对于国内的手游以及端游，而国内经常会用热更新(Hot Update)指代这种技术，其实这种形容是不准确的。因为热更新是在不重启游戏的情况下更新资源与代码，而目前大部分游戏是需要重启才能更新相应的资源以及代码。注意，要完全读懂下面的内容，你需要Untiy3D编程基础，">
-<meta property="og:updated_time" content="2015-10-13T17:12:00.924Z">
+<meta property="og:updated_time" content="2015-10-13T17:16:31.252Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Unity3D资源代码更新技术">
 <meta name="twitter:description" content="所谓资源代码更新，就是当我们重启游戏的时候，游戏会根据当前服务器版本与客户端版本下载更新资源。游戏里面经常会使用到资源更新技术，特别是对于国内的手游以及端游，而国内经常会用热更新(Hot Update)指代这种技术，其实这种形容是不准确的。因为热更新是在不重启游戏的情况下更新资源与代码，而目前大部分游戏是需要重启才能更新相应的资源以及代码。注意，要完全读懂下面的内容，你需要Untiy3D编程基础，">
@@ -222,8 +222,8 @@
 
       
         <span itemprop="articleBody"><p>所谓<strong>资源代码</strong>更新，就是当我们重启游戏的时候，游戏会根据当前服务器版本与客户端版本下载更新资源。游戏里面经常会使用到资源更新技术，特别是对于国内的手游以及端游，而国内经常会用<strong>热更新(Hot Update)</strong>指代这种技术，其实这种形容是不准确的。因为热更新是在不重启游戏的情况下更新资源与代码，而目前大部分游戏是需要重启才能更新相应的资源以及代码。<br><strong>注意，要完全读懂下面的内容，你需要Untiy3D编程基础，假如你对Unity3D游戏开发感兴趣，欢迎浏览Unity3D官网开发文档以学习相关知识。</strong></p>
-<p>#Unity3D资源代码更新<br>关于Unity3D的资源更新，可以先浏览官网有关Asset Bundle的相关介绍：<a href="http://docs.unity3d.com/Manual/AssetBundlesIntro.html" title="Unity3D官网Asset Bundles介绍" target="_blank" rel="external">AssetBundles</a>，这里面涵盖了Asset Bundle的含义以及一些大概的流程，以及使用方法，相关的内容本人就不在Blog中复述了，这篇文章的重点在于，在官网提供的API的基础上，提供一些实战性质比较强的方法讨论。</p>
-<p>##Asset Bundle打包<br>在下载资源之前，我们需要把资源打包成AssetBundle包，这就需要使用到接口<a href="http://docs.unity3d.com/ScriptReference/BuildPipeline.BuildAssetBundle.html" title="BuildAssetBundle API" target="_blank" rel="external">BuildPipeline.BuildAssetBundle</a>。这里着重讨论<a href="http://docs.unity3d.com/ScriptReference/BuildAssetBundleOptions.html" title="BuildAssetBundleOptions参数" target="_blank" rel="external">BuildAssetBundleOptions</a>的几种枚举参数。</p>
+<h1 id="Unity3D资源代码更新">Unity3D资源代码更新</h1><p>关于Unity3D的资源更新，可以先浏览官网有关Asset Bundle的相关介绍：<a href="http://docs.unity3d.com/Manual/AssetBundlesIntro.html" title="Unity3D官网Asset Bundles介绍" target="_blank" rel="external">AssetBundles</a>，这里面涵盖了Asset Bundle的含义以及一些大概的流程，以及使用方法，相关的内容本人就不在Blog中复述了，这篇文章的重点在于，在官网提供的API的基础上，提供一些实战性质比较强的方法讨论。</p>
+<h2 id="Asset_Bundle打包">Asset Bundle打包</h2><p>在下载资源之前，我们需要把资源打包成AssetBundle包，这就需要使用到接口<a href="http://docs.unity3d.com/ScriptReference/BuildPipeline.BuildAssetBundle.html" title="BuildAssetBundle API" target="_blank" rel="external">BuildPipeline.BuildAssetBundle</a>。这里着重讨论<a href="http://docs.unity3d.com/ScriptReference/BuildAssetBundleOptions.html" title="BuildAssetBundleOptions参数" target="_blank" rel="external">BuildAssetBundleOptions</a>的几种枚举参数。</p>
 <ul>
 <li>UncompressedAssetBundle 创建非压缩的Asset bundle资源。在创建以及加载时会比压缩资源要快，但是包大小会比压缩了的资源大。当没有指定这个枚举参数时，Unity3D会使用默认的压缩方式对资源进行压缩，压缩的资源包要小，但是创建以及加载时会比非压缩慢，因为过程需要压缩以及解压缩操作。</li>
 <li>CollectDependencies 创建Asset Bundle时，集成跟当前资源有依赖关系的资源。举个例子，就是A资源跟B资源有依赖关系，那么在打包A资源的时候，就会把B资源也打包进去，也就是说，打包A资源，得到的结果是AB都在这个Asset Bundle包里面。这么做有一个好处，就是在加载A资源时，因为A资源是需要B资源的，但是假如没有B资源的存在，那么加载完A资源就会出现问题。添加了这个操作，可以避免这个问题的出现。另外，在Unity3D 5.x版本里面，我看到这个枚举类型被移除了，因为还没有使用过5.x开发项目，所以不知道是不是官方针对这些进行了优化，有开发过新版本资源包加载功能的同学们，欢迎各位来讨论。</li>
@@ -405,7 +405,7 @@
           <div class="post-toc">
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Unity3D资源代码更新"><span class="nav-number">1.</span> <span class="nav-text">Unity3D资源代码更新</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Asset_Bundle打包"><span class="nav-number">1.1.</span> <span class="nav-text">Asset Bundle打包</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
