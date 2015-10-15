@@ -39,13 +39,13 @@
 
 <meta name="description" content="所谓资源代码更新，就是当我们重启游戏的时候，游戏会根据当前服务器版本与客户端版本下载更新资源。游戏里面经常会使用到资源更新技术，特别是对于国内的手游以及端游，而国内经常会用热更新(Hot Update)指代这种技术，其实这种形容是不准确的。因为热更新是在不重启游戏的情况下更新资源与代码，而目前大部分游戏是需要重启才能更新相应的资源以及代码。注意，要完全读懂下面的内容，你需要Untiy3D编程基础，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Unity3D资源代码更新技术">
+<meta property="og:title" content="Unity3D资源代码更新技术——在5.0版本之前">
 <meta property="og:url" content="http://yoursite.com/2015/09/28/UnityHotUpdate/index.html">
 <meta property="og:site_name" content="学无止境">
 <meta property="og:description" content="所谓资源代码更新，就是当我们重启游戏的时候，游戏会根据当前服务器版本与客户端版本下载更新资源。游戏里面经常会使用到资源更新技术，特别是对于国内的手游以及端游，而国内经常会用热更新(Hot Update)指代这种技术，其实这种形容是不准确的。因为热更新是在不重启游戏的情况下更新资源与代码，而目前大部分游戏是需要重启才能更新相应的资源以及代码。注意，要完全读懂下面的内容，你需要Untiy3D编程基础，">
-<meta property="og:updated_time" content="2015-10-13T17:16:31.252Z">
+<meta property="og:updated_time" content="2015-10-15T16:36:50.015Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Unity3D资源代码更新技术">
+<meta name="twitter:title" content="Unity3D资源代码更新技术——在5.0版本之前">
 <meta name="twitter:description" content="所谓资源代码更新，就是当我们重启游戏的时候，游戏会根据当前服务器版本与客户端版本下载更新资源。游戏里面经常会使用到资源更新技术，特别是对于国内的手游以及端游，而国内经常会用热更新(Hot Update)指代这种技术，其实这种形容是不准确的。因为热更新是在不重启游戏的情况下更新资源与代码，而目前大部分游戏是需要重启才能更新相应的资源以及代码。注意，要完全读懂下面的内容，你需要Untiy3D编程基础，">
 
 
@@ -56,7 +56,7 @@
   };
 </script>
 
-  <title> Unity3D资源代码更新技术 | 学无止境 </title>
+  <title> Unity3D资源代码更新技术——在5.0版本之前 | 学无止境 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -171,7 +171,7 @@
           
           
             
-              Unity3D资源代码更新技术
+              Unity3D资源代码更新技术——在5.0版本之前
             
           
         </h1>
@@ -223,7 +223,7 @@
       
         <span itemprop="articleBody"><p>所谓<strong>资源代码</strong>更新，就是当我们重启游戏的时候，游戏会根据当前服务器版本与客户端版本下载更新资源。游戏里面经常会使用到资源更新技术，特别是对于国内的手游以及端游，而国内经常会用<strong>热更新(Hot Update)</strong>指代这种技术，其实这种形容是不准确的。因为热更新是在不重启游戏的情况下更新资源与代码，而目前大部分游戏是需要重启才能更新相应的资源以及代码。<br><strong>注意，要完全读懂下面的内容，你需要Untiy3D编程基础，假如你对Unity3D游戏开发感兴趣，欢迎浏览Unity3D官网开发文档以学习相关知识。</strong></p>
 <h1 id="Unity3D资源代码更新">Unity3D资源代码更新</h1><p>关于Unity3D的资源更新，可以先浏览官网有关Asset Bundle的相关介绍：<a href="http://docs.unity3d.com/Manual/AssetBundlesIntro.html" title="Unity3D官网Asset Bundles介绍" target="_blank" rel="external">AssetBundles</a>，这里面涵盖了Asset Bundle的含义以及一些大概的流程，以及使用方法，相关的内容本人就不在Blog中复述了，这篇文章的重点在于，在官网提供的API的基础上，提供一些实战性质比较强的方法讨论。</p>
-<h2 id="Asset_Bundle打包">Asset Bundle打包</h2><p>在下载资源之前，我们需要把资源打包成AssetBundle包，这就需要使用到接口<a href="http://docs.unity3d.com/ScriptReference/BuildPipeline.BuildAssetBundle.html" title="BuildAssetBundle API" target="_blank" rel="external">BuildPipeline.BuildAssetBundle</a>。这里着重讨论<a href="http://docs.unity3d.com/ScriptReference/BuildAssetBundleOptions.html" title="BuildAssetBundleOptions参数" target="_blank" rel="external">BuildAssetBundleOptions</a>的几种枚举参数。</p>
+<h2 id="Asset_Bundle打包">Asset Bundle打包</h2><p>在下载资源之前，我们需要把资源打包成AssetBundle包，这就需要使用到接口<a href="http://docs.unity3d.com/ScriptReference/BuildPipeline.BuildAssetBundle.html" title="BuildAssetBundle API" target="_blank" rel="external">BuildPipeline.BuildAssetBundle</a>（注意，这个接口已经在新版本里面标注废弃了，所以我修改了标题，限于Unity3D 5.0版本之前，新版本的打包机制我会后面描述）。这里着重讨论<a href="http://docs.unity3d.com/ScriptReference/BuildAssetBundleOptions.html" title="BuildAssetBundleOptions参数" target="_blank" rel="external">BuildAssetBundleOptions</a>的几种枚举参数。</p>
 <ul>
 <li>UncompressedAssetBundle 创建非压缩的Asset bundle资源。在创建以及加载时会比压缩资源要快，但是包大小会比压缩了的资源大。当没有指定这个枚举参数时，Unity3D会使用默认的压缩方式对资源进行压缩，压缩的资源包要小，但是创建以及加载时会比非压缩慢，因为过程需要压缩以及解压缩操作。</li>
 <li>CollectDependencies 创建Asset Bundle时，集成跟当前资源有依赖关系的资源。举个例子，就是A资源跟B资源有依赖关系，那么在打包A资源的时候，就会把B资源也打包进去，也就是说，打包A资源，得到的结果是AB都在这个Asset Bundle包里面。这么做有一个好处，就是在加载A资源时，因为A资源是需要B资源的，但是假如没有B资源的存在，那么加载完A资源就会出现问题。添加了这个操作，可以避免这个问题的出现。另外，在Unity3D 5.x版本里面，我看到这个枚举类型被移除了，因为还没有使用过5.x开发项目，所以不知道是不是官方针对这些进行了优化，有开发过新版本资源包加载功能的同学们，欢迎各位来讨论。</li>
@@ -240,9 +240,16 @@
 <p>代码更新的机制需要特殊处理，所以我会另外开一个文章讲述代码更新机制，而针对这些非代码资源的打包操作，一般有两种策略：</p>
 <ol>
 <li>把所有的资源打包成一个大包<br>有过这方面开发经验的人也知道，当打包操作添加了CollectDependencies枚举的情况下，Unity3D在对资源进行Asset Bunle打包操作时，会对当前打包资源具有依赖关系的另外一个资源也打包进去，这样你不用关心这些资源之间的依赖关系，不用担心这些包因为依赖产生的多余的资源，但是打成大包最大的缺点在于，一旦有改动就会牵一发而动全身——需要把整包重新打包。这样造成的后果是，用户需要每次重复下载一些没有变动的资源，造成了网络流量的浪费，并且等待下载的时间会造成用户的流失。</li>
-<li>把所有的资源分别打成单独的小包<br>为了避免打成大包造成的缺点，可以采取的策略是把每个资源打成单独的小包，这样的好处是，我们不必再为牵一发动全身的问题发愁了，在有版本管理的前提下，用户只需要下载被更新了的小包。但是打包成小包同样有缺点，假如在打包时，不选择CollectDependencies的策略的话，那么资源上存在了依赖关系的资源或者引用关系会丢失，给我们造成不可估量的后果。而选择CollectDependencies操作，我们需要确保打包资源的低耦合高内聚，也就是说尽量避免引用其他资源的情况，否则就会造成包大小的浪费。<br>目前我采用的是两种策略混合使用的办法，对于那些很少会更新，或者说整包很小的资源模块，采取大包的加载策略，而对于图片、策划配置这种经常会变动的资源，采取使用小包的管理方式。</li>
+<li>把所有的资源分别打成单独的小包<br>为了避免打成大包造成的缺点，可以采取的策略是把每个资源打成单独的小包，这样的好处是，我们不必再为牵一发动全身的问题发愁了，在有版本管理的前提下，用户只需要下载被更新了的小包。但是打包成小包同样有缺点，假如在打包时，不选择CollectDependencies的策略的话，那么资源上存在了依赖关系的资源或者引用关系会丢失，给我们造成不可估量的后果。而选择CollectDependencies操作，我们需要确保打包资源的低耦合高内聚，也就是说尽量避免引用其他资源的情况，否则就会造成包大小的浪费。</li>
 </ol>
-<p>讲完了打包的复杂度规划，下面我们来谈究竟要不要使用UncompressedAssetBundle操作，也就是说，要不要使用非压缩包的问题。</p>
+<p>目前我采用的是两种策略混合使用的办法，对于那些很少会更新，或者说整包很小的资源模块，采取大包的加载策略，而对于图片、策划配置这种经常会变动的资源，采取使用小包的管理方式。</p>
+<p>讲完了打包的复杂度规划，下面我们来谈究竟要不要使用UncompressedAssetBundle操作，也就是说，要不要使用非压缩包的问题，下面我将分开描述选择是否压缩包的情况：</p>
+<ul>
+<li>使用Unity3D自带的压缩方式<br>当我们没有给BuildAssetBundleOptions指定UncompressedAssetBundle枚举时，Unity3D将会使用自带的Asset Bundle压缩算法进行压缩，一旦使用了这个方法，在加载Asset Bundle包时，无法使用<a href="http://docs.unity3d.com/ScriptReference/AssetBundle.CreateFromFile.html" title="CreateFromFile API" target="_blank" rel="external">AssetBundle.CreateFromFile</a>方法，根据官方文档的描述，CreateFromFile是所有加载Asset Bundle包方法里面最快的，并且是同步的不会阻塞主线程的方法，但是他只能在非压缩模式下使用。另外，使用压缩的Asset Bundle包，你需要每次解压缩，为了避免每次解压缩耗费的时间，你可能还需要把解压缩之后的二进制文件在具有读写权限的文件目录下再次另外存储一份解压之后的文件，当然你也可以不这么做，因为这样可以减少程序员的工作量，但是带来的代价是，你每次加载的时候必须要忍受漫长的解压时间，会使得文件的读取非常没有效率。</li>
+<li>使用Unity3D的非压缩模式<br>给BuildAssetBundleOptions指定UncompressedAssetBundle枚举时，Unity3D将会使用非压缩的方式处理打包的操作。非压缩的方式避免了打包以及解压包的时候进行的压缩以及解压缩的过程，并且可以使用CreateFromFile接口，但是它的坏处也是显而易见的，非压缩包的空间占用非常大。</li>
+</ul>
+<p>两种模式都有自己的优缺点，针对第一种的缺点，我已经在第一点的描述中提出了解决方案，而我采用的是第二种方式，为了解决非压缩包占用空间大的问题，我引入了LZMA插件以解决这个问题。</p>
+<h2 id="使用LZMA压缩算法压缩包">使用LZMA压缩算法压缩包</h2><p>关于LZMA的介绍，我们可以参考<a href="https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Markov_chain_algorithm," title="LZMA维基地址" target="_blank" rel="external">维基网站</a>，有人说Untiy3D的Asset Bundle压缩算法就是基于LZMA的，我没有看过源代码所以不敢下定论，LZMA有一个开源的类库，我们可以去网站下载<a href="http://www.7-zip.org/sdk.html, LZMA SDK开源库地址" target="_blank" rel="external">LZMA的SDK</a>。</p>
 </span>
       
     </div>
@@ -290,7 +297,7 @@
           <div class="comments" id="comments">
             
               <div class="ds-thread" data-thread-key="2015/09/28/UnityHotUpdate/"
-                   data-title="Unity3D资源代码更新技术" data-url="http://yoursite.com/2015/09/28/UnityHotUpdate/">
+                   data-title="Unity3D资源代码更新技术——在5.0版本之前" data-url="http://yoursite.com/2015/09/28/UnityHotUpdate/">
               </div>
             
           </div>
@@ -405,7 +412,7 @@
           <div class="post-toc">
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Unity3D资源代码更新"><span class="nav-number">1.</span> <span class="nav-text">Unity3D资源代码更新</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Asset_Bundle打包"><span class="nav-number">1.1.</span> <span class="nav-text">Asset Bundle打包</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Unity3D资源代码更新"><span class="nav-number">1.</span> <span class="nav-text">Unity3D资源代码更新</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Asset_Bundle打包"><span class="nav-number">1.1.</span> <span class="nav-text">Asset Bundle打包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用LZMA压缩算法压缩包"><span class="nav-number">1.2.</span> <span class="nav-text">使用LZMA压缩算法压缩包</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
