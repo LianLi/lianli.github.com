@@ -28,7 +28,7 @@
 
 
 
-  <meta name="keywords" content="学无止境" />
+  <meta name="keywords" content="Unity3D," />
 
 
 
@@ -37,16 +37,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="今天开通了自己的技术BLOG，希望通过这个BLOG能跟大家进行技术交流，也请大家多多指教。后续会更新一些自己工作以来的一些在开发上遇到的一些问题以及心得，如果文章内容有相关错误欢迎指正。">
+<meta name="description" content="其实我经常在工作场合里面听到有人跟我说：“这个代码能用就行了，能跑通就OK了”。其实我觉得这种想法对于个人长远发展来说是不对的，在我看来，好的程序员的素质除了会懂的给自己节省时间做更有意义的事情之外（其实就是偷懒），另外一个体现素质的地方，就是他对于代码的要求很高，体现一个程序员素质的地方，不止于他懂的很多，同时也需要他写得一手好代码。那么一个代码的好坏取决于什么点呢？在我看来应该是以下几个：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="helloHexo">
-<meta property="og:url" content="http://yoursite.com/2015/09/20/helloHexo/index.html">
+<meta property="og:title" content="Unity3D代码优化技巧">
+<meta property="og:url" content="http://yoursite.com/2015/12/09/UnityAdanvecd/index.html">
 <meta property="og:site_name" content="学无止境">
-<meta property="og:description" content="今天开通了自己的技术BLOG，希望通过这个BLOG能跟大家进行技术交流，也请大家多多指教。后续会更新一些自己工作以来的一些在开发上遇到的一些问题以及心得，如果文章内容有相关错误欢迎指正。">
-<meta property="og:updated_time" content="2015-09-21T15:07:49.036Z">
+<meta property="og:description" content="其实我经常在工作场合里面听到有人跟我说：“这个代码能用就行了，能跑通就OK了”。其实我觉得这种想法对于个人长远发展来说是不对的，在我看来，好的程序员的素质除了会懂的给自己节省时间做更有意义的事情之外（其实就是偷懒），另外一个体现素质的地方，就是他对于代码的要求很高，体现一个程序员素质的地方，不止于他懂的很多，同时也需要他写得一手好代码。那么一个代码的好坏取决于什么点呢？在我看来应该是以下几个：">
+<meta property="og:updated_time" content="2015-12-08T16:54:12.159Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="helloHexo">
-<meta name="twitter:description" content="今天开通了自己的技术BLOG，希望通过这个BLOG能跟大家进行技术交流，也请大家多多指教。后续会更新一些自己工作以来的一些在开发上遇到的一些问题以及心得，如果文章内容有相关错误欢迎指正。">
+<meta name="twitter:title" content="Unity3D代码优化技巧">
+<meta name="twitter:description" content="其实我经常在工作场合里面听到有人跟我说：“这个代码能用就行了，能跑通就OK了”。其实我觉得这种想法对于个人长远发展来说是不对的，在我看来，好的程序员的素质除了会懂的给自己节省时间做更有意义的事情之外（其实就是偷懒），另外一个体现素质的地方，就是他对于代码的要求很高，体现一个程序员素质的地方，不止于他懂的很多，同时也需要他写得一手好代码。那么一个代码的好坏取决于什么点呢？在我看来应该是以下几个：">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -56,7 +56,7 @@
   };
 </script>
 
-  <title> helloHexo | 学无止境 </title>
+  <title> Unity3D代码优化技巧 | 学无止境 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -171,7 +171,7 @@
           
           
             
-              helloHexo
+              Unity3D代码优化技巧
             
           
         </h1>
@@ -180,19 +180,34 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2015-09-20T20:54:41+08:00" content="2015-09-20">
-            2015-09-20
+          <time itemprop="dateCreated" datetime="2015-12-09T23:11:36+08:00" content="2015-12-09">
+            2015-12-09
           </time>
         </span>
 
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Unity3D/" itemprop="url" rel="index">
+                  <span itemprop="name">Unity3D</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
         
 
         
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2015/09/20/helloHexo/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/20/helloHexo/" itemprop="commentsCount"></span>
+              <a href="/2015/12/09/UnityAdanvecd/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/09/UnityAdanvecd/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -206,23 +221,37 @@
       
 
       
-        <span itemprop="articleBody"><p>今天开通了自己的技术BLOG，希望通过这个BLOG能跟大家进行技术交流，也请大家多多指教。后续会更新一些自己工作以来的一些在开发上遇到的一些问题以及心得，如果文章内容有相关错误欢迎指正。</p>
+        <span itemprop="articleBody"><p>其实我经常在工作场合里面听到有人跟我说：“这个代码能用就行了，能跑通就OK了”。其实我觉得这种想法对于个人长远发展来说是不对的，在我看来，好的程序员的素质除了会懂的给自己节省时间做更有意义的事情之外（其实就是偷懒），另外一个体现素质的地方，就是他对于代码的要求很高，体现一个程序员素质的地方，不止于他懂的很多，同时也需要他写得一手好代码。<br>那么一个代码的好坏取决于什么点呢？在我看来应该是以下几个：</p>
+<ul>
+<li>需要花费的空间以及时间效率</li>
+<li>可扩展性</li>
+<li>可维护性</li>
+<li>可读性</li>
+<li>健壮性</li>
+</ul>
+<p>这篇文章主要针对空间、时间效率针对讨论，而至于后面几点，为什么不在放这里讨论呢？可扩展性以及可维护性，是要根据每个项目的架构而言的，在对于目前Unity3D各个游戏的架构并不是统一的前提下，针对这一点的讨论不具备通用性。不过我认为，对于游戏来说，<a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller," title="MVC维基百科" target="_blank" rel="external">MVC</a>架构是一个很好的模式。可读性这一点，我相信去阅读一些优秀的开源项目，对于提升代码可读性是有帮助的。而健壮性，需要体现在各种细节上，而这一点我也是个野路子，还需要学习，假如各位有更好的相关文章推荐，不妨分享出来，彼此学习。<br>那么怎么提升Unity3D开发中，代码的空间、时间效率呢？在讨论这个点之前，有额外的事情是值得我们讨论的，那就是Unity3D的GC机制。</p>
 </span>
       
     </div>
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Unity3D/" rel="tag">#Unity3D</a>
+          
+        </div>
+      
 
       
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/09/28/UnityHotUpdate/" rel="prev">Unity3D资源代码更新技术——在5.0版本之前</a>
-            
           </div>
 
           <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/09/28/UnityHotUpdate/" rel="next">Unity3D资源代码更新技术——在5.0版本之前</a>
             
           </div>
         </div>
@@ -247,8 +276,8 @@
         
           <div class="comments" id="comments">
             
-              <div class="ds-thread" data-thread-key="2015/09/20/helloHexo/"
-                   data-title="helloHexo" data-url="http://yoursite.com/2015/09/20/helloHexo/">
+              <div class="ds-thread" data-thread-key="2015/12/09/UnityAdanvecd/"
+                   data-title="Unity3D代码优化技巧" data-url="http://yoursite.com/2015/12/09/UnityAdanvecd/">
               </div>
             
           </div>
