@@ -28,7 +28,7 @@
 
 
 
-  <meta name="keywords" content="," />
+  <meta name="keywords" content="游戏通用技术编程," />
 
 
 
@@ -38,9 +38,9 @@
 
 
 <meta name="description" content="“使用共享以高效地支持大量的细粒度对象。”游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：1234567class TreeModel&amp;#123;    private:        Mesh mesh_;">
-<meta property="og:type" content="website">
+<meta property="og:type" content="article">
 <meta property="og:title" content="游戏编程模式笔记——第三章 享元模式">
-<meta property="og:url" content="http://yoursite.com/通用游戏编程技术/GameProgrammingArchitecture_3.html">
+<meta property="og:url" content="http://yoursite.com/2017/08/06/GameProgrammingArchitecture_3/index.html">
 <meta property="og:site_name" content="学无止境">
 <meta property="og:description" content="“使用共享以高效地支持大量的细粒度对象。”游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：1234567class TreeModel&amp;#123;    private:        Mesh mesh_;">
 <meta property="og:updated_time" content="2017-08-05T18:34:12.678Z">
@@ -56,13 +56,7 @@
   };
 </script>
 
-  <title>
-  
-
-  
-    游戏编程模式笔记——第三章 享元模式 | 学无止境
-  
-</title>
+  <title> 游戏编程模式笔记——第三章 享元模式 | 学无止境 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -80,7 +74,7 @@
 
 
 
-  <div class="container one-column ">
+  <div class="container one-column page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -167,8 +161,67 @@
 
   <div id="posts" class="posts-expand">
     
-    
-      <p><strong>“使用共享以高效地支持大量的细粒度对象。”</strong><br>游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。<br>很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> TreeModel</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        Mesh mesh_;</span><br><span class="line">        Texture bark_;</span><br><span class="line">        Texture leaves_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              游戏编程模式笔记——第三章 享元模式
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-08-06T02:11:36+08:00" content="2017-08-06">
+            2017-08-06
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/游戏通用技术编程/" itemprop="url" rel="index">
+                  <span itemprop="name">游戏通用技术编程</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/08/06/GameProgrammingArchitecture_3/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/08/06/GameProgrammingArchitecture_3/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p><strong>“使用共享以高效地支持大量的细粒度对象。”</strong><br>游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。<br>很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> TreeModel</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        Mesh mesh_;</span><br><span class="line">        Texture bark_;</span><br><span class="line">        Texture leaves_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
 <p>整个游戏只需要一份这样的数据，因为没有理由为相同的网格和纹理分配成千上万份内存。然后，游戏世界中每一颗树的实例都有一个指向共享的TreeModel的引用。Tree类中的其他数据成员用来形成树木之间的差异：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Tree</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        TreeModel* model_;</span><br><span class="line">        Vector position_;</span><br><span class="line">        <span class="keyword">double</span> height_;</span><br><span class="line">        <span class="keyword">double</span> thickness_;</span><br><span class="line">        Color barkTint_;</span><br><span class="line">        Color leafTint_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
 <p>为了最大程度地减少发送到GPU上的数据量，我们希望只发送一次共享数据——TreeModel。然后我们再单独地将每棵树实例的特有数据——位置、颜色和缩放比推送到GPU。最后，我们告诉GPU，“使用那个共享的模型来渲染每个实例”。</p>
 <p><strong>享元模式</strong><br>顾名思义，一般来说当你有太多对象并考虑对其进行轻量化时它便能派上用场。<br>享元模式通过将对象数据分成两种类型来解决问题。第一种类型数据是那些不属于单一实例对象并且能够被所有对象共享的数据。GoF将其称为内部状态(the intrinsic state)，但我更喜欢将它认为是“上下文无关”的状态。<br>其他数据便是外部状态(the extrinsic state)，对于每一个实例它们都是唯一的。</p>
@@ -182,8 +235,45 @@
 <li>为了找到以前创建的享元，你必须追踪哪些你已经实例化过的对象的池(pool)。正如其名，这意味着对象池模式对于存储他们会很有用。</li>
 <li>在使用状态模式时，你经常会拥有一些”状态”对象，对于状态所处的状态机而言它们没有特定的字段。状态的标识和方法也足够有用。在这种情况下，你可以同时在多个状态机中使用这种模式，并且重用这个相同的状态实例并不会带来任何问题。</li>
 </ul>
+</span>
+      
+    </div>
 
-    
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/游戏通用技术编程/" rel="tag">#游戏通用技术编程</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/06/GameProgrammingArchitecture_1/" rel="prev">游戏编程模式笔记——第一章 架构、性能和游戏</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/06/GameProgrammingArchitecture_2/" rel="next">游戏编程模式笔记——第二章 命令模式</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
  </div>
@@ -193,8 +283,8 @@
         
           <div class="comments" id="comments">
             
-              <div class="ds-thread" data-thread-key="通用游戏编程技术/GameProgrammingArchitecture_3.html"
-                   data-title="游戏编程模式笔记——第三章 享元模式" data-url="http://yoursite.com/通用游戏编程技术/GameProgrammingArchitecture_3.html">
+              <div class="ds-thread" data-thread-key="2017/08/06/GameProgrammingArchitecture_3/"
+                   data-title="游戏编程模式笔记——第三章 享元模式" data-url="http://yoursite.com/2017/08/06/GameProgrammingArchitecture_3/">
               </div>
             
           </div>
@@ -215,6 +305,15 @@
     <div class="sidebar-inner">
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
       <section class="site-overview">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -225,21 +324,21 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
 
           <div class="site-state-item site-state-categories">
             <a href="/categories">
-              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-count">2</span>
               <span class="site-state-item-name">分类</span>
               </a>
           </div>
 
           <div class="site-state-item site-state-tags">
             <a href="/tags">
-              <span class="site-state-item-count">1</span>
+              <span class="site-state-item-count">2</span>
               <span class="site-state-item-name">标签</span>
               </a>
           </div>
@@ -294,6 +393,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
       
 
     </div>
@@ -382,6 +492,165 @@
   <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
 
   
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
 
   <script type="text/javascript">
     $(document).ready(function () {
