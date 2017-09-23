@@ -37,16 +37,19 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="“使用共享以高效地支持大量的细粒度对象。”游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：1234567class TreeModel&amp;#123;    private:        Mesh mesh_;">
+<meta name="description" content="把批处理代码丢给计算机，离开几个小时后再回来查看结果的方式，在程序排错上简直慢得可怕。他们需要即时反馈——于是交互式编程诞生了。真实的游戏循环的第一个关键点：它处理用户的输入，但并不等待输入。游戏循环始终在运转：123456while(true)&amp;#123;    processInput();    update();    render();&amp;#125;
+游戏循环模式的另一个要点：这一模式让游">
 <meta property="og:type" content="article">
-<meta property="og:title" content="游戏编程模式笔记——第三章 享元模式">
-<meta property="og:url" content="http://yoursite.com/2017/08/06/GameProgrammingArchitecture_3/index.html">
+<meta property="og:title" content="游戏编程模式笔记——第四章 观察者模式">
+<meta property="og:url" content="http://yoursite.com/2017/09/23/GameProgrammingArchitecture_9/index.html">
 <meta property="og:site_name" content="学无止境">
-<meta property="og:description" content="“使用共享以高效地支持大量的细粒度对象。”游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：1234567class TreeModel&amp;#123;    private:        Mesh mesh_;">
-<meta property="og:updated_time" content="2017-09-23T13:56:40.015Z">
+<meta property="og:description" content="把批处理代码丢给计算机，离开几个小时后再回来查看结果的方式，在程序排错上简直慢得可怕。他们需要即时反馈——于是交互式编程诞生了。真实的游戏循环的第一个关键点：它处理用户的输入，但并不等待输入。游戏循环始终在运转：123456while(true)&amp;#123;    processInput();    update();    render();&amp;#125;
+游戏循环模式的另一个要点：这一模式让游">
+<meta property="og:updated_time" content="2017-09-23T14:08:36.479Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="游戏编程模式笔记——第三章 享元模式">
-<meta name="twitter:description" content="“使用共享以高效地支持大量的细粒度对象。”游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：1234567class TreeModel&amp;#123;    private:        Mesh mesh_;">
+<meta name="twitter:title" content="游戏编程模式笔记——第四章 观察者模式">
+<meta name="twitter:description" content="把批处理代码丢给计算机，离开几个小时后再回来查看结果的方式，在程序排错上简直慢得可怕。他们需要即时反馈——于是交互式编程诞生了。真实的游戏循环的第一个关键点：它处理用户的输入，但并不等待输入。游戏循环始终在运转：123456while(true)&amp;#123;    processInput();    update();    render();&amp;#125;
+游戏循环模式的另一个要点：这一模式让游">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -56,7 +59,7 @@
   };
 </script>
 
-  <title> 游戏编程模式笔记——第三章 享元模式 | 学无止境 </title>
+  <title> 游戏编程模式笔记——第四章 观察者模式 | 学无止境 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -171,7 +174,7 @@
           
           
             
-              游戏编程模式笔记——第三章 享元模式
+              游戏编程模式笔记——第四章 观察者模式
             
           
         </h1>
@@ -180,8 +183,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2017-08-06T04:11:36+08:00" content="2017-08-06">
-            2017-08-06
+          <time itemprop="dateCreated" datetime="2017-09-23T13:11:36+08:00" content="2017-09-23">
+            2017-09-23
           </time>
         </span>
 
@@ -206,8 +209,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2017/08/06/GameProgrammingArchitecture_3/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2017/08/06/GameProgrammingArchitecture_3/" itemprop="commentsCount"></span>
+              <a href="/2017/09/23/GameProgrammingArchitecture_9/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/23/GameProgrammingArchitecture_9/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -221,19 +224,66 @@
       
 
       
-        <span itemprop="articleBody"><p><strong>“使用共享以高效地支持大量的细粒度对象。”</strong><br>游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。<br>很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> TreeModel</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        Mesh mesh_;</span><br><span class="line">        Texture bark_;</span><br><span class="line">        Texture leaves_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>整个游戏只需要一份这样的数据，因为没有理由为相同的网格和纹理分配成千上万份内存。然后，游戏世界中每一颗树的实例都有一个指向共享的TreeModel的引用。Tree类中的其他数据成员用来形成树木之间的差异：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Tree</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        TreeModel* model_;</span><br><span class="line">        Vector position_;</span><br><span class="line">        <span class="keyword">double</span> height_;</span><br><span class="line">        <span class="keyword">double</span> thickness_;</span><br><span class="line">        Color barkTint_;</span><br><span class="line">        Color leafTint_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>为了最大程度地减少发送到GPU上的数据量，我们希望只发送一次共享数据——TreeModel。然后我们再单独地将每棵树实例的特有数据——位置、颜色和缩放比推送到GPU。最后，我们告诉GPU，“使用那个共享的模型来渲染每个实例”。</p>
-<p><strong>享元模式</strong><br>顾名思义，一般来说当你有太多对象并考虑对其进行轻量化时它便能派上用场。<br>享元模式通过将对象数据分成两种类型来解决问题。第一种类型数据是那些不属于单一实例对象并且能够被所有对象共享的数据。GoF将其称为内部状态(the intrinsic state)，但我更喜欢将它认为是“上下文无关”的状态。<br>其他数据便是外部状态(the extrinsic state)，对于每一个实例它们都是唯一的。</p>
-<p>使用瓦片(Tile-based)的技术来构建地面：游戏世界的地面是由许多细小的瓦片组成的巨大的网格。每一个瓦片都由某种地形所覆盖。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> Terrain</span><br><span class="line">&#123;</span><br><span class="line">    TERRAIN_GRASS,</span><br><span class="line">    TERRAIN_HILL,</span><br><span class="line">    TERRAIN_RIVER</span><br><span class="line">    <span class="comment">// Other terrains...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>像下面代码这样实现地形类，是非常值得肯定的:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Terrain</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        Terrain(<span class="keyword">int</span> movementCost, <span class="keyword">bool</span> isWater, Texture texture) :</span><br><span class="line">            moveCost_(moveCost),</span><br><span class="line">            isWater_(isWater),</span><br><span class="line">            texture_(texture)</span><br><span class="line">        &#123;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">int</span> <span class="title">getMoveCost</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> moveCost_; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">bool</span> <span class="title">isWater</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> isWater_; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">const</span> Texture&amp; <span class="title">getTexture</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> texture_; &#125;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        <span class="keyword">int</span> moveCost_;</span><br><span class="line">        <span class="keyword">bool</span> isWater_;</span><br><span class="line">        Texture texture_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>你会发现，瓦片中并没有标志其位置的特殊代码。在享元术语中，地形的所有状态都是“内在的”或者“上下文无关的”。<br>地形实例会被多处使用，如果你是动态地分配它们的话，则它们的生命周期会有些复杂。因为我们直接将他们存储在游戏世界中。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> World</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        World() : grassTerrain_(<span class="number">1</span>, <span class="literal">false</span>, GRASS_TEXTURE),</span><br><span class="line">                        hillTerrain_(<span class="number">3</span>, <span class="literal">false</span>, HILL_TEXTURE),</span><br><span class="line">                        riverTerrain_(<span class="number">2</span>, <span class="literal">true</span>, RIVER_TEXTURE)</span><br><span class="line">        &#123;&#125;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        Terrain grassTerrain_;</span><br><span class="line">        Terrain hillTerrain_;</span><br><span class="line">        Terrain riverTerrain_;</span><br><span class="line">        <span class="comment">// Other stuff...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>现在我们可以像下面一样直接暴露地形对象，而无需访问World类的地形属性。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Terrain&amp; World:: getTitle(<span class="keyword">int</span> x, <span class="keyword">int</span> y) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> *titles_[x][y];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这样一来，World就不再和地形的各种细节耦合。如果你想得到砖块的某些属性，你可以从砖块对象来获得它。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> cost = world.getTile(<span class="number">2</span>, <span class="number">3</span>).getMovementCost();</span><br></pre></td></tr></table></figure></p>
-<p><strong>性能</strong><br>你需要通过网格中的指针来找到地形对象，然后访问其移动开销。跟踪这样的指针会引起缓存未命中，从而会拖慢速度。<br><strong>参考</strong><br>如果你不能预测哪些是你真正需要的，则最好按需创建它们。<br>这通常意味着在一些用来查找现有对象的接口背后，你必须做些结构上的封装。像这样隐藏构造函数，其中一个例子就是工厂方法模式。</p>
+        <span itemprop="articleBody"><p>把批处理代码丢给计算机，离开几个小时后再回来查看结果的方式，在程序排错上简直慢得可怕。他们需要即时反馈——于是交互式编程诞生了。<br>真实的游戏循环的第一个关键点：它处理用户的输入，但并不等待输入。游戏循环始终在运转：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">&#123;</span><br><span class="line">    processInput();</span><br><span class="line">    update();</span><br><span class="line">    render();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>游戏循环模式的另一个要点：这一模式让游戏在一个与硬件无关的速度常量下运行。</p>
+<p>###模式<br>一个游戏循环会在游戏过程中持续地运转。每循环一次，它非阻塞地处理用户的输入，更新游戏状态，并渲染游戏。它跟踪流逝的时间并控制游戏的速率。</p>
+<p>###使用情境<br>任何游戏里面都可以使用到它。</p>
+<p>###使用须知<br>你可能需要和操作系统的事件循环进行协调。</p>
+<p>###示例代码</p>
+<p>####跑，能跑多快就跑多快<br>我们已经看到最简单的游戏循环，它的问题在于你无法控制游戏运转的快慢。在较快的机器上游戏循环可能会快得令玩家看不清游戏在做什么，在慢的机器上游戏则会变慢变卡。</p>
+<p>####小睡一会儿<br>假如你希望让游戏以60帧/秒运行，也就是说你大概有16毫秒的时间来处理每一帧。假如你确实能够在这16毫秒以内进行所有的游戏更新与渲染工作，那么你就可以以一个稳定的帧率来跑游戏。你所需要做的就是处理这一帧，接着等待下一帧的到来。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">double</span> start = getCurrentTime();</span><br><span class="line">    processInput();</span><br><span class="line">    update();</span><br><span class="line">    render();</span><br><span class="line">    </span><br><span class="line">    sleep(start + MS_PER_FRAME - getCurrentTime());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>####小改动，大进步<br>我们目前的问题可以归结为：</p>
 <ul>
-<li>为了找到以前创建的享元，你必须追踪哪些你已经实例化过的对象的池(pool)。正如其名，这意味着对象池模式对于存储他们会很有用。</li>
-<li>在使用状态模式时，你经常会拥有一些”状态”对象，对于状态所处的状态机而言它们没有特定的字段。状态的标识和方法也足够有用。在这种情况下，你可以同时在多个状态机中使用这种模式，并且重用这个相同的状态实例并不会带来任何问题。</li>
+<li>每次更新游戏花去一个固定的时间值。</li>
+<li><p>需要花些实际的时间来进行更新。<br>假如第二步的时间长于第一步，那么游戏就会变慢。那么我们可以不那么频繁地更新游戏并且能够追赶上游戏的进行速度。<br>具体想法是计算这一帧距离上一帧的实际时间间隔以作为更新步长。帧处理花费的实际时间越长，这个步长也就越长。这个办法使得游戏总会越来越接近于实际时间。他们称此为变值时间步长（或者浮动时间步长）</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> lastTime = getCurrentTime();</span><br><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">double</span> current = getCurrentTime();</span><br><span class="line">    <span class="keyword">double</span> elapsed = current - lastTime;</span><br><span class="line">    processInput();</span><br><span class="line">    update(elapsed);</span><br><span class="line">    render();</span><br><span class="line">    lastTime = current;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>这样一来，游戏可以在不同的硬件上以相同的速率运行。</p>
+</li>
+<li>高端机器的玩家能够得到一个更流畅的游戏体验。</li>
+</ul>
+<p>但存在一个严重的潜在问题：我们使得游戏变得不确定且不稳定。物理引擎也将变得不稳定。</p>
+<p>####把时间追回来<br>渲染，通常是游戏引擎中不会变时步长影响的部分。由于渲染引擎表现的是游戏时间中的一瞬间，所以它并不关心距离上次渲染过去了多少时间。它只是把当前的游戏状态渲染出来而已。<br>这一事实可以利用。我们将使用固定时长更新，因为它使得物理引擎和AI都更加稳定。但我们允许在渲染的时候进行一些灵活的调整以释放一些处理器时间。<br>它像这样运作：距离上次的游戏循环已经过去了一段真实的时间。这一段时间就是我们需要模拟游戏的“当前时间”，以便赶上玩家的实际时间。我们通过一系列的固定步长来实现它。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> previous = getCurrentTime();</span><br><span class="line"><span class="keyword">double</span> lag = <span class="number">0.0</span>;</span><br><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">double</span> current = getCurrentTime();</span><br><span class="line">    <span class="keyword">double</span> elapsed = current - previous;</span><br><span class="line">    previous = current;</span><br><span class="line">    lag += elapsed;</span><br><span class="line">    processInput();</span><br><span class="line">    <span class="keyword">while</span>( lag &gt;= MS_PER_UPDATE )</span><br><span class="line">   &#123;</span><br><span class="line">        update();</span><br><span class="line">        lag -= MS_PER_UPDATE;</span><br><span class="line">   &#125;</span><br><span class="line">    render();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>常量MS_PER_UPDATE只是我们更新游戏的间隔。间隔越大，游戏跳帧越明显。但要注意的是被让它过短，你必须保证这个时间步长大于每次update()函数的处理时间。<br>我们给予了自己一些喘息的空间。通过将渲染拉出更新循环之外来实现这一点。</p>
+<p>####留在两帧之间<br>还有一个问题，就是残留的延迟。渲染有可能在两次更新之间。当进行渲染时，我们将其传入：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">render(lag / MS_PER_UPDATE);</span><br></pre></td></tr></table></figure></p>
+<p>这样在绘制的时候，就可以知道物体偏移的值为多少，可以准确描绘出物体的位置。</p>
+<p>###设计决策<br>你可能需要考虑这些问题。</p>
+<p>####1. 谁来控制游戏循环，你还是平台<br><strong>使用平台的事件循环</strong></p>
+<ul>
+<li>你无需担心游戏核心循环的代码和优化问题。</li>
+<li>它与平台协作得很好。无需担心它何时处理事件，如何捕获事件，或者如何处理平台与你输入模型之间不匹配的问题等。</li>
+<li>你失去了对时间的控制。更糟的是，许多应用程序的事件循环在概念上的设计并不同于游戏——它们通常很慢并且断续。</li>
+</ul>
+<p><strong>使用游戏引擎的游戏循环</strong></p>
+<ul>
+<li>你无需自己编写。</li>
+<li>坏消息是当出现一些与引擎循环不那么合拍的需求时，你无法获得循环的控制权。</li>
+</ul>
+<p><strong>自己编写游戏循环</strong></p>
+<ul>
+<li>掌控一切。</li>
+<li>你需要实现平台的接口。<br>####2. 你如何解决能量损耗<br>移动平台的发展需要你考虑不但要让你的游戏看来很棒，并且应尽可能地减少CPU的使用率。当完成了一帧中需要处理的所有工作时，你可能需要一个性能的上限来控制CPU进行休眠。</li>
+<li>让它能跑多快跑多快。<br>你最好只在PC游戏上这么做。这样一来，任何空余的循环都要用于避免FPS或者图形保真度的不稳定。这可能给予你最好的游戏体验，但它会消耗更多的电量。</li>
+<li>限制帧率<br>设置帧率上限（30 FPS或60 FPS）假如游戏循环在本时间片内已经完成了处理，那么剩余的时间它将休眠。<br>这给予了玩家一个足够好的体验并帮他们节省了电池能耗。<br>####3. 如何控制游戏速度<br>游戏循环有两个关键部分：非阻塞的用户输入和帧时间适配。<br><strong>非同步的固定时间步长</strong></li>
+<li>简单。</li>
+<li>游戏速度直接受硬件和游戏复杂度的影响。其主要缺点是假如出现任何变化，将直接影响游戏速度。游戏速度受游戏循环影响。</li>
+</ul>
+<p><strong>同步的固定时长</strong></p>
+<ul>
+<li>依然很简单</li>
+<li>这是省电的</li>
+<li>游戏不会运行得很快</li>
+<li>游戏可能会跑得很慢（假如一帧的更新和渲染花去过多的时间）</li>
+</ul>
+<p><strong>变时步长</strong></p>
+<ul>
+<li>它能适应过快或过慢的硬件平台</li>
+<li>它使得游戏变得不确定且不稳定</li>
+</ul>
+<p><strong>定时更新迭代，变时渲染</strong></p>
+<ul>
+<li>它也能适应过快或过慢的硬件平台</li>
+<li>它更复杂。它的主要缺陷在于实际的实现还有更多的工作要做。</li>
 </ul>
 </span>
       
@@ -252,13 +302,13 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/09/23/GameProgrammingArchitecture_4/" rel="prev">游戏编程模式笔记——第四章 观察者模式</a>
+              <a href="/2017/09/23/GameProgrammingArchitecture_11/" rel="prev">游戏编程模式笔记——第十一章 字节码</a>
             
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/06/GameProgrammingArchitecture_2/" rel="next">游戏编程模式笔记——第二章 命令模式</a>
+              <a href="/2017/09/23/GameProgrammingArchitecture_8/" rel="next">游戏编程模式笔记——第八章 双缓冲</a>
             
           </div>
         </div>
@@ -283,8 +333,8 @@
         
           <div class="comments" id="comments">
             
-              <div class="ds-thread" data-thread-key="2017/08/06/GameProgrammingArchitecture_3/"
-                   data-title="游戏编程模式笔记——第三章 享元模式" data-url="http://yoursite.com/2017/08/06/GameProgrammingArchitecture_3/">
+              <div class="ds-thread" data-thread-key="2017/09/23/GameProgrammingArchitecture_9/"
+                   data-title="游戏编程模式笔记——第四章 观察者模式" data-url="http://yoursite.com/2017/09/23/GameProgrammingArchitecture_9/">
               </div>
             
           </div>

@@ -37,16 +37,22 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="“使用共享以高效地支持大量的细粒度对象。”游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：1234567class TreeModel&amp;#123;    private:        Mesh mesh_;">
+<meta name="description" content="通过对所有对象实例同时进行帧更新来模拟一系列相互独立的游戏对象。
+###动机它要为游戏中的每个实体封装其自身的行为。这将使游戏循环保持整洁并便于往循环中增加或移除实体。为了做到这一点，我们需第十章 更新方法.md要一个抽象层，为此定义一个update()的抽象方法。游戏循环维护对象集合，但它并不关心这些对象的具体类型。它只是更新他们。这将每个对象的行为从游戏循环以及其他对象那里分离了出来。
+###">
 <meta property="og:type" content="article">
-<meta property="og:title" content="游戏编程模式笔记——第三章 享元模式">
-<meta property="og:url" content="http://yoursite.com/2017/08/06/GameProgrammingArchitecture_3/index.html">
+<meta property="og:title" content="游戏编程模式笔记——第十章 更新方法">
+<meta property="og:url" content="http://yoursite.com/2017/09/23/GameProgrammingArchitecture_10/index.html">
 <meta property="og:site_name" content="学无止境">
-<meta property="og:description" content="“使用共享以高效地支持大量的细粒度对象。”游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：1234567class TreeModel&amp;#123;    private:        Mesh mesh_;">
-<meta property="og:updated_time" content="2017-09-23T13:56:40.015Z">
+<meta property="og:description" content="通过对所有对象实例同时进行帧更新来模拟一系列相互独立的游戏对象。
+###动机它要为游戏中的每个实体封装其自身的行为。这将使游戏循环保持整洁并便于往循环中增加或移除实体。为了做到这一点，我们需第十章 更新方法.md要一个抽象层，为此定义一个update()的抽象方法。游戏循环维护对象集合，但它并不关心这些对象的具体类型。它只是更新他们。这将每个对象的行为从游戏循环以及其他对象那里分离了出来。
+###">
+<meta property="og:updated_time" content="2017-09-23T14:08:42.010Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="游戏编程模式笔记——第三章 享元模式">
-<meta name="twitter:description" content="“使用共享以高效地支持大量的细粒度对象。”游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：1234567class TreeModel&amp;#123;    private:        Mesh mesh_;">
+<meta name="twitter:title" content="游戏编程模式笔记——第十章 更新方法">
+<meta name="twitter:description" content="通过对所有对象实例同时进行帧更新来模拟一系列相互独立的游戏对象。
+###动机它要为游戏中的每个实体封装其自身的行为。这将使游戏循环保持整洁并便于往循环中增加或移除实体。为了做到这一点，我们需第十章 更新方法.md要一个抽象层，为此定义一个update()的抽象方法。游戏循环维护对象集合，但它并不关心这些对象的具体类型。它只是更新他们。这将每个对象的行为从游戏循环以及其他对象那里分离了出来。
+###">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -56,7 +62,7 @@
   };
 </script>
 
-  <title> 游戏编程模式笔记——第三章 享元模式 | 学无止境 </title>
+  <title> 游戏编程模式笔记——第十章 更新方法 | 学无止境 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -171,7 +177,7 @@
           
           
             
-              游戏编程模式笔记——第三章 享元模式
+              游戏编程模式笔记——第十章 更新方法
             
           
         </h1>
@@ -180,8 +186,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2017-08-06T04:11:36+08:00" content="2017-08-06">
-            2017-08-06
+          <time itemprop="dateCreated" datetime="2017-09-23T14:11:36+08:00" content="2017-09-23">
+            2017-09-23
           </time>
         </span>
 
@@ -206,8 +212,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2017/08/06/GameProgrammingArchitecture_3/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2017/08/06/GameProgrammingArchitecture_3/" itemprop="commentsCount"></span>
+              <a href="/2017/09/23/GameProgrammingArchitecture_10/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/23/GameProgrammingArchitecture_10/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -221,20 +227,30 @@
       
 
       
-        <span itemprop="articleBody"><p><strong>“使用共享以高效地支持大量的细粒度对象。”</strong><br>游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。<br>很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> TreeModel</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        Mesh mesh_;</span><br><span class="line">        Texture bark_;</span><br><span class="line">        Texture leaves_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>整个游戏只需要一份这样的数据，因为没有理由为相同的网格和纹理分配成千上万份内存。然后，游戏世界中每一颗树的实例都有一个指向共享的TreeModel的引用。Tree类中的其他数据成员用来形成树木之间的差异：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Tree</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        TreeModel* model_;</span><br><span class="line">        Vector position_;</span><br><span class="line">        <span class="keyword">double</span> height_;</span><br><span class="line">        <span class="keyword">double</span> thickness_;</span><br><span class="line">        Color barkTint_;</span><br><span class="line">        Color leafTint_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>为了最大程度地减少发送到GPU上的数据量，我们希望只发送一次共享数据——TreeModel。然后我们再单独地将每棵树实例的特有数据——位置、颜色和缩放比推送到GPU。最后，我们告诉GPU，“使用那个共享的模型来渲染每个实例”。</p>
-<p><strong>享元模式</strong><br>顾名思义，一般来说当你有太多对象并考虑对其进行轻量化时它便能派上用场。<br>享元模式通过将对象数据分成两种类型来解决问题。第一种类型数据是那些不属于单一实例对象并且能够被所有对象共享的数据。GoF将其称为内部状态(the intrinsic state)，但我更喜欢将它认为是“上下文无关”的状态。<br>其他数据便是外部状态(the extrinsic state)，对于每一个实例它们都是唯一的。</p>
-<p>使用瓦片(Tile-based)的技术来构建地面：游戏世界的地面是由许多细小的瓦片组成的巨大的网格。每一个瓦片都由某种地形所覆盖。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> Terrain</span><br><span class="line">&#123;</span><br><span class="line">    TERRAIN_GRASS,</span><br><span class="line">    TERRAIN_HILL,</span><br><span class="line">    TERRAIN_RIVER</span><br><span class="line">    <span class="comment">// Other terrains...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>像下面代码这样实现地形类，是非常值得肯定的:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Terrain</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        Terrain(<span class="keyword">int</span> movementCost, <span class="keyword">bool</span> isWater, Texture texture) :</span><br><span class="line">            moveCost_(moveCost),</span><br><span class="line">            isWater_(isWater),</span><br><span class="line">            texture_(texture)</span><br><span class="line">        &#123;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">int</span> <span class="title">getMoveCost</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> moveCost_; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">bool</span> <span class="title">isWater</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> isWater_; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">const</span> Texture&amp; <span class="title">getTexture</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> texture_; &#125;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        <span class="keyword">int</span> moveCost_;</span><br><span class="line">        <span class="keyword">bool</span> isWater_;</span><br><span class="line">        Texture texture_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>你会发现，瓦片中并没有标志其位置的特殊代码。在享元术语中，地形的所有状态都是“内在的”或者“上下文无关的”。<br>地形实例会被多处使用，如果你是动态地分配它们的话，则它们的生命周期会有些复杂。因为我们直接将他们存储在游戏世界中。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> World</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        World() : grassTerrain_(<span class="number">1</span>, <span class="literal">false</span>, GRASS_TEXTURE),</span><br><span class="line">                        hillTerrain_(<span class="number">3</span>, <span class="literal">false</span>, HILL_TEXTURE),</span><br><span class="line">                        riverTerrain_(<span class="number">2</span>, <span class="literal">true</span>, RIVER_TEXTURE)</span><br><span class="line">        &#123;&#125;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        Terrain grassTerrain_;</span><br><span class="line">        Terrain hillTerrain_;</span><br><span class="line">        Terrain riverTerrain_;</span><br><span class="line">        <span class="comment">// Other stuff...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>现在我们可以像下面一样直接暴露地形对象，而无需访问World类的地形属性。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Terrain&amp; World:: getTitle(<span class="keyword">int</span> x, <span class="keyword">int</span> y) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> *titles_[x][y];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这样一来，World就不再和地形的各种细节耦合。如果你想得到砖块的某些属性，你可以从砖块对象来获得它。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> cost = world.getTile(<span class="number">2</span>, <span class="number">3</span>).getMovementCost();</span><br></pre></td></tr></table></figure></p>
-<p><strong>性能</strong><br>你需要通过网格中的指针来找到地形对象，然后访问其移动开销。跟踪这样的指针会引起缓存未命中，从而会拖慢速度。<br><strong>参考</strong><br>如果你不能预测哪些是你真正需要的，则最好按需创建它们。<br>这通常意味着在一些用来查找现有对象的接口背后，你必须做些结构上的封装。像这样隐藏构造函数，其中一个例子就是工厂方法模式。</p>
+        <span itemprop="articleBody"><p>通过对所有对象实例同时进行帧更新来模拟一系列相互独立的游戏对象。</p>
+<p>###动机<br>它要为游戏中的每个实体封装其自身的行为。这将使游戏循环保持整洁并便于往循环中增加或移除实体。<br>为了做到这一点，我们需第十章 更新方法.md要一个抽象层，为此定义一个update()的抽象方法。游戏循环维护对象集合，但它并不关心这些对象的具体类型。它只是更新他们。这将每个对象的行为从游戏循环以及其他对象那里分离了出来。</p>
+<p>###模式<br>游戏世界维护一个对象集合。每个对象实现一个更新方法以在每帧模拟自己的行为。而游戏循环在每帧对集合中所有的对象调用其更新方法，以实现和游戏世界同步更新。</p>
+<p>###使用情境<br>如果这个游戏更加抽象，比如是西洋棋子，你并不需要同时模拟所有对象，而且你不需要也不必要让棋子们逐帧地更新自身，这一模式就不那么适用了。<br>更新方法在如下情境最为适用：</p>
 <ul>
-<li>为了找到以前创建的享元，你必须追踪哪些你已经实例化过的对象的池(pool)。正如其名，这意味着对象池模式对于存储他们会很有用。</li>
-<li>在使用状态模式时，你经常会拥有一些”状态”对象，对于状态所处的状态机而言它们没有特定的字段。状态的标识和方法也足够有用。在这种情况下，你可以同时在多个状态机中使用这种模式，并且重用这个相同的状态实例并不会带来任何问题。</li>
+<li>你的游戏中含有一系列对象或系统需要同步地运转。</li>
+<li>各个对象之间的行为几乎是相互独立的。</li>
+<li>对象的行为与时间相关。<br>###使用须知<br>####1. 将代码划分至单帧之中使其变得更加复杂<br>####2. 你需要在每帧结束前存储游戏状态以便下一帧继续<br>####3. 所有对象都在每帧进行模拟，但并非真正同步<br>这意味着，游戏循环遍历更新对象的顺序意义重大。<br>每次增量式的更新会改变游戏世界，从一个有效的状态到下一个，不会产生对象状态的歧义而需要去协调。<br>####4. 在更新期间修改对象列表时必须谨慎<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> numObjectsThisTurn = numObjects_;</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;numObjectsThisTurn; i++)</span><br><span class="line">&#123;</span><br><span class="line">    objects_[i]-&gt;update();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
+<p>objects是游戏中可更新对象的数组，而numObjects是它的长度，在增加新的对象时，这个长度变量增长。我们在循环的一开始将长度缓存在numObjectsThisTurn变量中，从而使这一帧的循环迭代在遍历到任何新增对象之前停止。<br>一个令人担忧的问题是在迭代时移除对象。在上述代码中，通过下标的访问形式，这会有几率跳过一个对象的更新。<br>一个方法是更新时从表的末尾开始遍历。<br>另外一个方法是可以标志对象为“死亡”，等到遍历更新结束之后，再次遍历列表来移除这些“尸体”。<br>假如在更新循环中你加入了多线程，则采用延迟修改的方法较好，因为这可以避免更新期间线程同步带来巨大的开销。</p>
+<p>###示例程序<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Entity</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Entity() : x_(<span class="number">0</span>), y_(<span class="number">0</span>) &#123;&#125;</span><br><span class="line">    <span class="keyword">virtual</span> ~Entity()    &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">double</span> <span class="title">x</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> x_; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">double</span> <span class="title">y</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> y_; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setX</span><span class="params">(<span class="keyword">double</span> x)</span> </span>&#123; x_ = x; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setY</span><span class="params">(<span class="keyword">double</span> y)</span> </span>&#123; y_ = y; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">double</span> x_;y_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>我们维护一个游戏世界，所有entity对象都在游戏世界中<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> World</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    World() : numEntities_(<span class="number">0</span>)    &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">gameLoop</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Entity* entities_[MAX_ENTITIES];</span><br><span class="line">    <span class="keyword">int</span> numEntities_;    </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> World::gameLoop()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Handle user input...</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">// Update each entity.</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; numEntities_; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            entities_[i]-&gt;update();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// Physis and rendering...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>后续可以直接继承Enitity类实现update方法，另外可以使用组件模式来改进继承的方案。</p>
+<p>###设计决策</p>
+<p>####update方法依存于何类中</p>
+<ul>
+<li>实体类中<br>每当希望有新的表现就创建子类，这会积累大量的类而导致项目难以维护。你最终会发现你希望通过一种单一继承层次的优雅映射方式来复用代码块，那时候你就该傻眼了。</li>
+<li>组件类中</li>
+<li>代理类中<br>可以使用状态模式或者对象类型模式。这么做让你能在代理类之外定义新的行为方式。正像使用组件模式那样这为不得不定义新类和新的行为方式带来灵活性。<br>####那些未被利用的对象该如何处理<br>一种方法是单独维护一个需要被更新的“存活”对象表。</li>
+<li>假如你使用单个集合来存储所有游戏对象<br>你在浪费时间。对于暂时无用的对象，你需要检查他们死否死亡的标志，或者调用一个空方法。</li>
+<li>假如你使用一个单独的集合来维护活跃的对象<br>你将使用额外的内存来维护这2个集合。<br>另外一个方法是，同样维护两个集合，但另外一个只维护那些未被激活的对象，而不是维护所有对象。<br>你必须保持两个集合同步。当对象被创建或者销毁时，你需要同时修改两个集合。</li>
+</ul>
+<p>Unity的Monobehavior以及XNA的Game以及GameComponent均使用了这一模式。</p>
 </span>
       
     </div>
@@ -252,13 +268,13 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/09/23/GameProgrammingArchitecture_4/" rel="prev">游戏编程模式笔记——第四章 观察者模式</a>
+              <a href="/2017/09/23/GameProgrammingArchitecture_12/" rel="prev">游戏编程模式笔记——第四章 观察者模式</a>
             
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/06/GameProgrammingArchitecture_2/" rel="next">游戏编程模式笔记——第二章 命令模式</a>
+              <a href="/2017/09/23/GameProgrammingArchitecture_11/" rel="next">游戏编程模式笔记——第十一章 字节码</a>
             
           </div>
         </div>
@@ -283,8 +299,8 @@
         
           <div class="comments" id="comments">
             
-              <div class="ds-thread" data-thread-key="2017/08/06/GameProgrammingArchitecture_3/"
-                   data-title="游戏编程模式笔记——第三章 享元模式" data-url="http://yoursite.com/2017/08/06/GameProgrammingArchitecture_3/">
+              <div class="ds-thread" data-thread-key="2017/09/23/GameProgrammingArchitecture_10/"
+                   data-title="游戏编程模式笔记——第十章 更新方法" data-url="http://yoursite.com/2017/09/23/GameProgrammingArchitecture_10/">
               </div>
             
           </div>

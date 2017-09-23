@@ -28,7 +28,7 @@
 
 
 
-  <meta name="keywords" content="游戏通用技术编程," />
+  <meta name="keywords" content="学无止境" />
 
 
 
@@ -37,25 +37,15 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="衡量一个设计好坏的方法就是看它应对变化的灵活性。
-我们如何从解耦中受益如果两块代码耦合，意味着你必须同时了解这两块代码，如果你让它们解耦，那么你只需了解其一。对我来说，这是软件架构的一个关键目标：在你前进前，最小化你脑海中的知识存储量。
-将一款有趣的游戏做得高效要比将一款高性能的游戏做的有趣更简单些。一种折中的办法是保持代码的灵活性，直到设计稳定下来，然后去除一些抽象，以提高游戏的性能。
-有一个小">
-<meta property="og:type" content="article">
-<meta property="og:title" content="游戏编程模式笔记——第一章 架构、性能和游戏">
-<meta property="og:url" content="http://yoursite.com/2017/08/06/GameProgrammingArchitecture_1/index.html">
+<meta name="description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="学无止境">
+<meta property="og:url" content="http://yoursite.com/page/2/index.html">
 <meta property="og:site_name" content="学无止境">
-<meta property="og:description" content="衡量一个设计好坏的方法就是看它应对变化的灵活性。
-我们如何从解耦中受益如果两块代码耦合，意味着你必须同时了解这两块代码，如果你让它们解耦，那么你只需了解其一。对我来说，这是软件架构的一个关键目标：在你前进前，最小化你脑海中的知识存储量。
-将一款有趣的游戏做得高效要比将一款高性能的游戏做的有趣更简单些。一种折中的办法是保持代码的灵活性，直到设计稳定下来，然后去除一些抽象，以提高游戏的性能。
-有一个小">
-<meta property="og:updated_time" content="2017-08-05T18:31:49.433Z">
+<meta property="og:description">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="游戏编程模式笔记——第一章 架构、性能和游戏">
-<meta name="twitter:description" content="衡量一个设计好坏的方法就是看它应对变化的灵活性。
-我们如何从解耦中受益如果两块代码耦合，意味着你必须同时了解这两块代码，如果你让它们解耦，那么你只需了解其一。对我来说，这是软件架构的一个关键目标：在你前进前，最小化你脑海中的知识存储量。
-将一款有趣的游戏做得高效要比将一款高性能的游戏做的有趣更简单些。一种折中的办法是保持代码的灵活性，直到设计稳定下来，然后去除一些抽象，以提高游戏的性能。
-有一个小">
+<meta name="twitter:title" content="学无止境">
+<meta name="twitter:description">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -65,7 +55,7 @@
   };
 </script>
 
-  <title> 游戏编程模式笔记——第一章 架构、性能和游戏 | 学无止境 </title>
+  <title> 学无止境 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -83,7 +73,9 @@
 
 
 
-  <div class="container one-column page-post-detail">
+  <div class="container one-column 
+   page-home 
+">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -167,9 +159,9 @@
     <main id="main" class="main">
       <div class="main-inner">
         <div id="content" class="content"> 
-
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-expand">
     
+      
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <header class="post-header">
@@ -180,7 +172,102 @@
           
           
             
-              游戏编程模式笔记——第一章 架构、性能和游戏
+              <a class="post-title-link" href="/2017/08/06/GameProgrammingArchitecture_2/" itemprop="url">
+                游戏编程模式笔记——第二章 命令模式
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-08-06T03:11:36+08:00" content="2017-08-06">
+            2017-08-06
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/游戏通用技术编程/" itemprop="url" rel="index">
+                  <span itemprop="name">游戏通用技术编程</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/08/06/GameProgrammingArchitecture_2/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/08/06/GameProgrammingArchitecture_2/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            将一个请求（request）封装成一个对象，从而允许你使用不同的请求、队列或日志将客户端参数化，同时支持请求操作的撤销与修复。
+命令就是一个对象化（实例化）的方法调用(A command is reified method call)。“reified”一词，意即“具象化”(make real)。另
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/08/06/GameProgrammingArchitecture_2/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2017/08/06/GameProgrammingArchitecture_1/" itemprop="url">
+                游戏编程模式笔记——第一章 架构、性能和游戏
+              </a>
             
           
         </h1>
@@ -230,71 +317,310 @@
       
 
       
-        <span itemprop="articleBody"><p><strong>衡量一个设计好坏的方法就是看它应对变化的灵活性。</strong></p>
-<p><strong>我们如何从解耦中受益</strong><br>如果两块代码耦合，意味着你必须同时了解这两块代码，如果你让它们解耦，那么你只需了解其一。<br>对我来说，这是软件架构的一个关键目标：在你前进前，最小化你脑海中的知识存储量。</p>
-<p>将一款有趣的游戏做得高效要比将一款高性能的游戏做的有趣更简单些。一种折中的办法是保持代码的灵活性，直到设计稳定下来，然后去除一些抽象，以提高游戏的性能。</p>
-<p>有一个小技巧确保你的原型代码不会变成真正的代码，就是使用不同于你游戏使用的语言来编写。这样的话，你就必须用游戏使用的语言重写一遍了。</p>
-<p><strong>总结：</strong></p>
-<ul>
-<li>抽象和解耦能够使得你的程序开发变得更快和更简单。但不要浪费时间来做这件事，除非你确信存在问题的代码需要这种灵活性。</li>
-<li>在你的开发周期中要对性能进行思考和设计，但是要推迟那些降低灵活性的、底层的、详尽的优化，能晚则晚。</li>
-<li>尽快地探索你的游戏的设计空间，但是不要走得太快留下一个烂摊子给自己，毕竟你将不得不面对它。</li>
-<li>如果你将要删除代码，那么不要浪费时间将它整理得很整洁。摇滚明星把酒店房间弄得很乱是因为他们知道第二天就要结账走人。</li>
-<li>但是，最重要的是，若要做一些有趣的玩意，那就乐在其中地做吧。</li>
-</ul>
-</span>
+        
+          <span itemprop="articleBody">
+            
+            衡量一个设计好坏的方法就是看它应对变化的灵活性。
+我们如何从解耦中受益如果两块代码耦合，意味着你必须同时了解这两块代码，如果你让它们解耦，那么你只需了解其一。对我来说，这是软件架构的一个关键目标：在你前进前，最小化你脑海中的知识存储量。
+将一款有趣的游戏做得高效要比将一款高性能的游戏做的有趣更简单些
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/08/06/GameProgrammingArchitecture_1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
       
     </div>
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/游戏通用技术编程/" rel="tag">#游戏通用技术编程</a>
-          
-        </div>
+
       
 
       
-        <div class="post-nav">
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/08/06/GameProgrammingArchitecture_2/" rel="prev">游戏编程模式笔记——第二章 命令模式</a>
-            
-          </div>
-
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2015/12/09/UnityAdanvecd/" rel="next">Unity3D代码优化技巧</a>
-            
-          </div>
-        </div>
       
-
-      
+        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
+    
+      
 
-    <div class="post-spread">
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2015/12/09/UnityAdanvecd/" itemprop="url">
+                Unity3D代码优化技巧
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-12-09T01:15:36+08:00" content="2015-12-09">
+            2015-12-09
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Unity3D/" itemprop="url" rel="index">
+                  <span itemprop="name">Unity3D</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/12/09/UnityAdanvecd/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/09/UnityAdanvecd/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            其实我经常在工作场合里面听到有人跟我说：”这个代码能用就行了，能跑通就OK了“。其实我觉得这种想法对于个人长远发展来说是不对的，在我看来，好的程序员的素质除了会懂的给自己节省时间做更有意义的事情之外（其实就是偷懒），另外一个体现素质的地方，就是他对于代码的要求很高，体现一个程序员素质的地方不止于他懂
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/12/09/UnityAdanvecd/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
       
     </div>
-  </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2015/09/28/UnityHotUpdate/" itemprop="url">
+                Unity3D资源代码更新技术——在5.0版本之前
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-09-28T23:11:36+08:00" content="2015-09-28">
+            2015-09-28
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/Unity3D/" itemprop="url" rel="index">
+                  <span itemprop="name">Unity3D</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/09/28/UnityHotUpdate/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/28/UnityHotUpdate/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            所谓资源代码更新，就是当我们重启游戏的时候，游戏会根据当前服务器版本与客户端版本下载更新资源。游戏里面经常会使用到资源更新技术，特别是对于国内的手游以及端游，而国内经常会用热更新(Hot Update)指代这种技术，其实这种形容是不准确的。因为热更新是在不重启游戏的情况下更新资源与代码，而目前大部分
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/09/28/UnityHotUpdate/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2015/09/20/helloHexo/" itemprop="url">
+                helloHexo
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2015-09-20T20:54:41+08:00" content="2015-09-20">
+            2015-09-20
+          </time>
+        </span>
+
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2015/09/20/helloHexo/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/20/helloHexo/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            今天开通了自己的技术BLOG，希望通过这个BLOG能跟大家进行技术交流，也请大家多多指教。后续会更新一些自己工作以来的一些在开发上遇到的一些问题以及心得，如果文章内容有相关错误欢迎指正。
+
+            
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2015/09/20/helloHexo/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/">&laquo;</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
 
  </div>
 
         
 
-        
-          <div class="comments" id="comments">
-            
-              <div class="ds-thread" data-thread-key="2017/08/06/GameProgrammingArchitecture_1/"
-                   data-title="游戏编程模式笔记——第一章 架构、性能和游戏" data-url="http://yoursite.com/2017/08/06/GameProgrammingArchitecture_1/">
-              </div>
-            
-          </div>
         
       </div>
 
@@ -311,15 +637,6 @@
   <aside id="sidebar" class="sidebar">
     <div class="sidebar-inner">
 
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
       
 
       <section class="site-overview">
@@ -400,17 +717,6 @@
 
       </section>
 
-      
-        <section class="post-toc-wrap sidebar-panel-active">
-          <div class="post-toc-indicator-top post-toc-indicator"></div>
-          <div class="post-toc">
-            
-            
-              <p class="post-toc-empty">此文章未包含目录</p>
-            
-          </div>
-          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
-        </section>
       
 
     </div>
@@ -499,165 +805,6 @@
   <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
 
   
-  
-<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
-
-
-<script type="text/javascript" id="sidebar.toc.highlight">
-  $(document).ready(function () {
-    var tocSelector = '.post-toc';
-    var $tocSelector = $(tocSelector);
-    var activeCurrentSelector = '.active-current';
-
-    $tocSelector
-      .on('activate.bs.scrollspy', function () {
-        var $currentActiveElement = $(tocSelector + ' .active').last();
-
-        removeCurrentActiveClass();
-        $currentActiveElement.addClass('active-current');
-
-        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
-      })
-      .on('clear.bs.scrollspy', function () {
-        removeCurrentActiveClass();
-      });
-
-    function removeCurrentActiveClass () {
-      $(tocSelector + ' ' + activeCurrentSelector)
-        .removeClass(activeCurrentSelector.substring(1));
-    }
-
-    function processTOC () {
-      getTOCMaxHeight();
-      toggleTOCOverflowIndicators();
-    }
-
-    function getTOCMaxHeight () {
-      var height = $('.sidebar').height() -
-                   $tocSelector.position().top -
-                   $('.post-toc-indicator-bottom').height();
-
-      $tocSelector.css('height', height);
-
-      return height;
-    }
-
-    function toggleTOCOverflowIndicators () {
-      tocOverflowIndicator(
-        '.post-toc-indicator-top',
-        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
-      );
-
-      tocOverflowIndicator(
-        '.post-toc-indicator-bottom',
-        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
-      )
-    }
-
-    $(document).on('sidebar.motion.complete', function () {
-      processTOC();
-    });
-
-    $('body').scrollspy({ target: tocSelector });
-    $(window).on('resize', function () {
-      if ( $('.sidebar').hasClass('sidebar-active') ) {
-        processTOC();
-      }
-    });
-
-    onScroll($tocSelector);
-
-    function onScroll (element) {
-      element.on('mousewheel DOMMouseScroll', function (event) {
-          var oe = event.originalEvent;
-          var delta = oe.wheelDelta || -oe.detail;
-
-          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
-          event.preventDefault();
-
-          toggleTOCOverflowIndicators();
-      });
-    }
-
-    function tocOverflowIndicator (indicator, action) {
-      var $indicator = $(indicator);
-      var opacity = action === 'show' ? 0.4 : 0;
-      $indicator.velocity ?
-        $indicator.velocity('stop').velocity({
-          opacity: opacity
-        }, { duration: 100 }) :
-        $indicator.stop().animate({
-          opacity: opacity
-        }, 100);
-    }
-
-  });
-</script>
-
-<script type="text/javascript" id="sidebar.nav">
-  $(document).ready(function () {
-    var html = $('html');
-    var TAB_ANIMATE_DURATION = 200;
-    var hasVelocity = $.isFunction(html.velocity);
-
-    $('.sidebar-nav li').on('click', function () {
-      var item = $(this);
-      var activeTabClassName = 'sidebar-nav-active';
-      var activePanelClassName = 'sidebar-panel-active';
-      if (item.hasClass(activeTabClassName)) {
-        return;
-      }
-
-      var currentTarget = $('.' + activePanelClassName);
-      var target = $('.' + item.data('target'));
-
-      hasVelocity ?
-        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
-          target
-            .velocity('stop')
-            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
-            .addClass(activePanelClassName);
-        }) :
-        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
-          currentTarget.hide();
-          target
-            .stop()
-            .css({'opacity': 0, 'display': 'block'})
-            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
-              currentTarget.removeClass(activePanelClassName);
-              target.addClass(activePanelClassName);
-            });
-        });
-
-      item.siblings().removeClass(activeTabClassName);
-      item.addClass(activeTabClassName);
-    });
-
-    $('.post-toc a').on('click', function (e) {
-      e.preventDefault();
-      var targetSelector = escapeSelector(this.getAttribute('href'));
-      var offset = $(targetSelector).offset().top;
-      hasVelocity ?
-        html.velocity('stop').velocity('scroll', {
-          offset: offset  + 'px',
-          mobileHA: false
-        }) :
-        $('html, body').stop().animate({
-          scrollTop: offset
-        }, 500);
-    });
-
-    // Expand sidebar on post detail page by default, when post has a toc.
-    var $tocContent = $('.post-toc-content');
-    if (isDesktop() && CONFIG.sidebar === 'post') {
-      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
-        displaySidebar();
-      }
-    }
-  });
-</script>
-
-
 
   <script type="text/javascript">
     $(document).ready(function () {

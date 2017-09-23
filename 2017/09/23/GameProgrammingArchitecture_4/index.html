@@ -37,16 +37,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="“使用共享以高效地支持大量的细粒度对象。”游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：1234567class TreeModel&amp;#123;    private:        Mesh mesh_;">
+<meta name="description" content="“在对象间定义一种一对多的依赖关系，以便当某对象的状态发生改变时，与它存在依赖关系的所有对象都能收到通知并自动进行更新。”在计算机上随便打开一个应用，它很有可能就是采用Model-View-Controller架构开发，而其底层就是观察者模式。观察者模式应用非常广泛，Java甚至直接把它集成到了系统库里面(java.util.Observer)。C#更是直接将它集成在了语言层面(event关键字)">
 <meta property="og:type" content="article">
-<meta property="og:title" content="游戏编程模式笔记——第三章 享元模式">
-<meta property="og:url" content="http://yoursite.com/2017/08/06/GameProgrammingArchitecture_3/index.html">
+<meta property="og:title" content="游戏编程模式笔记——第四章 观察者模式">
+<meta property="og:url" content="http://yoursite.com/2017/09/23/GameProgrammingArchitecture_4/index.html">
 <meta property="og:site_name" content="学无止境">
-<meta property="og:description" content="“使用共享以高效地支持大量的细粒度对象。”游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：1234567class TreeModel&amp;#123;    private:        Mesh mesh_;">
-<meta property="og:updated_time" content="2017-09-23T13:56:40.015Z">
+<meta property="og:description" content="“在对象间定义一种一对多的依赖关系，以便当某对象的状态发生改变时，与它存在依赖关系的所有对象都能收到通知并自动进行更新。”在计算机上随便打开一个应用，它很有可能就是采用Model-View-Controller架构开发，而其底层就是观察者模式。观察者模式应用非常广泛，Java甚至直接把它集成到了系统库里面(java.util.Observer)。C#更是直接将它集成在了语言层面(event关键字)">
+<meta property="og:updated_time" content="2017-09-23T13:58:56.379Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="游戏编程模式笔记——第三章 享元模式">
-<meta name="twitter:description" content="“使用共享以高效地支持大量的细粒度对象。”游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：1234567class TreeModel&amp;#123;    private:        Mesh mesh_;">
+<meta name="twitter:title" content="游戏编程模式笔记——第四章 观察者模式">
+<meta name="twitter:description" content="“在对象间定义一种一对多的依赖关系，以便当某对象的状态发生改变时，与它存在依赖关系的所有对象都能收到通知并自动进行更新。”在计算机上随便打开一个应用，它很有可能就是采用Model-View-Controller架构开发，而其底层就是观察者模式。观察者模式应用非常广泛，Java甚至直接把它集成到了系统库里面(java.util.Observer)。C#更是直接将它集成在了语言层面(event关键字)">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -56,7 +56,7 @@
   };
 </script>
 
-  <title> 游戏编程模式笔记——第三章 享元模式 | 学无止境 </title>
+  <title> 游戏编程模式笔记——第四章 观察者模式 | 学无止境 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -171,7 +171,7 @@
           
           
             
-              游戏编程模式笔记——第三章 享元模式
+              游戏编程模式笔记——第四章 观察者模式
             
           
         </h1>
@@ -180,8 +180,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2017-08-06T04:11:36+08:00" content="2017-08-06">
-            2017-08-06
+          <time itemprop="dateCreated" datetime="2017-09-23T08:11:36+08:00" content="2017-09-23">
+            2017-09-23
           </time>
         </span>
 
@@ -206,8 +206,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2017/08/06/GameProgrammingArchitecture_3/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2017/08/06/GameProgrammingArchitecture_3/" itemprop="commentsCount"></span>
+              <a href="/2017/09/23/GameProgrammingArchitecture_4/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/23/GameProgrammingArchitecture_4/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -221,20 +221,7 @@
       
 
       
-        <span itemprop="articleBody"><p><strong>“使用共享以高效地支持大量的细粒度对象。”</strong><br>游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。<br>很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> TreeModel</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        Mesh mesh_;</span><br><span class="line">        Texture bark_;</span><br><span class="line">        Texture leaves_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>整个游戏只需要一份这样的数据，因为没有理由为相同的网格和纹理分配成千上万份内存。然后，游戏世界中每一颗树的实例都有一个指向共享的TreeModel的引用。Tree类中的其他数据成员用来形成树木之间的差异：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Tree</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        TreeModel* model_;</span><br><span class="line">        Vector position_;</span><br><span class="line">        <span class="keyword">double</span> height_;</span><br><span class="line">        <span class="keyword">double</span> thickness_;</span><br><span class="line">        Color barkTint_;</span><br><span class="line">        Color leafTint_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>为了最大程度地减少发送到GPU上的数据量，我们希望只发送一次共享数据——TreeModel。然后我们再单独地将每棵树实例的特有数据——位置、颜色和缩放比推送到GPU。最后，我们告诉GPU，“使用那个共享的模型来渲染每个实例”。</p>
-<p><strong>享元模式</strong><br>顾名思义，一般来说当你有太多对象并考虑对其进行轻量化时它便能派上用场。<br>享元模式通过将对象数据分成两种类型来解决问题。第一种类型数据是那些不属于单一实例对象并且能够被所有对象共享的数据。GoF将其称为内部状态(the intrinsic state)，但我更喜欢将它认为是“上下文无关”的状态。<br>其他数据便是外部状态(the extrinsic state)，对于每一个实例它们都是唯一的。</p>
-<p>使用瓦片(Tile-based)的技术来构建地面：游戏世界的地面是由许多细小的瓦片组成的巨大的网格。每一个瓦片都由某种地形所覆盖。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> Terrain</span><br><span class="line">&#123;</span><br><span class="line">    TERRAIN_GRASS,</span><br><span class="line">    TERRAIN_HILL,</span><br><span class="line">    TERRAIN_RIVER</span><br><span class="line">    <span class="comment">// Other terrains...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>像下面代码这样实现地形类，是非常值得肯定的:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Terrain</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        Terrain(<span class="keyword">int</span> movementCost, <span class="keyword">bool</span> isWater, Texture texture) :</span><br><span class="line">            moveCost_(moveCost),</span><br><span class="line">            isWater_(isWater),</span><br><span class="line">            texture_(texture)</span><br><span class="line">        &#123;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">int</span> <span class="title">getMoveCost</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> moveCost_; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">bool</span> <span class="title">isWater</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> isWater_; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">const</span> Texture&amp; <span class="title">getTexture</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> texture_; &#125;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        <span class="keyword">int</span> moveCost_;</span><br><span class="line">        <span class="keyword">bool</span> isWater_;</span><br><span class="line">        Texture texture_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>你会发现，瓦片中并没有标志其位置的特殊代码。在享元术语中，地形的所有状态都是“内在的”或者“上下文无关的”。<br>地形实例会被多处使用，如果你是动态地分配它们的话，则它们的生命周期会有些复杂。因为我们直接将他们存储在游戏世界中。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> World</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        World() : grassTerrain_(<span class="number">1</span>, <span class="literal">false</span>, GRASS_TEXTURE),</span><br><span class="line">                        hillTerrain_(<span class="number">3</span>, <span class="literal">false</span>, HILL_TEXTURE),</span><br><span class="line">                        riverTerrain_(<span class="number">2</span>, <span class="literal">true</span>, RIVER_TEXTURE)</span><br><span class="line">        &#123;&#125;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        Terrain grassTerrain_;</span><br><span class="line">        Terrain hillTerrain_;</span><br><span class="line">        Terrain riverTerrain_;</span><br><span class="line">        <span class="comment">// Other stuff...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>现在我们可以像下面一样直接暴露地形对象，而无需访问World类的地形属性。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Terrain&amp; World:: getTitle(<span class="keyword">int</span> x, <span class="keyword">int</span> y) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> *titles_[x][y];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这样一来，World就不再和地形的各种细节耦合。如果你想得到砖块的某些属性，你可以从砖块对象来获得它。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> cost = world.getTile(<span class="number">2</span>, <span class="number">3</span>).getMovementCost();</span><br></pre></td></tr></table></figure></p>
-<p><strong>性能</strong><br>你需要通过网格中的指针来找到地形对象，然后访问其移动开销。跟踪这样的指针会引起缓存未命中，从而会拖慢速度。<br><strong>参考</strong><br>如果你不能预测哪些是你真正需要的，则最好按需创建它们。<br>这通常意味着在一些用来查找现有对象的接口背后，你必须做些结构上的封装。像这样隐藏构造函数，其中一个例子就是工厂方法模式。</p>
-<ul>
-<li>为了找到以前创建的享元，你必须追踪哪些你已经实例化过的对象的池(pool)。正如其名，这意味着对象池模式对于存储他们会很有用。</li>
-<li>在使用状态模式时，你经常会拥有一些”状态”对象，对于状态所处的状态机而言它们没有特定的字段。状态的标识和方法也足够有用。在这种情况下，你可以同时在多个状态机中使用这种模式，并且重用这个相同的状态实例并不会带来任何问题。</li>
-</ul>
+        <span itemprop="articleBody"><p>“在对象间定义一种一对多的依赖关系，以便当某对象的状态发生改变时，与它存在依赖关系的所有对象都能收到通知并自动进行更新。”<br>在计算机上随便打开一个应用，它很有可能就是采用Model-View-Controller架构开发，而其底层就是观察者模式。观察者模式应用非常广泛，Java甚至直接把它集成到了系统库里面(java.util.Observer)。C#更是直接将它集成在了语言层面(event关键字)。<br>有一个原则，如果两个观察者观察同一个被观察者对象，则它们两个不会因为注册顺序而受到影响。<br>观察者模式非常适合于一些不相关的模块之间的通信问题。它不适合于单个紧凑的模块内部的通信。</p>
 </span>
       
     </div>
@@ -252,13 +239,13 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/09/23/GameProgrammingArchitecture_4/" rel="prev">游戏编程模式笔记——第四章 观察者模式</a>
+              <a href="/2017/09/23/GameProgrammingArchitecture_5/" rel="prev">游戏编程模式笔记——第五章 原型模式</a>
             
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/06/GameProgrammingArchitecture_2/" rel="next">游戏编程模式笔记——第二章 命令模式</a>
+              <a href="/2017/08/06/GameProgrammingArchitecture_3/" rel="next">游戏编程模式笔记——第三章 享元模式</a>
             
           </div>
         </div>
@@ -283,8 +270,8 @@
         
           <div class="comments" id="comments">
             
-              <div class="ds-thread" data-thread-key="2017/08/06/GameProgrammingArchitecture_3/"
-                   data-title="游戏编程模式笔记——第三章 享元模式" data-url="http://yoursite.com/2017/08/06/GameProgrammingArchitecture_3/">
+              <div class="ds-thread" data-thread-key="2017/09/23/GameProgrammingArchitecture_4/"
+                   data-title="游戏编程模式笔记——第四章 观察者模式" data-url="http://yoursite.com/2017/09/23/GameProgrammingArchitecture_4/">
               </div>
             
           </div>

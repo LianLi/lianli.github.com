@@ -37,16 +37,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="“使用共享以高效地支持大量的细粒度对象。”游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：1234567class TreeModel&amp;#123;    private:        Mesh mesh_;">
+<meta name="description" content="”确保一个类只有一个实例，并为其提供一个全局访问入口。“尽管单例模式的出发点是好的，但在GOF对单例模式的描述中，它通常弊大于利。他们一再强调应当谨慎使用该模式——然而当其应用于游戏产业中时，这一点却往往被忽略了。与任何模式一样，在不合适的地方使用单例模式，就像药不对症，不过首先，我们来看看模式本身。确保一个类只有一个实例在对系统文件进行操作时，如果我们调用一个方法创建文件，又调用另外一个方法删除">
 <meta property="og:type" content="article">
-<meta property="og:title" content="游戏编程模式笔记——第三章 享元模式">
-<meta property="og:url" content="http://yoursite.com/2017/08/06/GameProgrammingArchitecture_3/index.html">
+<meta property="og:title" content="游戏编程模式笔记——第六章 单例模式">
+<meta property="og:url" content="http://yoursite.com/2017/09/23/GameProgrammingArchitecture_6/index.html">
 <meta property="og:site_name" content="学无止境">
-<meta property="og:description" content="“使用共享以高效地支持大量的细粒度对象。”游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：1234567class TreeModel&amp;#123;    private:        Mesh mesh_;">
-<meta property="og:updated_time" content="2017-09-23T13:56:40.015Z">
+<meta property="og:description" content="”确保一个类只有一个实例，并为其提供一个全局访问入口。“尽管单例模式的出发点是好的，但在GOF对单例模式的描述中，它通常弊大于利。他们一再强调应当谨慎使用该模式——然而当其应用于游戏产业中时，这一点却往往被忽略了。与任何模式一样，在不合适的地方使用单例模式，就像药不对症，不过首先，我们来看看模式本身。确保一个类只有一个实例在对系统文件进行操作时，如果我们调用一个方法创建文件，又调用另外一个方法删除">
+<meta property="og:updated_time" content="2017-09-23T14:01:14.761Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="游戏编程模式笔记——第三章 享元模式">
-<meta name="twitter:description" content="“使用共享以高效地支持大量的细粒度对象。”游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：1234567class TreeModel&amp;#123;    private:        Mesh mesh_;">
+<meta name="twitter:title" content="游戏编程模式笔记——第六章 单例模式">
+<meta name="twitter:description" content="”确保一个类只有一个实例，并为其提供一个全局访问入口。“尽管单例模式的出发点是好的，但在GOF对单例模式的描述中，它通常弊大于利。他们一再强调应当谨慎使用该模式——然而当其应用于游戏产业中时，这一点却往往被忽略了。与任何模式一样，在不合适的地方使用单例模式，就像药不对症，不过首先，我们来看看模式本身。确保一个类只有一个实例在对系统文件进行操作时，如果我们调用一个方法创建文件，又调用另外一个方法删除">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -56,7 +56,7 @@
   };
 </script>
 
-  <title> 游戏编程模式笔记——第三章 享元模式 | 学无止境 </title>
+  <title> 游戏编程模式笔记——第六章 单例模式 | 学无止境 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -171,7 +171,7 @@
           
           
             
-              游戏编程模式笔记——第三章 享元模式
+              游戏编程模式笔记——第六章 单例模式
             
           
         </h1>
@@ -180,8 +180,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2017-08-06T04:11:36+08:00" content="2017-08-06">
-            2017-08-06
+          <time itemprop="dateCreated" datetime="2017-09-23T10:11:36+08:00" content="2017-09-23">
+            2017-09-23
           </time>
         </span>
 
@@ -206,8 +206,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2017/08/06/GameProgrammingArchitecture_3/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2017/08/06/GameProgrammingArchitecture_3/" itemprop="commentsCount"></span>
+              <a href="/2017/09/23/GameProgrammingArchitecture_6/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/23/GameProgrammingArchitecture_6/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -221,19 +221,27 @@
       
 
       
-        <span itemprop="articleBody"><p><strong>“使用共享以高效地支持大量的细粒度对象。”</strong><br>游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。<br>很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> TreeModel</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        Mesh mesh_;</span><br><span class="line">        Texture bark_;</span><br><span class="line">        Texture leaves_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>整个游戏只需要一份这样的数据，因为没有理由为相同的网格和纹理分配成千上万份内存。然后，游戏世界中每一颗树的实例都有一个指向共享的TreeModel的引用。Tree类中的其他数据成员用来形成树木之间的差异：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Tree</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        TreeModel* model_;</span><br><span class="line">        Vector position_;</span><br><span class="line">        <span class="keyword">double</span> height_;</span><br><span class="line">        <span class="keyword">double</span> thickness_;</span><br><span class="line">        Color barkTint_;</span><br><span class="line">        Color leafTint_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>为了最大程度地减少发送到GPU上的数据量，我们希望只发送一次共享数据——TreeModel。然后我们再单独地将每棵树实例的特有数据——位置、颜色和缩放比推送到GPU。最后，我们告诉GPU，“使用那个共享的模型来渲染每个实例”。</p>
-<p><strong>享元模式</strong><br>顾名思义，一般来说当你有太多对象并考虑对其进行轻量化时它便能派上用场。<br>享元模式通过将对象数据分成两种类型来解决问题。第一种类型数据是那些不属于单一实例对象并且能够被所有对象共享的数据。GoF将其称为内部状态(the intrinsic state)，但我更喜欢将它认为是“上下文无关”的状态。<br>其他数据便是外部状态(the extrinsic state)，对于每一个实例它们都是唯一的。</p>
-<p>使用瓦片(Tile-based)的技术来构建地面：游戏世界的地面是由许多细小的瓦片组成的巨大的网格。每一个瓦片都由某种地形所覆盖。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> Terrain</span><br><span class="line">&#123;</span><br><span class="line">    TERRAIN_GRASS,</span><br><span class="line">    TERRAIN_HILL,</span><br><span class="line">    TERRAIN_RIVER</span><br><span class="line">    <span class="comment">// Other terrains...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>像下面代码这样实现地形类，是非常值得肯定的:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Terrain</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        Terrain(<span class="keyword">int</span> movementCost, <span class="keyword">bool</span> isWater, Texture texture) :</span><br><span class="line">            moveCost_(moveCost),</span><br><span class="line">            isWater_(isWater),</span><br><span class="line">            texture_(texture)</span><br><span class="line">        &#123;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">int</span> <span class="title">getMoveCost</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> moveCost_; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">bool</span> <span class="title">isWater</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> isWater_; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">const</span> Texture&amp; <span class="title">getTexture</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> texture_; &#125;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        <span class="keyword">int</span> moveCost_;</span><br><span class="line">        <span class="keyword">bool</span> isWater_;</span><br><span class="line">        Texture texture_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>你会发现，瓦片中并没有标志其位置的特殊代码。在享元术语中，地形的所有状态都是“内在的”或者“上下文无关的”。<br>地形实例会被多处使用，如果你是动态地分配它们的话，则它们的生命周期会有些复杂。因为我们直接将他们存储在游戏世界中。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> World</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        World() : grassTerrain_(<span class="number">1</span>, <span class="literal">false</span>, GRASS_TEXTURE),</span><br><span class="line">                        hillTerrain_(<span class="number">3</span>, <span class="literal">false</span>, HILL_TEXTURE),</span><br><span class="line">                        riverTerrain_(<span class="number">2</span>, <span class="literal">true</span>, RIVER_TEXTURE)</span><br><span class="line">        &#123;&#125;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        Terrain grassTerrain_;</span><br><span class="line">        Terrain hillTerrain_;</span><br><span class="line">        Terrain riverTerrain_;</span><br><span class="line">        <span class="comment">// Other stuff...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>现在我们可以像下面一样直接暴露地形对象，而无需访问World类的地形属性。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Terrain&amp; World:: getTitle(<span class="keyword">int</span> x, <span class="keyword">int</span> y) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> *titles_[x][y];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这样一来，World就不再和地形的各种细节耦合。如果你想得到砖块的某些属性，你可以从砖块对象来获得它。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> cost = world.getTile(<span class="number">2</span>, <span class="number">3</span>).getMovementCost();</span><br></pre></td></tr></table></figure></p>
-<p><strong>性能</strong><br>你需要通过网格中的指针来找到地形对象，然后访问其移动开销。跟踪这样的指针会引起缓存未命中，从而会拖慢速度。<br><strong>参考</strong><br>如果你不能预测哪些是你真正需要的，则最好按需创建它们。<br>这通常意味着在一些用来查找现有对象的接口背后，你必须做些结构上的封装。像这样隐藏构造函数，其中一个例子就是工厂方法模式。</p>
+        <span itemprop="articleBody"><p>”确保一个类只有一个实例，并为其提供一个全局访问入口。“<br>尽管单例模式的出发点是好的，但在GOF对单例模式的描述中，它通常弊大于利。他们一再强调应当谨慎使用该模式——然而当其应用于游戏产业中时，这一点却往往被忽略了。<br>与任何模式一样，在不合适的地方使用单例模式，就像药不对症，不过首先，我们来看看模式本身。<br><strong>确保一个类只有一个实例</strong><br>在对系统文件进行操作时，如果我们调用一个方法创建文件，又调用另外一个方法删除这个文件，那么我们的封装类就必须知悉，并确保他们不会互相干扰。为了实现这点，对封装类的调用必须能够知道之前的每一步操作。如果使用者能够自由地创建这个类的实例，那么一个实例就无法知道其他实例所做的操作。而单例模式则提供了在编译期就能确保某个类只有一个实例的做法。<br><strong>提供一个全局指针以访问唯一实例</strong><br>除了创建一个单独的实例外，它还提供一个全局的方法以便获取该实例。这样一来，任何模块在任何地方都能得到这个实例了。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> FileSystem</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="function"><span class="keyword">static</span> FileSystem&amp; <span class="title">instance</span><span class="params">()</span></span><br><span class="line">       </span>&#123;</span><br><span class="line">            <span class="comment">//Lazy initialize</span></span><br><span class="line">            <span class="keyword">if</span>(instance_ == <span class="literal">NULL</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                instance_ = <span class="keyword">new</span> FileSystem();</span><br><span class="line">           &#125;</span><br><span class="line">            <span class="keyword">return</span> *instance_;</span><br><span class="line">       &#125;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        FileSystem() &#123;&#125;</span><br><span class="line">        <span class="keyword">static</span> FileSystem* instance_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>以下是更现代的版本：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> FileSystem</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="function"><span class="keyword">static</span> FileSystem&amp; <span class="title">instance</span><span class="params">()</span></span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">static</span> FileSystem *instance = <span class="keyword">new</span> FileSystem();</span><br><span class="line">            <span class="keyword">return</span> *instance;</span><br><span class="line">       &#125;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        FileSystem() &#123;&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>C++11保证一个局部静态变量的初始化只进行一次，哪怕实在多线程的情况下也是如此。所以你有一个现代C++编译器的话，这份代码是线程安全的，而之前的例子却不是。<br><strong>使用情境</strong><br>除了不会因为初始化多个实例而将事情弄糟，它还具备一些其他的优良特性。</p>
 <ul>
-<li>为了找到以前创建的享元，你必须追踪哪些你已经实例化过的对象的池(pool)。正如其名，这意味着对象池模式对于存储他们会很有用。</li>
-<li>在使用状态模式时，你经常会拥有一些”状态”对象，对于状态所处的状态机而言它们没有特定的字段。状态的标识和方法也足够有用。在这种情况下，你可以同时在多个状态机中使用这种模式，并且重用这个相同的状态实例并不会带来任何问题。</li>
+<li>如果我们不使用它，就不会创建实例——节省CPU周期以及内存空间。</li>
+<li>它在运行时初始化。</li>
+<li>你可以继承单例。这是一个强大但是经常被经常忽视的特性。<br>比如FileSystem，我们可以继承它并为不同平台定义派生类。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> FileSystem</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="function"><span class="keyword">static</span> FileSystem&amp; <span class="title">instance</span><span class="params">()</span></span>;</span><br><span class="line">        <span class="keyword">virtual</span> ~FileSystem() &#123;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="keyword">char</span>* <span class="title">read</span><span class="params">(<span class="keyword">char</span> *path)</span> </span>= <span class="number">0</span>;</span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(<span class="keyword">char</span>* path, <span class="keyword">char</span>* text)</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        FileSystem() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> PS3FileSystem : <span class="keyword">public</span> FileSystem</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="keyword">char</span>* <span class="title">read</span><span class="params">(<span class="keyword">char</span>* path)</span></span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="comment">// Use Sony file IO API...</span></span><br><span class="line">       &#125;</span><br><span class="line">        <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">Write</span><span class="params">(<span class="keyword">char</span> *path, <span class="keyword">char</span> *text)</span></span><br><span class="line">       </span>&#123;</span><br><span class="line">            <span class="comment">// Use Sony file IO API...</span></span><br><span class="line">       &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>这里巧妙的地方在于如何创建实例：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FileSystem&amp; FileSystem:: instance()</span><br><span class="line">&#123;</span><br><span class="line"><span class="preprocessor">#<span class="keyword">if</span> PLATFORM == PLAYSTATION3</span></span><br><span class="line">    <span class="keyword">static</span> FileSystem *instance = <span class="keyword">new</span> PS3FileSystem();</span><br><span class="line"><span class="preprocessor">#<span class="keyword">elif</span> ...</span></span><br><span class="line">    <span class="comment">// Other Platforms</span></span><br><span class="line"><span class="preprocessor">#<span class="keyword">endif</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们可以通过FileSystem::instance()来访问文件系统，而不必和任何平台相关的代码发生耦合。</p>
+<p>###后悔使用单例的原因</p>
+<p>####它是一个全局变量</p>
+<ul>
+<li>它们令代码晦涩难懂</li>
+<li>全局变量促进了耦合</li>
+<li>它对并发不友好<br>单例就是一个全局状态——它只是被封装到了类中而已。<br>####它是个画蛇添足的解决方案<br>便利的访问，是使用单例模式的主要原因。比如日志类，将Log类的实例传递给每个函数会扰乱函数签名，并分散代码意图。把Log类变为单例能解决问题，但是不能够创建多个日志器了。但是一旦需要加入日志过滤的需求，通过将日志分割成不同的文件才解决这个问题，除了要修改log不能有多个实例的问题，同时需要修改每个调用点。<br>####延迟初始化剥离了你的控制<br>游戏通常需要仔细地控制内存在堆中的布局来防止碎片化。如果我们的音频系统在初始化时分配了内存，我们需要知道初始化发生的时间，以便让我们控制它在堆中的内存布局。<br>###那么我们该怎么做<br>####看你究竟是否需要类<br>保姆类有时是有用的，不过这通常反映出他们对OOP不熟悉。如果可以，你只需要将这些功能移动到它所帮助的类中去就可以了。毕竟面向对象就是让对象自己管理自己。<br>####将类限制为单一实例<br>####为实例提供便捷的访问方式。<br>通用的原则是，在保证功能的情况下将变量限制在一个狭窄的范围内。对象的作用域越小，我们需要记住它的地方越少。让我们考虑下代码库访问一个对象的其他途径：</li>
+<li>传递进去。 将这个对象当作一个参数传递给需要它的函数。</li>
+<li>在基类中获取它。 把Log定义在GameObject中，这样所有派生自GameObject的对象都可以范围它。（子类沙盒）</li>
+<li>通过其他全局对象访问它。</li>
+<li>通过服务定位器来访问。定义一个类专门用来给对象做全局访问。</li>
 </ul>
 </span>
       
@@ -252,13 +260,13 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/09/23/GameProgrammingArchitecture_4/" rel="prev">游戏编程模式笔记——第四章 观察者模式</a>
+              <a href="/2017/09/23/GameProgrammingArchitecture_7/" rel="prev">游戏编程模式笔记——第七章 状态模式</a>
             
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/06/GameProgrammingArchitecture_2/" rel="next">游戏编程模式笔记——第二章 命令模式</a>
+              <a href="/2017/09/23/GameProgrammingArchitecture_5/" rel="next">游戏编程模式笔记——第五章 原型模式</a>
             
           </div>
         </div>
@@ -283,8 +291,8 @@
         
           <div class="comments" id="comments">
             
-              <div class="ds-thread" data-thread-key="2017/08/06/GameProgrammingArchitecture_3/"
-                   data-title="游戏编程模式笔记——第三章 享元模式" data-url="http://yoursite.com/2017/08/06/GameProgrammingArchitecture_3/">
+              <div class="ds-thread" data-thread-key="2017/09/23/GameProgrammingArchitecture_6/"
+                   data-title="游戏编程模式笔记——第六章 单例模式" data-url="http://yoursite.com/2017/09/23/GameProgrammingArchitecture_6/">
               </div>
             
           </div>

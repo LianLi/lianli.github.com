@@ -1,0 +1,724 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+
+
+  <meta name="keywords" content="游戏通用技术编程," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="“使用基类提供的操作集合来定义子类中的行为。”
+###动机每个孩子都有一个超级英雄梦，但是理想很丰满，现实很骨感。玩游戏或许是令你成为超级英雄的最佳途径。因为游戏设计师从来不会说“不”，我们的超级英雄游戏目标是提供成百上千种不同的超能力以供玩家选择。我们的计划是建立一个Superpower基类，然后，我们有一个派生类来实现各种超能力。我们将把设计文档分摊给团队中的程序员进行编码。完成时就将得到数以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="游戏编程模式笔记——第四章 观察者模式">
+<meta property="og:url" content="http://yoursite.com/2017/09/23/GameProgrammingArchitecture_12/index.html">
+<meta property="og:site_name" content="学无止境">
+<meta property="og:description" content="“使用基类提供的操作集合来定义子类中的行为。”
+###动机每个孩子都有一个超级英雄梦，但是理想很丰满，现实很骨感。玩游戏或许是令你成为超级英雄的最佳途径。因为游戏设计师从来不会说“不”，我们的超级英雄游戏目标是提供成百上千种不同的超能力以供玩家选择。我们的计划是建立一个Superpower基类，然后，我们有一个派生类来实现各种超能力。我们将把设计文档分摊给团队中的程序员进行编码。完成时就将得到数以">
+<meta property="og:updated_time" content="2017-09-23T14:09:09.079Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="游戏编程模式笔记——第四章 观察者模式">
+<meta name="twitter:description" content="“使用基类提供的操作集合来定义子类中的行为。”
+###动机每个孩子都有一个超级英雄梦，但是理想很丰满，现实很骨感。玩游戏或许是令你成为超级英雄的最佳途径。因为游戏设计师从来不会说“不”，我们的超级英雄游戏目标是提供成百上千种不同的超能力以供玩家选择。我们的计划是建立一个Superpower基类，然后，我们有一个派生类来实现各种超能力。我们将把设计文档分摊给团队中的程序员进行编码。完成时就将得到数以">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> 游戏编程模式笔记——第四章 观察者模式 | 学无止境 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">学无止境</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              游戏编程模式笔记——第四章 观察者模式
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-09-23T15:11:36+08:00" content="2017-09-23">
+            2017-09-23
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/游戏通用技术编程/" itemprop="url" rel="index">
+                  <span itemprop="name">游戏通用技术编程</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/09/23/GameProgrammingArchitecture_12/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/23/GameProgrammingArchitecture_12/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>“使用基类提供的操作集合来定义子类中的行为。”</p>
+<p>###动机<br>每个孩子都有一个超级英雄梦，但是理想很丰满，现实很骨感。玩游戏或许是令你成为超级英雄的最佳途径。因为游戏设计师从来不会说“不”，我们的超级英雄游戏目标是提供成百上千种不同的超能力以供玩家选择。<br>我们的计划是建立一个Superpower基类，然后，我们有一个派生类来实现各种超能力。我们将把设计文档分摊给团队中的程序员进行编码。完成时就将得到数以百计的superpower类。<br>这就意味着这些superpower子类几乎能够做任何事情：播放音效、产生视觉效果、与AI交互、创建和销毁其他游戏实体以及产生物理效果。它们将触及代码库的每一个角落。<br>如果发动我们的团队开始编写superpower类，那将会发生什么呢？</p>
+<ul>
+<li>这将产生大量冗余代码。</li>
+<li>游戏引擎的每个部分都将与这些类产生耦合。</li>
+<li>当这些外部系统需要改变的时候，superpower的代码很有可能遭到随机性的破坏。</li>
+<li>定义所有superpower都遵循的不变量是很困难的。</li>
+</ul>
+<p>我们需要的是给每个设计superpower的游戏逻辑程序员一系列可用的基本操作函数。我们通过把这些操作设置成superpower基类的、受保护的方法来实现。把它们放在基类就能让每个Power子类简单而直接地访问这些方法。把它们设置为受保护状态（而且很可能是非虚的）来交互，以供子类调用，这正是它们存在的意义。<br>我们为此定义一种沙盒方法，这个是子类必须实现的抽象保护方法。在有了这些之后，为实现一种新的power，你要做的就是：</p>
+<ol>
+<li>创建一个继承自Superpower的新类。</li>
+<li>覆写沙盒函数activate()。</li>
+<li>通过调用Superpower提供的保护函数来实现新类方法的函数体。</li>
+</ol>
+<p>我们通过将基础操作提取到更高的层次来解决冗余代码问题。当我们发现在子类中存在大量重复代码时，我们就会把它向上移到Superpower中作为一个新的可用基本操作。<br>Superpower最终将与不同的游戏系统耦合，但我们的上百个子类则不会，它们仅与基类耦合。当这些游戏系统中的某部分变化时，对Superpower进行修改可能是必须的，但是这些子类则不应被改动。<br>这个设计模式会催生一种扁平的类层次架构。你的继承链不会太深，但是会有大量的类与Superpower挂钩。通过使一个类派生大量的直接子类，我们限制了该代码在代码库里的影响范围。游戏中大量的类都会获益于我们精心设计的Superpower类。</p>
+<p>###沙盒模式<br>一个基类定义了一个抽象的沙盒方法和一些预定义的操作集合。通过将它们设置为受保护的状态以确保它们仅供子类使用。每个派生出的沙盒子类根据父类提供的操作来实现沙盒函数。</p>
+<p>###使用情境</p>
+<ul>
+<li>你有一个带有大量子类的基类。</li>
+<li>基类能够提供所有子类可能需要执行的操作集合</li>
+<li>在子类之间有重叠的代码，你希望在它们之间更简便地共享代码。</li>
+<li>你希望使这些继承类与程序其他代码之间的耦合最小化。<br>###使用须知<br>近些年“继承”一词容易被部分程序圈所诟病，原因之一是基类会衍生越来越多的代码。这个模式尤其受这个因素的影响。<br>由于子类是通过他们的基类来完成各自功能的，因此基类最终会与那些需要与其子类交互的任何系统产生耦合。当然，这些子类也与它们的基类密切相关。这个蜘蛛网式的耦合使得无损地改变基类是很困难的——你遇到了脆弱的基类问题。<br>而从另一个角度来说，你所有的耦合都被聚集到了基类，子类现在便与其他部分的代码划清了界限。理想状态下，你的绝大部分操作都在子类中。这意味着你的大量的代码库是独立的，并且更易于维护。<br>如果你仍然发现本模式正把你得基类变得庞大不堪，那么请考虑把一些提供的操作提取到一个基类能够管理的独立的类中。这里组件模式（第14章）能够提供有所帮助。<br>###示例<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Superpower</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~Superpower() &#123;&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">activate</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">move</span><span class="params">(<span class="keyword">double</span> x, <span class="keyword">double</span> y, <span class="keyword">double</span> z)</span></span><br><span class="line">   </span>&#123;</span><br><span class="line">        <span class="comment">// Code here...</span></span><br><span class="line">   &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">playSound</span><span class="params">(SoundId sound)</span></span><br><span class="line">   </span>&#123;</span><br><span class="line">        <span class="comment">// Code here...</span></span><br><span class="line">   &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">spawnParticles</span><span class="params">(ParticleType type, <span class="keyword">int</span> count)</span></span><br><span class="line">   </span>&#123;</span><br><span class="line">        <span class="comment">// Code here...</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>activate()就是沙盒函数。由于它是抽象虚函数，因此子类必须要重写它。这是为了让子类实现着能够明确它们该对power子类做些什么。<br>其他的受保护函数move()、playSound()和spawnParticles()都是所提供的操作。这些就是子类在”activate()”函数实现时能够调用的函数。<br>现在让我们创造一些放射性蜘蛛并创建一个power类。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> SkyLaunch : <span class="keyword">public</span> Superpower</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">activate</span><span class="params">()</span></span><br><span class="line">   </span>&#123;</span><br><span class="line">        move(<span class="number">0</span>,<span class="number">0</span>,<span class="number">20</span>);        <span class="comment">// Spring into the air.</span></span><br><span class="line">        playSound(SOUND_SPROING);</span><br><span class="line">        spawnParticles(PARTICLE_DUST, <span class="number">10</span>);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>同时你可以在基类中定义角色的状态，由于可以访问状态，因此在沙盒函数可以做写实际而有趣的控制流。通过将沙盒方法变成一个可包含任意代码的成熟方法，便可具备无线潜力。</p>
+<p>###设计决策<br>子类沙盒是一个相当“温和”的模式。它描述了一个基本思想，但并没有给出过于详细的机制。这就意味着你每次应用它的时候，将面临一些抉择，大概包括如下的几个问题：</p>
+<p>####需要提供什么操作<br>一个极端看，基类不提供任何操作。为实现它你将不得不调用基类之外的系统。另一个极端是，基类为子类提供所需的所有操作。在这两种极端之间，有一个很宽阔的中间地带。如果你有一堆与外部系统耦合的继承类的话，那么就可以使用这个模式。通过把耦合提取进一个操作方法，你将它们聚集到了一个地方——基类。但是你越是这么做，基类就变得越大且越来越难以维护。<br>因此你该如何做出选择呢？这里有些经验法则：</p>
+<ul>
+<li>如果所提供的操作仅仅被一个或者少数的子类所使用，那么不必将它加入基类。这只会给基类增加复杂度，同时影响每个子类，而仅有少数子类从中受益。</li>
+<li>当你在游戏的其他模块进行某个方法调用时，如果它不修改任何状态，那么它就不具备侵入性。它仍然产生了耦合，但这是个“安全”（加引号因为存在多线程情况下也有可能出错）的耦合，因为在游戏中它不带来任何破坏。而另一个方面，如果这些调用确实改变了状态，则将与代码库产生更大的耦合，你需要对这些耦合更上心。因为此时这些方法更适合由更可视化的基类提供。</li>
+<li>如果提供的操作，其实现仅仅是对一些外部系统调用的二次封装，那么它并没有带来多少价值。在这种情况下，直接调用外部系统更为简单。<br>然而，极其简单的转向调用也扔有用——这些函数通常访问基类不想直接暴露给子类的状态。例如:<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">playSound</span><span class="params">(SoundId sound)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    soundEngine_.play(sound);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>它仅仅转向调用了Superpower中的某个soundEngine_字段。这样的好处是把这个域封装在Superpower，以免子类直接接触它。</p>
+<p>####是直接提供函数，还是由包含它们的对象提供<br>这个设计模式的挑战在于最终你得基类可能塞满了方法。你能够通过转移一些函数到其他类中来缓解这种情况，并与基类的相关操作中返回相应的类对象即可。<br>例如:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Superpower</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">playSound</span><span class="params">(SoundId sound)</span> </span>&#123; <span class="comment">/* Code... */</span>&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">stopSound</span><span class="params">(SoundId sound)</span> </span>&#123; <span class="comment">/* Code... */</span>&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setVolume</span><span class="params">(SoundId sound)</span> </span>&#123; <span class="comment">/* Code... */</span>&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Sandbox method and other operations...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>但是如果superpower已经变得臃肿不堪，那么我们也许想避免这样做。反而，我们创建一个SoundPlayer类来暴露这种功能：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> SoundPlayer</span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">playSound</span><span class="params">(SoundId sound)</span> </span>&#123; <span class="comment">/* Code... */</span>&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">stopSound</span><span class="params">(SoundId sound)</span> </span>&#123; <span class="comment">/* Code... */</span>&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setVolume</span><span class="params">(SoundId sound)</span> </span>&#123; <span class="comment">/* Code... */</span>&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">class</span> Superpower</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="function">SoundPlayer&amp; <span class="title">getSoundPlayer</span><span class="params">()</span></span><br><span class="line">   </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> soundPlayer_;</span><br><span class="line">   &#125;</span><br><span class="line">    <span class="comment">// Sandbox method and other operations...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    SoundPlayer soundPlayer_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>把提供的操作分流到一个像这样的辅助类中能给你带来些好处：</p>
+<ul>
+<li>减少了基类的函数数量。</li>
+<li>在辅助类中的代码通常更容易维护。</li>
+<li>降低了基类和其他系统之间的耦合。这个例子中把音效转移到SoundPlayer中减少了Superpower对单个SoundPlayer类的耦合，SoundPlayer会自行封装其他的依赖关系。<br>####基类如何获取其所需的状态<br>你得基类希望封装一些数据以对子类保持隐藏。在我们的第一个例子中，Superpower类提供了一个spawnParticles()方法。如果这个方法的实现需要一些粒子系统的对象，那么它该如何获得？</li>
+<li><p>把它传递给基类构造函数<br>这安全地保证了每个superpower在它构造的时候能够得到一个例子系统。但是我们来看看子类：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> SkyLaunch : <span class="keyword">public</span> Superpower</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    SkyLaunch(ParticleSystem* particles)</span><br><span class="line">    : Superpower(particles) &#123;&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p> 问题来了。每个子类都需要将一个构造函数来调用基类的构造函数并传入那个粒子系统参数。这样就向每个子类暴露了一些我们并不希望暴露的状态。<br> 这样做也存在维护负担。如果后面为基类添加另一个状态，那么我们不得不修改每个继承类的构造函数来传递它。</p>
+</li>
+<li><p>进行分段初始化<br>为了避免上述问题，我们可以把初始化拆分为两个步骤。构造函数将不带参数，仅仅负责创建对象。然后，我们调用一个直接定义在基类的函数来传递它所需的其他数据。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Superpower* power = <span class="keyword">new</span> SkyLaunch();</span><br><span class="line">power-&gt;init(particles);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将状态静态化<br>我们可以声明这个状态为基类私有成员，同时也是静态的。这样所有power对象都共享了particles_对象。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Superpower</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(ParticleSystem* particles)</span></span><br><span class="line">   </span>&#123;</span><br><span class="line">        particles_ = particles;</span><br><span class="line">   &#125;</span><br><span class="line">    <span class="comment">// Sandbox method and other operations...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> ParticleSystem* particles_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用服务定位器<br>另外一个选择是让基类把它需要的状态拉进去进行处理。一个实现方法是使用服务器定位器模式。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Superpower</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">   <span class="function"><span class="keyword">void</span> <span class="title">spawnParticles</span><span class="params">(ParticleType type, <span class="keyword">int</span> count)</span></span><br><span class="line">   </span>&#123;</span><br><span class="line">        ParticleSystem&amp; particles = Locator::getParticles();</span><br><span class="line">        particles.spawn(type, count);</span><br><span class="line">   &#125;  </span><br><span class="line">    <span class="comment">// Sandbox method and other operations...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/游戏通用技术编程/" rel="tag">#游戏通用技术编程</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/23/GameProgrammingArchitecture_10/" rel="next">游戏编程模式笔记——第十章 更新方法</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2017/09/23/GameProgrammingArchitecture_12/"
+                   data-title="游戏编程模式笔记——第四章 观察者模式" data-url="http://yoursite.com/2017/09/23/GameProgrammingArchitecture_12/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/untitled.png" alt="Lian" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Lian</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/LianLi" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/Lian_Li_Key" target="_blank">twitter</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.weibo.com/u/1233518767/home?wvr=5" target="_blank">weibo</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">朋友们的Blog与微博</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://tokrablog.github.io/" target="_blank">六叠一间的唐吉坷德</a>
+              </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://utopia.pursuitus.com/" target="_blank">Ouroboros</a>
+              </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://millieen.github.io/" target="_blank">GloomyStone</a>
+              </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://weibo.com/u/5874448585" target="_blank">蒸汽姬天团</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lian</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"lianli"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

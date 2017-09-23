@@ -37,16 +37,16 @@
   <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
 
 
-<meta name="description" content="“使用共享以高效地支持大量的细粒度对象。”游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：1234567class TreeModel&amp;#123;    private:        Mesh mesh_;">
+<meta name="description" content="###动机计算机显示器的显示设备在每一时刻仅绘制一个像素。显示设备从左至右地扫描屏幕每行中的像素，并如此从上至下地扫描屏幕上的每一行。当它扫描至屏幕的右下角时，它将重定位至屏幕的左上角并如前述那样地重复扫描屏幕。这一扫描过程如此地快速（大概每秒60次），以至于我们的眼睛无法察觉这一过程。对于我们而言，扫描的结果就是屏幕上一块彩色像素组成的静态区域，即一张图片。在多数计算机中，它从帧缓冲区(fram">
 <meta property="og:type" content="article">
-<meta property="og:title" content="游戏编程模式笔记——第三章 享元模式">
-<meta property="og:url" content="http://yoursite.com/2017/08/06/GameProgrammingArchitecture_3/index.html">
+<meta property="og:title" content="游戏编程模式笔记——第八章 双缓冲">
+<meta property="og:url" content="http://yoursite.com/2017/09/23/GameProgrammingArchitecture_8/index.html">
 <meta property="og:site_name" content="学无止境">
-<meta property="og:description" content="“使用共享以高效地支持大量的细粒度对象。”游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：1234567class TreeModel&amp;#123;    private:        Mesh mesh_;">
-<meta property="og:updated_time" content="2017-09-23T13:56:40.015Z">
+<meta property="og:description" content="###动机计算机显示器的显示设备在每一时刻仅绘制一个像素。显示设备从左至右地扫描屏幕每行中的像素，并如此从上至下地扫描屏幕上的每一行。当它扫描至屏幕的右下角时，它将重定位至屏幕的左上角并如前述那样地重复扫描屏幕。这一扫描过程如此地快速（大概每秒60次），以至于我们的眼睛无法察觉这一过程。对于我们而言，扫描的结果就是屏幕上一块彩色像素组成的静态区域，即一张图片。在多数计算机中，它从帧缓冲区(fram">
+<meta property="og:updated_time" content="2017-09-23T14:08:28.663Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="游戏编程模式笔记——第三章 享元模式">
-<meta name="twitter:description" content="“使用共享以高效地支持大量的细粒度对象。”游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：1234567class TreeModel&amp;#123;    private:        Mesh mesh_;">
+<meta name="twitter:title" content="游戏编程模式笔记——第八章 双缓冲">
+<meta name="twitter:description" content="###动机计算机显示器的显示设备在每一时刻仅绘制一个像素。显示设备从左至右地扫描屏幕每行中的像素，并如此从上至下地扫描屏幕上的每一行。当它扫描至屏幕的右下角时，它将重定位至屏幕的左上角并如前述那样地重复扫描屏幕。这一扫描过程如此地快速（大概每秒60次），以至于我们的眼睛无法察觉这一过程。对于我们而言，扫描的结果就是屏幕上一块彩色像素组成的静态区域，即一张图片。在多数计算机中，它从帧缓冲区(fram">
 
 
 <script type="text/javascript" id="hexo.configuration">
@@ -56,7 +56,7 @@
   };
 </script>
 
-  <title> 游戏编程模式笔记——第三章 享元模式 | 学无止境 </title>
+  <title> 游戏编程模式笔记——第八章 双缓冲 | 学无止境 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -171,7 +171,7 @@
           
           
             
-              游戏编程模式笔记——第三章 享元模式
+              游戏编程模式笔记——第八章 双缓冲
             
           
         </h1>
@@ -180,8 +180,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2017-08-06T04:11:36+08:00" content="2017-08-06">
-            2017-08-06
+          <time itemprop="dateCreated" datetime="2017-09-23T12:11:36+08:00" content="2017-09-23">
+            2017-09-23
           </time>
         </span>
 
@@ -206,8 +206,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2017/08/06/GameProgrammingArchitecture_3/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2017/08/06/GameProgrammingArchitecture_3/" itemprop="commentsCount"></span>
+              <a href="/2017/09/23/GameProgrammingArchitecture_8/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/23/GameProgrammingArchitecture_8/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -221,19 +221,33 @@
       
 
       
-        <span itemprop="articleBody"><p><strong>“使用共享以高效地支持大量的细粒度对象。”</strong><br>游戏中的森林有成千上万的树木，但它们大部分看起来是相似的。它们可能会全部使用相同的网络和纹理数据。这意味着在这些对象实例中，大多数字段都是相同的。<br>很明显，我们可以将对象分割成两个独立的类。首先，我们将所有树木通用的数据放到一个单独的类中：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> TreeModel</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        Mesh mesh_;</span><br><span class="line">        Texture bark_;</span><br><span class="line">        Texture leaves_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>整个游戏只需要一份这样的数据，因为没有理由为相同的网格和纹理分配成千上万份内存。然后，游戏世界中每一颗树的实例都有一个指向共享的TreeModel的引用。Tree类中的其他数据成员用来形成树木之间的差异：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Tree</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        TreeModel* model_;</span><br><span class="line">        Vector position_;</span><br><span class="line">        <span class="keyword">double</span> height_;</span><br><span class="line">        <span class="keyword">double</span> thickness_;</span><br><span class="line">        Color barkTint_;</span><br><span class="line">        Color leafTint_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>为了最大程度地减少发送到GPU上的数据量，我们希望只发送一次共享数据——TreeModel。然后我们再单独地将每棵树实例的特有数据——位置、颜色和缩放比推送到GPU。最后，我们告诉GPU，“使用那个共享的模型来渲染每个实例”。</p>
-<p><strong>享元模式</strong><br>顾名思义，一般来说当你有太多对象并考虑对其进行轻量化时它便能派上用场。<br>享元模式通过将对象数据分成两种类型来解决问题。第一种类型数据是那些不属于单一实例对象并且能够被所有对象共享的数据。GoF将其称为内部状态(the intrinsic state)，但我更喜欢将它认为是“上下文无关”的状态。<br>其他数据便是外部状态(the extrinsic state)，对于每一个实例它们都是唯一的。</p>
-<p>使用瓦片(Tile-based)的技术来构建地面：游戏世界的地面是由许多细小的瓦片组成的巨大的网格。每一个瓦片都由某种地形所覆盖。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> Terrain</span><br><span class="line">&#123;</span><br><span class="line">    TERRAIN_GRASS,</span><br><span class="line">    TERRAIN_HILL,</span><br><span class="line">    TERRAIN_RIVER</span><br><span class="line">    <span class="comment">// Other terrains...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>像下面代码这样实现地形类，是非常值得肯定的:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Terrain</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        Terrain(<span class="keyword">int</span> movementCost, <span class="keyword">bool</span> isWater, Texture texture) :</span><br><span class="line">            moveCost_(moveCost),</span><br><span class="line">            isWater_(isWater),</span><br><span class="line">            texture_(texture)</span><br><span class="line">        &#123;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">int</span> <span class="title">getMoveCost</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> moveCost_; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">bool</span> <span class="title">isWater</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> isWater_; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">const</span> Texture&amp; <span class="title">getTexture</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> texture_; &#125;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        <span class="keyword">int</span> moveCost_;</span><br><span class="line">        <span class="keyword">bool</span> isWater_;</span><br><span class="line">        Texture texture_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>你会发现，瓦片中并没有标志其位置的特殊代码。在享元术语中，地形的所有状态都是“内在的”或者“上下文无关的”。<br>地形实例会被多处使用，如果你是动态地分配它们的话，则它们的生命周期会有些复杂。因为我们直接将他们存储在游戏世界中。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> World</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        World() : grassTerrain_(<span class="number">1</span>, <span class="literal">false</span>, GRASS_TEXTURE),</span><br><span class="line">                        hillTerrain_(<span class="number">3</span>, <span class="literal">false</span>, HILL_TEXTURE),</span><br><span class="line">                        riverTerrain_(<span class="number">2</span>, <span class="literal">true</span>, RIVER_TEXTURE)</span><br><span class="line">        &#123;&#125;</span><br><span class="line">    <span class="keyword">private</span>:</span><br><span class="line">        Terrain grassTerrain_;</span><br><span class="line">        Terrain hillTerrain_;</span><br><span class="line">        Terrain riverTerrain_;</span><br><span class="line">        <span class="comment">// Other stuff...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>现在我们可以像下面一样直接暴露地形对象，而无需访问World类的地形属性。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Terrain&amp; World:: getTitle(<span class="keyword">int</span> x, <span class="keyword">int</span> y) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> *titles_[x][y];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>这样一来，World就不再和地形的各种细节耦合。如果你想得到砖块的某些属性，你可以从砖块对象来获得它。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> cost = world.getTile(<span class="number">2</span>, <span class="number">3</span>).getMovementCost();</span><br></pre></td></tr></table></figure></p>
-<p><strong>性能</strong><br>你需要通过网格中的指针来找到地形对象，然后访问其移动开销。跟踪这样的指针会引起缓存未命中，从而会拖慢速度。<br><strong>参考</strong><br>如果你不能预测哪些是你真正需要的，则最好按需创建它们。<br>这通常意味着在一些用来查找现有对象的接口背后，你必须做些结构上的封装。像这样隐藏构造函数，其中一个例子就是工厂方法模式。</p>
+        <span itemprop="articleBody"><p>###动机<br>计算机显示器的显示设备在每一时刻仅绘制一个像素。显示设备从左至右地扫描屏幕每行中的像素，并如此从上至下地扫描屏幕上的每一行。当它扫描至屏幕的右下角时，它将重定位至屏幕的左上角并如前述那样地重复扫描屏幕。这一扫描过程如此地快速（大概每秒60次），以至于我们的眼睛无法察觉这一过程。对于我们而言，扫描的结果就是屏幕上一块彩色像素组成的静态区域，即一张图片。<br>在多数计算机中，它从帧缓冲区(framebuffer)中获知哪些像素渲染在什么地方这些信息。<br>双缓冲主要是为了解决渲染速度超过写入速度并访问了帧缓冲中哪些未写入的部分，造成了撕裂的BUG。我们的程序一次只渲染一个像素，同时我们要求显示器一次性显示所有的像素。<br>前面的帧缓存用于展示，后面的帧缓存用于写入数据准备下一帧的渲染。</p>
+<p>###模式<br>定义一个帧缓冲区类来封装一个缓冲区：一块能被修改的状态区域。这块缓冲区能被逐步地修改，但我们希望任何外部的代码将对该缓冲区的修改都视为原子操作。为实现这一点，此类中维护两个缓冲区实例：后台缓冲区和当前缓冲区。<br>当要从缓冲区读取信息时，总是从当前缓冲区读取。当要往缓冲区中写入数据时，则总在后台缓冲区上进行。改动完成后，则执行“交换”操作来将当前缓冲区与后台缓冲区进行瞬时的交换。同时刚被换下来的当前缓冲区则成为现在的后台缓冲区以供复用。</p>
+<p>###使用情境<br>下面条件都成立时，适用双缓冲模式：</p>
 <ul>
-<li>为了找到以前创建的享元，你必须追踪哪些你已经实例化过的对象的池(pool)。正如其名，这意味着对象池模式对于存储他们会很有用。</li>
-<li>在使用状态模式时，你经常会拥有一些”状态”对象，对于状态所处的状态机而言它们没有特定的字段。状态的标识和方法也足够有用。在这种情况下，你可以同时在多个状态机中使用这种模式，并且重用这个相同的状态实例并不会带来任何问题。</li>
+<li>我们需要维护一些被逐步改变着的状态量</li>
+<li>同个状态可能会在其被修改的同时被访问到。</li>
+<li>我们希望避免访问状态的代码能看到具体的工作过程。</li>
+<li>我们希望能够读取状态但不希望等待写入操作的完成。<br>###注意事项<br>####交换本身需要时间<br>双缓冲模式需要在状态写入完成后进行一次交换操作，操作必须是原子性的。<br>####我们必须有两份缓冲区<br>这个模式另外一个后果就是增加了内存使用。<br>###示例代码<br>首先是缓冲区本身：<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Framebuffer</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// Constructor and methods...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> WIDTH = <span class="number">160</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> HEIGHT = <span class="number">120</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">char</span> pixels_[WIDTH*HEIGHT];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>缓冲区拥有一些基本操作：将整个缓冲区清理为默认颜色，对指定位置的像素颜色值进行设置。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Framebuffer::clear()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; WIDTH * HEIGHT; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        pixels_[i] = WHITE;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> Framebuffer::draw(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span><br><span class="line">&#123;</span><br><span class="line">    pixels_[(WIDTH * y) +x] = BLACK;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>还包含了getPixels()函数，用于暴露给外部以访问缓冲区持有的整个原始像素数组:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* Framebuffer::getPixels()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> pixels_;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>显卡驱动可以在任何时刻对缓冲区调用getPixels()，对用户来说，部分的图像还在，但是这一帧的其他图像丢失了，下一帧可能又是其他部分的图像受到干扰，结果就是可怕的频闪图像。我们可以用双缓冲来修正它：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Scene</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Scene() : current_(&amp;buffers_[<span class="number">0</span>]), next_(&amp;buffers[<span class="number">1</span>]) &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span></span><br><span class="line">   </span>&#123;</span><br><span class="line">        next_-&gt;clear();</span><br><span class="line">        next_-&gt;draw(<span class="number">1</span>,<span class="number">1</span>);</span><br><span class="line">        <span class="comment">//...</span></span><br><span class="line">        next_-&gt;draw(<span class="number">4</span>,<span class="number">3</span>);</span><br><span class="line">        swap();</span><br><span class="line">   &#125;</span><br><span class="line">    <span class="function">Framebuffer&amp; <span class="title">getBuffer</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> *current_; &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="comment">// Just switch the pointers.</span></span><br><span class="line">        Framebuffer* temp = current_;</span><br><span class="line">        current_ = next_;</span><br><span class="line">        next_ = temp;</span><br><span class="line">   &#125;</span><br><span class="line">    Framebuffer buffers_[<span class="number">2</span>];</span><br><span class="line">    Framebuffer* current_;</span><br><span class="line">    Framebuffer* next_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>当下一次显卡调用getBuffer()函数时，它将获取到我们刚刚完成绘制的那块新的缓冲区，并将其内容绘制到屏幕上。</p>
+<p>####并非只针对图形<br>我们已经通过上述图形示例描述了第一种情况——状态直接被另一个线程或中断的代码所直接访问。<br>而另一种情况同样很常见：进行状态修改的代码访问到了其正在修改的那个状态。这会在很多地方发生：尤其是实体的AI和物理部分，在它与其他实体进行交互时会发生这样的情况，双缓冲模式往往在此情形下奏效。</p>
+<p>####缓冲区如何交换<br>为达到最优性能，我们希望这个过程越快越好。<br><strong>交换缓冲区指针或者引用</strong></p>
+<ul>
+<li>这很快。无论缓冲区多大，交换的只是一对指针的赋值。</li>
+<li>外部代码无法存储指向某块缓冲区的持久化指针。这是该方法主要的约束。</li>
+<li>缓冲区中现存的数据会来自两帧之前而不是上一帧。</li>
+</ul>
+<p><strong>在两个缓冲区之间进行数据的拷贝</strong><br>假如我们无法对缓冲区进行指针重定向，那么唯一的办法就是将数据从后台缓冲区实实在在地拷贝到当前缓冲区。对于简单的数据结构（比如布尔值）而言，这不会花费比复制指向缓冲区的指针更多的时间。</p>
+<ul>
+<li>位于后台缓冲区里的数据与当前的数据就只差一帧时间。</li>
+<li>交换操作可能会花去更多的时间。<br>####缓冲区的粒度如何</li>
+<li>假如缓冲区是单个整体<br>交换操作很简单，因为全局只有一对缓冲区，只需要进行一次交换操作。</li>
+<li>假如许多对象都持有一块数据<br>交换较慢。为实现交换，我们需要遍历对象集合并通知每个对象进行交换。</li>
 </ul>
 </span>
       
@@ -252,13 +266,13 @@
         <div class="post-nav">
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/09/23/GameProgrammingArchitecture_4/" rel="prev">游戏编程模式笔记——第四章 观察者模式</a>
+              <a href="/2017/09/23/GameProgrammingArchitecture_9/" rel="prev">游戏编程模式笔记——第四章 观察者模式</a>
             
           </div>
 
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/06/GameProgrammingArchitecture_2/" rel="next">游戏编程模式笔记——第二章 命令模式</a>
+              <a href="/2017/09/23/GameProgrammingArchitecture_7/" rel="next">游戏编程模式笔记——第七章 状态模式</a>
             
           </div>
         </div>
@@ -283,8 +297,8 @@
         
           <div class="comments" id="comments">
             
-              <div class="ds-thread" data-thread-key="2017/08/06/GameProgrammingArchitecture_3/"
-                   data-title="游戏编程模式笔记——第三章 享元模式" data-url="http://yoursite.com/2017/08/06/GameProgrammingArchitecture_3/">
+              <div class="ds-thread" data-thread-key="2017/09/23/GameProgrammingArchitecture_8/"
+                   data-title="游戏编程模式笔记——第八章 双缓冲" data-url="http://yoursite.com/2017/09/23/GameProgrammingArchitecture_8/">
               </div>
             
           </div>

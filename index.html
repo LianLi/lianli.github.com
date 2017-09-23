@@ -172,8 +172,8 @@
           
           
             
-              <a class="post-title-link" href="/2017/08/06/GameProgrammingArchitecture_1/" itemprop="url">
-                游戏编程模式笔记——第一章 架构、性能和游戏
+              <a class="post-title-link" href="/2017/09/23/GameProgrammingArchitecture_12/" itemprop="url">
+                游戏编程模式笔记——第四章 观察者模式
               </a>
             
           
@@ -183,8 +183,8 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2017-08-06T02:11:36+08:00" content="2017-08-06">
-            2017-08-06
+          <time itemprop="dateCreated" datetime="2017-09-23T15:11:36+08:00" content="2017-09-23">
+            2017-09-23
           </time>
         </span>
 
@@ -209,8 +209,8 @@
           
             <span class="post-comments-count">
               &nbsp; | &nbsp;
-              <a href="/2017/08/06/GameProgrammingArchitecture_1/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2017/08/06/GameProgrammingArchitecture_1/" itemprop="commentsCount"></span>
+              <a href="/2017/09/23/GameProgrammingArchitecture_12/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/23/GameProgrammingArchitecture_12/" itemprop="commentsCount"></span>
               </a>
             </span>
           
@@ -227,13 +227,756 @@
         
           <span itemprop="articleBody">
             
-            衡量一个设计好坏的方法就是看它应对变化的灵活性。
-我们如何从解耦中受益如果两块代码耦合，意味着你必须同时了解这两块代码，如果你让它们解耦，那么你只需了解其一。对我来说，这是软件架构的一个关键目标：在你前进前，最小化你脑海中的知识存储量。
-将一款有趣的游戏做得高效要比将一款高性能的游戏做的有趣更简单些
+            “使用基类提供的操作集合来定义子类中的行为。”
+###动机每个孩子都有一个超级英雄梦，但是理想很丰满，现实很骨感。玩游戏或许是令你成为超级英雄的最佳途径。因为游戏设计师从来不会说“不”，我们的超级英雄游戏目标是提供成百上千种不同的超能力以供玩家选择。我们的计划是建立一个Superpower基类，然后
             ...
           </span>
           <div class="post-more-link text-center">
-            <a class="btn" href="/2017/08/06/GameProgrammingArchitecture_1/#more" rel="contents">
+            <a class="btn" href="/2017/09/23/GameProgrammingArchitecture_12/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2017/09/23/GameProgrammingArchitecture_10/" itemprop="url">
+                游戏编程模式笔记——第十章 更新方法
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-09-23T14:11:36+08:00" content="2017-09-23">
+            2017-09-23
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/游戏通用技术编程/" itemprop="url" rel="index">
+                  <span itemprop="name">游戏通用技术编程</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/09/23/GameProgrammingArchitecture_10/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/23/GameProgrammingArchitecture_10/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            通过对所有对象实例同时进行帧更新来模拟一系列相互独立的游戏对象。
+###动机它要为游戏中的每个实体封装其自身的行为。这将使游戏循环保持整洁并便于往循环中增加或移除实体。为了做到这一点，我们需第十章 更新方法.md要一个抽象层，为此定义一个update()的抽象方法。游戏循环维护对象集合，但它并不关心
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/09/23/GameProgrammingArchitecture_10/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2017/09/23/GameProgrammingArchitecture_11/" itemprop="url">
+                游戏编程模式笔记——第十一章 字节码
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-09-23T14:11:36+08:00" content="2017-09-23">
+            2017-09-23
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/游戏通用技术编程/" itemprop="url" rel="index">
+                  <span itemprop="name">游戏通用技术编程</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/09/23/GameProgrammingArchitecture_11/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/23/GameProgrammingArchitecture_11/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            通过将行为编码成虚拟机指令，而使其具备数据的灵活性。
+###动机任何的对游戏进行更新修改，都需要进行重新编译，这会浪费更多的时间，同时如果要支持mod，那么就必须要开放源码给玩家，同时确保玩家的代码不会出错，这是很糟糕的设计。我们需要把类似法术从游戏核心转移到安全沙箱中。我们要让它们易于修改，易于重
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/09/23/GameProgrammingArchitecture_11/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2017/09/23/GameProgrammingArchitecture_9/" itemprop="url">
+                游戏编程模式笔记——第四章 观察者模式
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-09-23T13:11:36+08:00" content="2017-09-23">
+            2017-09-23
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/游戏通用技术编程/" itemprop="url" rel="index">
+                  <span itemprop="name">游戏通用技术编程</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/09/23/GameProgrammingArchitecture_9/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/23/GameProgrammingArchitecture_9/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            把批处理代码丢给计算机，离开几个小时后再回来查看结果的方式，在程序排错上简直慢得可怕。他们需要即时反馈——于是交互式编程诞生了。真实的游戏循环的第一个关键点：它处理用户的输入，但并不等待输入。游戏循环始终在运转：123456while(true)&#123;    processInput();  
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/09/23/GameProgrammingArchitecture_9/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2017/09/23/GameProgrammingArchitecture_8/" itemprop="url">
+                游戏编程模式笔记——第八章 双缓冲
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-09-23T12:11:36+08:00" content="2017-09-23">
+            2017-09-23
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/游戏通用技术编程/" itemprop="url" rel="index">
+                  <span itemprop="name">游戏通用技术编程</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/09/23/GameProgrammingArchitecture_8/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/23/GameProgrammingArchitecture_8/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            ###动机计算机显示器的显示设备在每一时刻仅绘制一个像素。显示设备从左至右地扫描屏幕每行中的像素，并如此从上至下地扫描屏幕上的每一行。当它扫描至屏幕的右下角时，它将重定位至屏幕的左上角并如前述那样地重复扫描屏幕。这一扫描过程如此地快速（大概每秒60次），以至于我们的眼睛无法察觉这一过程。对于我们而言
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/09/23/GameProgrammingArchitecture_8/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2017/09/23/GameProgrammingArchitecture_7/" itemprop="url">
+                游戏编程模式笔记——第七章 状态模式
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-09-23T11:11:36+08:00" content="2017-09-23">
+            2017-09-23
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/游戏通用技术编程/" itemprop="url" rel="index">
+                  <span itemprop="name">游戏通用技术编程</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/09/23/GameProgrammingArchitecture_7/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/23/GameProgrammingArchitecture_7/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+             “允许一个对象在其内部状态改变时改变自身的行为。对象看起来好像事在修改自身类。”有限状态机借鉴了计算机里的自动机理论中的一种数据结构思想。有限状态机可以看作是最简单的图灵机。
+
+你拥有一组状态，并且可以在这组状态之间进行切换。
+状态机同一时刻只能处于一种状态。
+状态机会接受一组输入或者事件。
+每一
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/09/23/GameProgrammingArchitecture_7/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2017/09/23/GameProgrammingArchitecture_6/" itemprop="url">
+                游戏编程模式笔记——第六章 单例模式
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-09-23T10:11:36+08:00" content="2017-09-23">
+            2017-09-23
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/游戏通用技术编程/" itemprop="url" rel="index">
+                  <span itemprop="name">游戏通用技术编程</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/09/23/GameProgrammingArchitecture_6/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/23/GameProgrammingArchitecture_6/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            ”确保一个类只有一个实例，并为其提供一个全局访问入口。“尽管单例模式的出发点是好的，但在GOF对单例模式的描述中，它通常弊大于利。他们一再强调应当谨慎使用该模式——然而当其应用于游戏产业中时，这一点却往往被忽略了。与任何模式一样，在不合适的地方使用单例模式，就像药不对症，不过首先，我们来看看模式本身
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/09/23/GameProgrammingArchitecture_6/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2017/09/23/GameProgrammingArchitecture_5/" itemprop="url">
+                游戏编程模式笔记——第五章 原型模式
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-09-23T09:11:36+08:00" content="2017-09-23">
+            2017-09-23
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/游戏通用技术编程/" itemprop="url" rel="index">
+                  <span itemprop="name">游戏通用技术编程</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/09/23/GameProgrammingArchitecture_5/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/23/GameProgrammingArchitecture_5/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            “使用特定原型实例来创建特定种类的对象，并且通过拷贝原型来创建新的对象。”
+原型设计模式我们游戏里面有3种怪物类型——幽灵、恶魔和术士。原型模式提供了一种解决方案，其核心思想是一个对象可以生成与自身相似的其他对象。如果你有一个幽灵，则你可以通过这个幽灵制作出更多的幽灵。如果你有一个魔鬼，那你就能制作
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/09/23/GameProgrammingArchitecture_5/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              <a class="post-title-link" href="/2017/09/23/GameProgrammingArchitecture_4/" itemprop="url">
+                游戏编程模式笔记——第四章 观察者模式
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-09-23T08:11:36+08:00" content="2017-09-23">
+            2017-09-23
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/游戏通用技术编程/" itemprop="url" rel="index">
+                  <span itemprop="name">游戏通用技术编程</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/09/23/GameProgrammingArchitecture_4/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/23/GameProgrammingArchitecture_4/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+            “在对象间定义一种一对多的依赖关系，以便当某对象的状态发生改变时，与它存在依赖关系的所有对象都能收到通知并自动进行更新。”在计算机上随便打开一个应用，它很有可能就是采用Model-View-Controller架构开发，而其底层就是观察者模式。观察者模式应用非常广泛，Java甚至直接把它集成到了系统
+            ...
+          </span>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2017/09/23/GameProgrammingArchitecture_4/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -277,7 +1020,7 @@
       <div class="post-meta">
         <span class="post-time">
           发表于
-          <time itemprop="dateCreated" datetime="2017-08-06T02:11:36+08:00" content="2017-08-06">
+          <time itemprop="dateCreated" datetime="2017-08-06T04:11:36+08:00" content="2017-08-06">
             2017-08-06
           </time>
         </span>
@@ -347,364 +1090,13 @@
 
 
     
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2017/08/06/GameProgrammingArchitecture_2/" itemprop="url">
-                游戏编程模式笔记——第二章 命令模式
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2017-08-06T02:11:36+08:00" content="2017-08-06">
-            2017-08-06
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/游戏通用技术编程/" itemprop="url" rel="index">
-                  <span itemprop="name">游戏通用技术编程</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2017/08/06/GameProgrammingArchitecture_2/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2017/08/06/GameProgrammingArchitecture_2/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            将一个请求（request）封装成一个对象，从而允许你使用不同的请求、队列或日志将客户端参数化，同时支持请求操作的撤销与修复。
-命令就是一个对象化（实例化）的方法调用(A command is reified method call)。“reified”一词，意即“具象化”(make real)。另
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2017/08/06/GameProgrammingArchitecture_2/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/12/09/UnityAdanvecd/" itemprop="url">
-                Unity3D代码优化技巧
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-12-09T01:15:36+08:00" content="2015-12-09">
-            2015-12-09
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Unity3D/" itemprop="url" rel="index">
-                  <span itemprop="name">Unity3D</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2015/12/09/UnityAdanvecd/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/09/UnityAdanvecd/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            其实我经常在工作场合里面听到有人跟我说：”这个代码能用就行了，能跑通就OK了“。其实我觉得这种想法对于个人长远发展来说是不对的，在我看来，好的程序员的素质除了会懂的给自己节省时间做更有意义的事情之外（其实就是偷懒），另外一个体现素质的地方，就是他对于代码的要求很高，体现一个程序员素质的地方不止于他懂
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/12/09/UnityAdanvecd/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/09/28/UnityHotUpdate/" itemprop="url">
-                Unity3D资源代码更新技术——在5.0版本之前
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-09-28T23:11:36+08:00" content="2015-09-28">
-            2015-09-28
-          </time>
-        </span>
-
-        
-          <span class="post-category" >
-            &nbsp; | &nbsp; 分类于
-            
-              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                <a href="/categories/Unity3D/" itemprop="url" rel="index">
-                  <span itemprop="name">Unity3D</span>
-                </a>
-              </span>
-
-              
-              
-
-            
-          </span>
-        
-
-        
-          
-            <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2015/09/28/UnityHotUpdate/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/28/UnityHotUpdate/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            所谓资源代码更新，就是当我们重启游戏的时候，游戏会根据当前服务器版本与客户端版本下载更新资源。游戏里面经常会使用到资源更新技术，特别是对于国内的手游以及端游，而国内经常会用热更新(Hot Update)指代这种技术，其实这种形容是不准确的。因为热更新是在不重启游戏的情况下更新资源与代码，而目前大部分
-            ...
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/09/28/UnityHotUpdate/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      
-      
-        <h1 class="post-title" itemprop="name headline">
-          
-          
-            
-              <a class="post-title-link" href="/2015/09/20/helloHexo/" itemprop="url">
-                helloHexo
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          发表于
-          <time itemprop="dateCreated" datetime="2015-09-20T20:54:41+08:00" content="2015-09-20">
-            2015-09-20
-          </time>
-        </span>
-
-        
-
-        
-          
-            <span class="post-comments-count">
-              &nbsp; | &nbsp;
-              <a href="/2015/09/20/helloHexo/#comments" itemprop="discussionUrl">
-                <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/20/helloHexo/" itemprop="commentsCount"></span>
-              </a>
-            </span>
-          
-        
-      </div>
-    </header>
-
-    <div class="post-body">
-
-      
-      
-
-      
-        
-          <span itemprop="articleBody">
-            
-            今天开通了自己的技术BLOG，希望通过这个BLOG能跟大家进行技术交流，也请大家多多指教。后续会更新一些自己工作以来的一些在开发上遇到的一些问题以及心得，如果文章内容有相关错误欢迎指正。
-
-            
-          </span>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/09/20/helloHexo/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">&raquo;</a>
+  </nav>
+
  </div>
 
         
@@ -736,7 +1128,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">15</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
