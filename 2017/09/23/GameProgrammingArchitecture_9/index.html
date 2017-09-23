@@ -45,7 +45,7 @@
 <meta property="og:site_name" content="学无止境">
 <meta property="og:description" content="把批处理代码丢给计算机，离开几个小时后再回来查看结果的方式，在程序排错上简直慢得可怕。他们需要即时反馈——于是交互式编程诞生了。真实的游戏循环的第一个关键点：它处理用户的输入，但并不等待输入。游戏循环始终在运转：123456while(true)&amp;#123;    processInput();    update();    render();&amp;#125;
 游戏循环模式的另一个要点：这一模式让游">
-<meta property="og:updated_time" content="2017-09-23T14:13:23.383Z">
+<meta property="og:updated_time" content="2017-09-23T14:31:16.429Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="游戏编程模式笔记——第九章 游戏循环">
 <meta name="twitter:description" content="把批处理代码丢给计算机，离开几个小时后再回来查看结果的方式，在程序排错上简直慢得可怕。他们需要即时反馈——于是交互式编程诞生了。真实的游戏循环的第一个关键点：它处理用户的输入，但并不等待输入。游戏循环始终在运转：123456while(true)&amp;#123;    processInput();    update();    render();&amp;#125;
@@ -226,13 +226,12 @@
       
         <span itemprop="articleBody"><p>把批处理代码丢给计算机，离开几个小时后再回来查看结果的方式，在程序排错上简直慢得可怕。他们需要即时反馈——于是交互式编程诞生了。<br>真实的游戏循环的第一个关键点：它处理用户的输入，但并不等待输入。游戏循环始终在运转：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">&#123;</span><br><span class="line">    processInput();</span><br><span class="line">    update();</span><br><span class="line">    render();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>游戏循环模式的另一个要点：这一模式让游戏在一个与硬件无关的速度常量下运行。</p>
-<p>###模式<br>一个游戏循环会在游戏过程中持续地运转。每循环一次，它非阻塞地处理用户的输入，更新游戏状态，并渲染游戏。它跟踪流逝的时间并控制游戏的速率。</p>
-<p>###使用情境<br>任何游戏里面都可以使用到它。</p>
-<p>###使用须知<br>你可能需要和操作系统的事件循环进行协调。</p>
-<p>###示例代码</p>
-<p>####跑，能跑多快就跑多快<br>我们已经看到最简单的游戏循环，它的问题在于你无法控制游戏运转的快慢。在较快的机器上游戏循环可能会快得令玩家看不清游戏在做什么，在慢的机器上游戏则会变慢变卡。</p>
-<p>####小睡一会儿<br>假如你希望让游戏以60帧/秒运行，也就是说你大概有16毫秒的时间来处理每一帧。假如你确实能够在这16毫秒以内进行所有的游戏更新与渲染工作，那么你就可以以一个稳定的帧率来跑游戏。你所需要做的就是处理这一帧，接着等待下一帧的到来。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">double</span> start = getCurrentTime();</span><br><span class="line">    processInput();</span><br><span class="line">    update();</span><br><span class="line">    render();</span><br><span class="line">    </span><br><span class="line">    sleep(start + MS_PER_FRAME - getCurrentTime());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>####小改动，大进步<br>我们目前的问题可以归结为：</p>
+<h3 id="模式">模式</h3><p>一个游戏循环会在游戏过程中持续地运转。每循环一次，它非阻塞地处理用户的输入，更新游戏状态，并渲染游戏。它跟踪流逝的时间并控制游戏的速率。</p>
+<h3 id="使用情境">使用情境</h3><p>任何游戏里面都可以使用到它。</p>
+<h3 id="使用须知">使用须知</h3><p>你可能需要和操作系统的事件循环进行协调。</p>
+<h3 id="示例代码">示例代码</h3><h4 id="跑，能跑多快就跑多快">跑，能跑多快就跑多快</h4><p>我们已经看到最简单的游戏循环，它的问题在于你无法控制游戏运转的快慢。在较快的机器上游戏循环可能会快得令玩家看不清游戏在做什么，在慢的机器上游戏则会变慢变卡。</p>
+<h4 id="小睡一会儿">小睡一会儿</h4><p>假如你希望让游戏以60帧/秒运行，也就是说你大概有16毫秒的时间来处理每一帧。假如你确实能够在这16毫秒以内进行所有的游戏更新与渲染工作，那么你就可以以一个稳定的帧率来跑游戏。你所需要做的就是处理这一帧，接着等待下一帧的到来。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">double</span> start = getCurrentTime();</span><br><span class="line">    processInput();</span><br><span class="line">    update();</span><br><span class="line">    render();</span><br><span class="line">    </span><br><span class="line">    sleep(start + MS_PER_FRAME - getCurrentTime());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="小改动，大进步">小改动，大进步</h4><p>我们目前的问题可以归结为：</p>
 <ul>
 <li>每次更新游戏花去一个固定的时间值。</li>
 <li><p>需要花些实际的时间来进行更新。<br>假如第二步的时间长于第一步，那么游戏就会变慢。那么我们可以不那么频繁地更新游戏并且能够追赶上游戏的进行速度。<br>具体想法是计算这一帧距离上一帧的实际时间间隔以作为更新步长。帧处理花费的实际时间越长，这个步长也就越长。这个办法使得游戏总会越来越接近于实际时间。他们称此为变值时间步长（或者浮动时间步长）</p>
@@ -243,12 +242,12 @@
 <li>高端机器的玩家能够得到一个更流畅的游戏体验。</li>
 </ul>
 <p>但存在一个严重的潜在问题：我们使得游戏变得不确定且不稳定。物理引擎也将变得不稳定。</p>
-<p>####把时间追回来<br>渲染，通常是游戏引擎中不会变时步长影响的部分。由于渲染引擎表现的是游戏时间中的一瞬间，所以它并不关心距离上次渲染过去了多少时间。它只是把当前的游戏状态渲染出来而已。<br>这一事实可以利用。我们将使用固定时长更新，因为它使得物理引擎和AI都更加稳定。但我们允许在渲染的时候进行一些灵活的调整以释放一些处理器时间。<br>它像这样运作：距离上次的游戏循环已经过去了一段真实的时间。这一段时间就是我们需要模拟游戏的“当前时间”，以便赶上玩家的实际时间。我们通过一系列的固定步长来实现它。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> previous = getCurrentTime();</span><br><span class="line"><span class="keyword">double</span> lag = <span class="number">0.0</span>;</span><br><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">double</span> current = getCurrentTime();</span><br><span class="line">    <span class="keyword">double</span> elapsed = current - previous;</span><br><span class="line">    previous = current;</span><br><span class="line">    lag += elapsed;</span><br><span class="line">    processInput();</span><br><span class="line">    <span class="keyword">while</span>( lag &gt;= MS_PER_UPDATE )</span><br><span class="line">   &#123;</span><br><span class="line">        update();</span><br><span class="line">        lag -= MS_PER_UPDATE;</span><br><span class="line">   &#125;</span><br><span class="line">    render();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="把时间追回来">把时间追回来</h4><p>渲染，通常是游戏引擎中不会变时步长影响的部分。由于渲染引擎表现的是游戏时间中的一瞬间，所以它并不关心距离上次渲染过去了多少时间。它只是把当前的游戏状态渲染出来而已。<br>这一事实可以利用。我们将使用固定时长更新，因为它使得物理引擎和AI都更加稳定。但我们允许在渲染的时候进行一些灵活的调整以释放一些处理器时间。<br>它像这样运作：距离上次的游戏循环已经过去了一段真实的时间。这一段时间就是我们需要模拟游戏的“当前时间”，以便赶上玩家的实际时间。我们通过一系列的固定步长来实现它。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> previous = getCurrentTime();</span><br><span class="line"><span class="keyword">double</span> lag = <span class="number">0.0</span>;</span><br><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">double</span> current = getCurrentTime();</span><br><span class="line">    <span class="keyword">double</span> elapsed = current - previous;</span><br><span class="line">    previous = current;</span><br><span class="line">    lag += elapsed;</span><br><span class="line">    processInput();</span><br><span class="line">    <span class="keyword">while</span>( lag &gt;= MS_PER_UPDATE )</span><br><span class="line">   &#123;</span><br><span class="line">        update();</span><br><span class="line">        lag -= MS_PER_UPDATE;</span><br><span class="line">   &#125;</span><br><span class="line">    render();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>常量MS_PER_UPDATE只是我们更新游戏的间隔。间隔越大，游戏跳帧越明显。但要注意的是被让它过短，你必须保证这个时间步长大于每次update()函数的处理时间。<br>我们给予了自己一些喘息的空间。通过将渲染拉出更新循环之外来实现这一点。</p>
-<p>####留在两帧之间<br>还有一个问题，就是残留的延迟。渲染有可能在两次更新之间。当进行渲染时，我们将其传入：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">render(lag / MS_PER_UPDATE);</span><br></pre></td></tr></table></figure></p>
+<h4 id="留在两帧之间">留在两帧之间</h4><p>还有一个问题，就是残留的延迟。渲染有可能在两次更新之间。当进行渲染时，我们将其传入：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">render(lag / MS_PER_UPDATE);</span><br></pre></td></tr></table></figure></p>
 <p>这样在绘制的时候，就可以知道物体偏移的值为多少，可以准确描绘出物体的位置。</p>
-<p>###设计决策<br>你可能需要考虑这些问题。</p>
-<p>####1. 谁来控制游戏循环，你还是平台<br><strong>使用平台的事件循环</strong></p>
+<h3 id="设计决策">设计决策</h3><p>你可能需要考虑这些问题。</p>
+<h4 id="1-_谁来控制游戏循环，你还是平台">1. 谁来控制游戏循环，你还是平台</h4><p><strong>使用平台的事件循环</strong></p>
 <ul>
 <li>你无需担心游戏核心循环的代码和优化问题。</li>
 <li>它与平台协作得很好。无需担心它何时处理事件，如何捕获事件，或者如何处理平台与你输入模型之间不匹配的问题等。</li>
@@ -262,9 +261,15 @@
 <p><strong>自己编写游戏循环</strong></p>
 <ul>
 <li>掌控一切。</li>
-<li>你需要实现平台的接口。<br>####2. 你如何解决能量损耗<br>移动平台的发展需要你考虑不但要让你的游戏看来很棒，并且应尽可能地减少CPU的使用率。当完成了一帧中需要处理的所有工作时，你可能需要一个性能的上限来控制CPU进行休眠。</li>
+<li>你需要实现平台的接口。</li>
+</ul>
+<h4 id="2-_你如何解决能量损耗">2. 你如何解决能量损耗</h4><p>移动平台的发展需要你考虑不但要让你的游戏看来很棒，并且应尽可能地减少CPU的使用率。当完成了一帧中需要处理的所有工作时，你可能需要一个性能的上限来控制CPU进行休眠。</p>
+<ul>
 <li>让它能跑多快跑多快。<br>你最好只在PC游戏上这么做。这样一来，任何空余的循环都要用于避免FPS或者图形保真度的不稳定。这可能给予你最好的游戏体验，但它会消耗更多的电量。</li>
-<li>限制帧率<br>设置帧率上限（30 FPS或60 FPS）假如游戏循环在本时间片内已经完成了处理，那么剩余的时间它将休眠。<br>这给予了玩家一个足够好的体验并帮他们节省了电池能耗。<br>####3. 如何控制游戏速度<br>游戏循环有两个关键部分：非阻塞的用户输入和帧时间适配。<br><strong>非同步的固定时间步长</strong></li>
+<li>限制帧率<br>设置帧率上限（30 FPS或60 FPS）假如游戏循环在本时间片内已经完成了处理，那么剩余的时间它将休眠。<br>这给予了玩家一个足够好的体验并帮他们节省了电池能耗。</li>
+</ul>
+<h4 id="3-_如何控制游戏速度">3. 如何控制游戏速度</h4><p>游戏循环有两个关键部分：非阻塞的用户输入和帧时间适配。<br><strong>非同步的固定时间步长</strong></p>
+<ul>
 <li>简单。</li>
 <li>游戏速度直接受硬件和游戏复杂度的影响。其主要缺点是假如出现任何变化，将直接影响游戏速度。游戏速度受游戏循环影响。</li>
 </ul>
@@ -449,7 +454,7 @@
           <div class="post-toc">
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#模式"><span class="nav-number">1.</span> <span class="nav-text">模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用情境"><span class="nav-number">2.</span> <span class="nav-text">使用情境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用须知"><span class="nav-number">3.</span> <span class="nav-text">使用须知</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#示例代码"><span class="nav-number">4.</span> <span class="nav-text">示例代码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#跑，能跑多快就跑多快"><span class="nav-number">4.1.</span> <span class="nav-text">跑，能跑多快就跑多快</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#小睡一会儿"><span class="nav-number">4.2.</span> <span class="nav-text">小睡一会儿</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#小改动，大进步"><span class="nav-number">4.3.</span> <span class="nav-text">小改动，大进步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#把时间追回来"><span class="nav-number">4.4.</span> <span class="nav-text">把时间追回来</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#留在两帧之间"><span class="nav-number">4.5.</span> <span class="nav-text">留在两帧之间</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设计决策"><span class="nav-number">5.</span> <span class="nav-text">设计决策</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-_谁来控制游戏循环，你还是平台"><span class="nav-number">5.1.</span> <span class="nav-text">1. 谁来控制游戏循环，你还是平台</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-_你如何解决能量损耗"><span class="nav-number">5.2.</span> <span class="nav-text">2. 你如何解决能量损耗</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-_如何控制游戏速度"><span class="nav-number">5.3.</span> <span class="nav-text">3. 如何控制游戏速度</span></a></li></ol></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator"></div>
