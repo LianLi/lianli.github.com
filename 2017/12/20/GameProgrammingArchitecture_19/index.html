@@ -1,0 +1,736 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+
+
+  <meta name="keywords" content="游戏通用技术编程," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="“使用固定的对象池重用对象，取代单独地分配和释放对象，以此来达到提升性能和优化内存使用的目的。”
+动机一个魔棒就会生成数以百计的粒子，所以我们的系统需要非常快速地生成它们。更重要的是，我们需要确保创建和销毁它们时不会产生内存碎片。
+碎片化的害处为游戏机和移动设备编程在多方面都比传统的PC编程更接近于嵌入式编程。就像嵌入式编程一样，内存是稀缺的，用户希望游戏稳定运行，但是极少有高效的内存压缩管理器可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="游戏编程模式笔记——第十九章 对象池">
+<meta property="og:url" content="http://yoursite.com/2017/12/20/GameProgrammingArchitecture_19/index.html">
+<meta property="og:site_name" content="学无止境">
+<meta property="og:description" content="“使用固定的对象池重用对象，取代单独地分配和释放对象，以此来达到提升性能和优化内存使用的目的。”
+动机一个魔棒就会生成数以百计的粒子，所以我们的系统需要非常快速地生成它们。更重要的是，我们需要确保创建和销毁它们时不会产生内存碎片。
+碎片化的害处为游戏机和移动设备编程在多方面都比传统的PC编程更接近于嵌入式编程。就像嵌入式编程一样，内存是稀缺的，用户希望游戏稳定运行，但是极少有高效的内存压缩管理器可">
+<meta property="og:updated_time" content="2018-01-27T02:38:35.825Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="游戏编程模式笔记——第十九章 对象池">
+<meta name="twitter:description" content="“使用固定的对象池重用对象，取代单独地分配和释放对象，以此来达到提升性能和优化内存使用的目的。”
+动机一个魔棒就会生成数以百计的粒子，所以我们的系统需要非常快速地生成它们。更重要的是，我们需要确保创建和销毁它们时不会产生内存碎片。
+碎片化的害处为游戏机和移动设备编程在多方面都比传统的PC编程更接近于嵌入式编程。就像嵌入式编程一样，内存是稀缺的，用户希望游戏稳定运行，但是极少有高效的内存压缩管理器可">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> 游戏编程模式笔记——第十九章 对象池 | 学无止境 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">学无止境</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              游戏编程模式笔记——第十九章 对象池
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-12-20T15:11:36+08:00" content="2017-12-20">
+            2017-12-20
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/游戏通用技术编程/" itemprop="url" rel="index">
+                  <span itemprop="name">游戏通用技术编程</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/12/20/GameProgrammingArchitecture_19/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/12/20/GameProgrammingArchitecture_19/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>“使用固定的对象池重用对象，取代单独地分配和释放对象，以此来达到提升性能和优化内存使用的目的。”</p>
+<h3 id="动机">动机</h3><p>一个魔棒就会生成数以百计的粒子，所以我们的系统需要非常快速地生成它们。更重要的是，我们需要确保创建和销毁它们时不会产生内存碎片。</p>
+<h4 id="碎片化的害处">碎片化的害处</h4><p>为游戏机和移动设备编程在多方面都比传统的PC编程更接近于嵌入式编程。就像嵌入式编程一样，内存是稀缺的，用户希望游戏稳定运行，但是极少有高效的内存压缩管理器可以使用。在这样的环境下，内存碎片往往是致命的。<br>碎片化意味着我们空闲的堆空间分裂成了许多小的内存碎片，而不是一整块连续的内存块。或许这些小碎片构成的可访问内存总量很大，但其中最长的、连续的区域却小得可怜。假如我们有14字节的空闲空间，但它被一段已使用内存分割为了两个7字节的字段。假如我们尝试分配一个12字节的对象，那么便会失败。<br>大多数游戏制造商都要求游戏通过“侵泡测试”(“soak tests”)——他们将游戏置于demo模式连续地跑上好几天。多数情况下，碎片化的扩张或者内存泄露才是导致游戏宕机的原因。<br>即使碎片化的情况很少，它也仍然在削减着内存并使其成为一个千疮百孔而不可用的泡沫块，严重局限了整个游戏的表现力。</p>
+<h4 id="二者兼顾">二者兼顾</h4><p>由于碎片化，以及内存分配缓慢的缘故，在游戏中何时以及如何管理内存需要十分小心。一个常用而有效的办法是：在游戏启动时分配一大块内存，直到游戏结束时才释放它。但如此一来，在游戏运行过程中创建或销毁东西，对系统来说将是一个巨大的负担。<br>使用对象池使得我们能二者兼顾：对于内存管理器而言，我们仅分配一大块内存直到游戏结束时才释放它，对于内存池的使用者而言，我们可以按照自己的意愿来分配和释放对象。</p>
+<h3 id="对象池模式">对象池模式</h3><p>定义一个保持着可重用对象集合的对象池类。其中的每个对象支持对其“使用(in use)”状态的访问，以确定这一对象目前是否“存活(alive)”。在对象池初始化时，它预先创建整个对象的集合（通常为一整块连续堆区域），并将它们都置为“未使用(not in use)”状态。<br>当你想要创建一个新对象时就向对象池请求。它将搜索到一个可用的对象，将其初始化为“使用中(in use)”状态并返回给你。当该对象不再被使用时，它将被置回“未使用(not in use)”状态。使用该方法，对象便可以在无需进行内存或其他资源分配的情况下进行任意的创建和销毁。</p>
+<h3 id="使用情境">使用情境</h3><p>这一设计模式被广泛地应用于游戏中的可见物体，如游戏实体对象、各种视觉特效，但同时也被适用于非可见的数据结构中，如当前播放的声音。我们在以下情况使用对象池：</p>
+<ul>
+<li>当你需要频繁地创建和销毁对象时。</li>
+<li>对象的大小一致时。</li>
+<li>在堆上进行对象内存分配较慢或者会产生内存碎片时。</li>
+<li>每个对象封装着获取代价昂贵且可重用的资源，如数据库、网络的连接。</li>
+</ul>
+<h3 id="使用须知">使用须知</h3><p>你一般依赖于一个垃圾回收器或只是简单地通过new和delete来进行内存管理。而通过使用对象池，你就是在告诉系统:“我更明白这些字节应该如何处理。”也就意味这个模式的规则完全由你来负责制定。</p>
+<h4 id="对象池可能在闲置的对象上浪费内存">对象池可能在闲置的对象上浪费内存</h4><p>对象池的大小需要根据游戏的需求量身定制。在确定大小时，分配过小的情况往往很明显，但也要注意不能让池子太大。一个适当小的内存池可以腾出空余的内存供其他模块使用。</p>
+<h4 id="任意时刻处于存活状态的对象数目恒定">任意时刻处于存活状态的对象数目恒定</h4><p>在某些角度上说这是件好事。将内存划分为几个独立的对象池用于不同类型的对象管理，这一点会确保下面的情况不会发生：例如，一大连串的爆炸动画不会致使你的粒子系统把所有的可用内存全部占用，从而防止一些更严重的情况发生，比如无法创建新的敌人。<br>然而，这也意味着你要为如下情况做好准备：当你希望向对象池申请重用某个对象时，可能会失败，因为它们都在被使用。以下是一些针对此问题的常见对策：</p>
+<ul>
+<li>阻止其发生。这也是最常见“修复方法”：约束对象池的大小，这样无论使用者如何分配都不会造成溢出。<br>上述方法的副作用是，它会令你仅仅为了十分罕见的边际情况而腾出许多空闲的对象空间。鉴于此，单一的固定大小的对象池并不适用于所有的游戏状态。在此情况下，可以考虑针对不同的场景将池调整至不同尺寸。</li>
+<li>不创建对象。这听起来很残忍，但它在诸如粒子系统中十分奏效。假如所有的粒子对象都处于使用状态，那么屏幕将可能被闪光的图元所覆盖。玩家将不会注意到下一次的爆炸效果是否和当前的效果一样炫。</li>
+<li>强行清理现存对象。以一个音效对象池为例，并假设你想要播放新的一段音效但对象池满了。你并不希望直接忽略掉这个新的音效。解决方案是，检索当前播放的音效中最不引人注意的并以我们的新音效替换之。新的音效将掩盖旧音效的中断。<br>一般来说，如果新对象的出现能让玩家无法察觉到有对象的消失，那么清理现存对象的方法会是一个好选择。</li>
+<li>增加对象池的大小。假如游戏允许你调配更多的内存，那么你可以在运行时对对象池扩容，或者增设一个二级的溢出池。假如你通过上述任何一种方法获取到更多的内存，那么当这些额外空间不再被占用时你就必须考虑是否将池的大小恢复到扩容之前。</li>
+</ul>
+<h4 id="每个对象的内存大小是固定的">每个对象的内存大小是固定的</h4><p>多数对象池在实现时将对象原地存入一个数组中。假如你的所有对象都属于同一类型，那么这没问题。然而假如你希望在池中存入不同类型的对象，或者子类型，那么你就必须保证对象池中的每个槽都有足够的内存能容纳最大的对象。否则一个未知的大对象将占去相邻对象的空间，并导致内存崩溃。<br>另外来讲，当你的内存大小不一时，将浪费内存，当你发现自己浪费许多内存时，可以考虑根据对象的尺寸将池划分为多个大小不同的池——大的装行李，小的装口袋里的杂物。</p>
+<h4 id="重用对象不会被自动清理">重用对象不会被自动清理</h4><p>多数内存管理器都有一个排错特性：它们会将刚分配或者刚释放的内存置成某些特定值（比如0xdeadbeef）。这一做法将帮助你找到那些由“未初始化的变量”或者“使用了已释放的内存”引发的致命错误。<br>由于我们的对象池并不通过内存管理器来重用对象，所以我们丧失了这层安全保障。更可怕的是，这些“新”对象使用的内存先前存储着另一个同类型的对象。这将使你无法分辨自己是否在创建对象时已将他们初始化——这块存储新对象的内存可能在其先前的生命周期中已经包含了几乎完全相同的数据。<br>鉴于此，需要特别注意用于初始化对象池中新对象的代码是否完整地初始化了对象。甚至值得花些工夫为回收对象槽内存增设一个排错功能。</p>
+<h4 id="未使用的对象将占用内存">未使用的对象将占用内存</h4><p>由于对象池在对象不再被使用时并不真正地释放它们，故他们仍将占用内存。假如它们包含了指向其他对象的引用，那么这也将阻碍回收器对它们进行回收。为避免这些问题，当对象池中的对象不再被需要时，应当清空对象指向其他任何对象的引用。</p>
+<h4 id="示例代码">示例代码</h4><p>让我们来模拟一个简单的粒子系统。让我们先从最简单的开始，首先是粒子类：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Particle</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Particle() : frameLeft_(<span class="number">0</span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">(<span class="keyword">double</span> x, <span class="keyword">double</span> y, <span class="keyword">double</span> xVel, <span class="keyword">double</span> yVel, <span class="keyword">int</span> lifetime)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">animate</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">inUse</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> framesLeft_ &gt; <span class="number">0</span>; &#125;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> framesLeft_;</span><br><span class="line">    <span class="keyword">double</span> x_,y_;</span><br><span class="line">    <span class="keyword">double</span> xVel, yVel; </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>默认构造函数将粒子初始化为“未使用”状态。接下来调用init()将其状态置为“使用中”。粒子随着时间播放动画，并逐帧调用函数animate()。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Particle::init(<span class="keyword">double</span> x, <span class="keyword">double</span> y, <span class="keyword">double</span> xVel, <span class="keyword">double</span> yVel, <span class="keyword">int</span> lifetime)</span><br><span class="line">&#123;</span><br><span class="line">    x_ = x;</span><br><span class="line">    y_ = y;</span><br><span class="line">    xVel_ = xVel;</span><br><span class="line">    yVel_ = yVel;</span><br><span class="line">    framesLeft_ = lifetime;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">void</span> Particle::animate()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>( !inUse() ) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    framesLeft--;</span><br><span class="line">    x_ += xVel_;</span><br><span class="line">    y_ += yVel_;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>对象池需要知道哪些粒子可被重用——通过粒子实例的inUse()方法来获取粒子的状态。它利用粒子的生命周期有限这一点，使用变量_framesLeft来检查哪些粒子正在被使用，而不是使用一个单独的标志位。<br>对象池类也很简单:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> ParticlePool</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">create</span><span class="params">(<span class="keyword">double</span> x, <span class="keyword">double</span> y, <span class="keyword">double</span> xVel, <span class="keyword">double</span> yVel, <span class="keyword">int</span> lifetime)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">animate</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> POOL_SIZE = <span class="number">100</span>;</span><br><span class="line">    Particle particle_[POOL_SIZE];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>create()函数使用外部代码创建新的粒子。游戏逐帧调用对象池的animate()方法，它会遍历池中所有粒子并调用它们的animate()函数。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> ParticlePool::animate()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; POOL_SIZE; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        particles_[i].animate();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>对象池简单地使用一个固定大小的数组来存储粒子。可以通过根据给定的大小使用动态数组，或者使用值模板参数来定义。<br>创建新的粒子:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> ParticlePool::create(<span class="keyword">double</span> x, <span class="keyword">double</span> y, <span class="keyword">double</span> xVel, <span class="keyword">double</span> yVel, <span class="keyword">int</span> lifetime)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; POOL_SIZE; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>( !particles_[i].inUse())</span><br><span class="line">        &#123;</span><br><span class="line">            particle_[i].init(x,y,xVel, yVel, lifetime);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意在这个版本中，假如没有找到可用的粒子，则不再创建新的粒子。当粒子的生命周期结束时它们会自动地将自己闲置下来。<br>这个例子中创建一个新粒子需要在池内部遍历粒子数组直到找到一个空槽。假设这个池数组很大且几乎已满，则此时创建粒子将会十分缓慢。让我们来看看如何提升性能。<br><strong>空闲表</strong><br>如果我们不想浪费时间去检索空闲的粒子，那么显然我们得跟踪它们。我们可以单独维护一个指向每个未被使用粒子的指针列表。那么，当我们需要创建粒子时，我们只需移除这个列表的第一项并将这第一项指针指向的例子进行重用即可。<br>不幸的是，这可能要求我们管理如同整个对象池对象数组一样庞大的指针列表。方便的是，我们身边就有一些可利用的资源：正是那些未被利用的粒子自身。<br>当某个粒子未被使用时，它的大部分状态时异常的。它的位置和速度都未被使用。它唯一需要的状态就是用于自身是否被销毁的标记，也就是我们例子中的frameLeft成员。除此之外的其他空间都是可利用的，修改后的例子如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Particle</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// Previous stuff...</span></span><br><span class="line">    <span class="function">Particle* <span class="title">getNext</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> state_.next; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setNext</span><span class="params">(Particle* next)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        state_.next = next;   </span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> framesLeft_;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">union</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// State when it's in use.</span></span><br><span class="line">        <span class="keyword">struct</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">double</span> x, y, xVel, yVel;</span><br><span class="line">        &#125; live;</span><br><span class="line">    </span><br><span class="line">        <span class="comment">// State when it's available.</span></span><br><span class="line">        Particle* next;</span><br><span class="line">    &#125; state_;   </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>我们把除了frameLeft<em>之外的成员变量移动到一个live结构体中，并将它置入一个state</em>联合体。该结构包括了粒子在播放动画时的状态。当粒子未被使用时，也就是联合体的其他情况，成员next将被激活。next存储了一个指向下一个可用粒子的指针。<br>我们可以利用这些指针(next成员)来创建一个对象池中未被使用的粒子列表。我们持有所需的可用粒子列表，且无需额外的内存——我们将那些已死亡粒子占用的空间划分过来以存储这个列表。<br>这个巧妙的解决办法被称作空闲表(free list)，为使其正常运作，我们需要确保正确地初始化指针以及在创建和销毁粒子时保持住指针。当然，我们也需要时刻跟踪这个列表的头指针：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> ParticlePool</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Previous stuff...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Particle* firstAvailable_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>当对象池首次被创建时，所有的粒子均处于可用状态，故我们的空闲表贯穿了整个对象池。对象池的构造函数如下:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ParticlePool::ParticlePool()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// The first one is available</span></span><br><span class="line">    firstAvailable_ = &amp;particles_[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Each particle points to the next.</span></span><br><span class="line">    <span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; POOL_SIZE - <span class="number">1</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        particles_[i].setNext(&amp;particles_[i +<span class="number">1</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// The last one terminates the list.</span></span><br><span class="line">    particles_[POOL_SIZE - <span class="number">1</span>].setNext(<span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>现在创建一个新粒子时我们跳转到一个空闲的粒子:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> ParticlePool::create(<span class="keyword">double</span> x, <span class="keyword">double</span> y, <span class="keyword">double</span> xVel, <span class="keyword">double</span> yVel, <span class="keyword">int</span> lifetime)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Make sure the pool isn't full.</span></span><br><span class="line">    assert(firstAvailable_ != <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Remove it from the available list.</span></span><br><span class="line">    Particle* newParticle = firstAvailable_;</span><br><span class="line">    firstAvailable_ = newParticle-&gt;getNext();</span><br><span class="line"></span><br><span class="line">    newParticle-&gt;init(x, y, xVel, yVel, lifetime);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们需要获知粒子何时死亡以将它置回空闲表中。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> Particle::animate()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (!inUse()) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    framesLeft_--;</span><br><span class="line">    x_ += xVel;</span><br><span class="line">    y_ += yVel;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> framesLeft_ == <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当粒子在某帧中死掉时，我们就把这个粒子添加回空闲表:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> ParticlePool::animate()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; POOL_SIZE; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (particles_[i].animate())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Add this particle to the front of the list.</span></span><br><span class="line">            particles_[i].setNext(firstAvailable_);</span><br><span class="line">            firstAvailable_ = &amp;particles_[i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>O(1)的复杂度！</p>
+<h3 id="设计决策">设计决策</h3><p>最简单的对象池实现几乎没什么特别的：创建一个对象数组并在它们被需要时重新初始化。实际项目中的代码可不会这么简单。还有许多扩展对象池的方法，来使其更加通用、安全、便于管理。当你在自己的游戏中使用对象池时，你需要回答以下问题。</p>
+<h4 id="对象是否被加入对象池">对象是否被加入对象池</h4><p>首先要问的一个问题就是这些对象自身是否能知道自己处于一个对象池中。<br><strong>假如对象与对象池耦合</strong></p>
+<ul>
+<li>实现很简单，你可以简单地为那些池中的对象增加一个“使用中”的标志位或者函数，这就能解决问题了。</li>
+<li><p>你可以保证对象只能通过对象池创建，确保了开发者不会创建出脱离对象池管理的对象。在C++中，只需简单地将对象池类作为对象类的友元类，并将对象的构造函数私有化即可：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Particle</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">friend</span> <span class="keyword">class</span> ParticlePool;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Particle() : inUse_(<span class="literal">false</span>) &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">bool</span> inUse_;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">class</span> ParticlePool</span><br><span class="line">&#123;</span><br><span class="line">    Particle pool_[<span class="number">100</span>];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>你可以避免存储一个”使用中”的标志位，许多对象已经维护了可以表示自身是否仍然存活的状态。例如粒子可以通过“位置已离开屏幕范围”来表示自身可被重用。假如对象类知道自己可能被对象池使用，则它可以提供inUse()方法来检查这一状态。这避免了对象池使用额外的空间来存储那些“使用中”的标志位。</p>
+</li>
+</ul>
+<p><strong>假如对象独立于对象池</strong></p>
+<ul>
+<li>任意类型的对象可以被置入池中。通过对象与对象池的解绑，你将能够实现一个通用、可重用的对象池类。</li>
+<li>“使用中”状态必须能够在对象外部被追踪。最简单的做法是在对象池中额外创建一块独立的空间:<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> TObject&gt;</span><br><span class="line"><span class="keyword">class</span> GenericPool</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> POOL_SIZE = <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line">    TObject pool_[POOL_SIZE];</span><br><span class="line">    <span class="keyword">bool</span> inUse_[POOL_SIZE]; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="谁来初始化哪些被重用的对象">谁来初始化哪些被重用的对象</h4><p><strong>假如在对象池内部初始化重用对象</strong></p>
+<ul>
+<li>对象池完全可以封装它管理的对象。这取决于你定义的对象类的其他功能，你或许能够将它们置于对象池内部。这样可以确保外部代码不会引用到这些对象而引起意外的重用。</li>
+<li>对象池与对象如何被初始化密切相关。一个置入对象池的对象可能会提供多个初始化函数。</li>
+</ul>
+<p><strong>假如对象在外部被初始化</strong></p>
+<ul>
+<li>此时对象池的接口会简单一些。对象池只需简单地返回新对象的引用既可。而无需像上面那样提供不同的初始化接口来处理对象不同的初始化方法。</li>
+<li>外部编码可能需要处理新对象创建失败的情况。</li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/游戏通用技术编程/" rel="tag">#游戏通用技术编程</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/02/GameProgrammingArchitecture_20/" rel="prev">游戏编程模式笔记——第二十章 空间分区</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/15/GameProgrammingArchitecture_18/" rel="next">游戏编程模式笔记——第十八章 脏标记模式</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2017/12/20/GameProgrammingArchitecture_19/"
+                   data-title="游戏编程模式笔记——第十九章 对象池" data-url="http://yoursite.com/2017/12/20/GameProgrammingArchitecture_19/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/untitled.png" alt="Lian" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Lian</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/LianLi" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/Lian_Li_Key" target="_blank">twitter</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.weibo.com/u/1233518767/home?wvr=5" target="_blank">weibo</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">朋友们的Blog与微博</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://tokrablog.github.io/" target="_blank">六叠一间的唐吉坷德</a>
+              </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://utopia.pursuitus.com/" target="_blank">Ouroboros</a>
+              </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://millieen.github.io/" target="_blank">GloomyStone</a>
+              </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://weibo.com/u/5874448585" target="_blank">蒸汽姬天团</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#动机"><span class="nav-number">1.</span> <span class="nav-text">动机</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#碎片化的害处"><span class="nav-number">1.1.</span> <span class="nav-text">碎片化的害处</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二者兼顾"><span class="nav-number">1.2.</span> <span class="nav-text">二者兼顾</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对象池模式"><span class="nav-number">2.</span> <span class="nav-text">对象池模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用情境"><span class="nav-number">3.</span> <span class="nav-text">使用情境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用须知"><span class="nav-number">4.</span> <span class="nav-text">使用须知</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对象池可能在闲置的对象上浪费内存"><span class="nav-number">4.1.</span> <span class="nav-text">对象池可能在闲置的对象上浪费内存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#任意时刻处于存活状态的对象数目恒定"><span class="nav-number">4.2.</span> <span class="nav-text">任意时刻处于存活状态的对象数目恒定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#每个对象的内存大小是固定的"><span class="nav-number">4.3.</span> <span class="nav-text">每个对象的内存大小是固定的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#重用对象不会被自动清理"><span class="nav-number">4.4.</span> <span class="nav-text">重用对象不会被自动清理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#未使用的对象将占用内存"><span class="nav-number">4.5.</span> <span class="nav-text">未使用的对象将占用内存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#示例代码"><span class="nav-number">4.6.</span> <span class="nav-text">示例代码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设计决策"><span class="nav-number">5.</span> <span class="nav-text">设计决策</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对象是否被加入对象池"><span class="nav-number">5.1.</span> <span class="nav-text">对象是否被加入对象池</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#谁来初始化哪些被重用的对象"><span class="nav-number">5.2.</span> <span class="nav-text">谁来初始化哪些被重用的对象</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lian</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"lianli"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

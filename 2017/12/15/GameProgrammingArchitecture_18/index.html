@@ -1,0 +1,731 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+
+
+  <meta name="keywords" content="游戏通用技术编程," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="“将工作推迟到必要时进行以避免不必要的工作。”
+动机许多游戏都有一个称之为场景图的东西。这是一个庞大的数据结构，包含了游戏世界中所有的物体。渲染引擎使用它来决定将物体绘制到屏幕的什么地方。许多场景图是分层的。场景中的一个物体会绑定在一个父物体上。在这种情况下，它的变换就依赖于其父物体的位置，而不是游戏世界中的一个绝对位置。想象我们的游戏中有一艘海盗船在海上。桅杆的顶部是一个瞭望塔，一个海盗靠在这个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="游戏编程模式笔记——第十八章 脏标记模式">
+<meta property="og:url" content="http://yoursite.com/2017/12/15/GameProgrammingArchitecture_18/index.html">
+<meta property="og:site_name" content="学无止境">
+<meta property="og:description" content="“将工作推迟到必要时进行以避免不必要的工作。”
+动机许多游戏都有一个称之为场景图的东西。这是一个庞大的数据结构，包含了游戏世界中所有的物体。渲染引擎使用它来决定将物体绘制到屏幕的什么地方。许多场景图是分层的。场景中的一个物体会绑定在一个父物体上。在这种情况下，它的变换就依赖于其父物体的位置，而不是游戏世界中的一个绝对位置。想象我们的游戏中有一艘海盗船在海上。桅杆的顶部是一个瞭望塔，一个海盗靠在这个">
+<meta property="og:updated_time" content="2018-01-27T02:37:32.748Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="游戏编程模式笔记——第十八章 脏标记模式">
+<meta name="twitter:description" content="“将工作推迟到必要时进行以避免不必要的工作。”
+动机许多游戏都有一个称之为场景图的东西。这是一个庞大的数据结构，包含了游戏世界中所有的物体。渲染引擎使用它来决定将物体绘制到屏幕的什么地方。许多场景图是分层的。场景中的一个物体会绑定在一个父物体上。在这种情况下，它的变换就依赖于其父物体的位置，而不是游戏世界中的一个绝对位置。想象我们的游戏中有一艘海盗船在海上。桅杆的顶部是一个瞭望塔，一个海盗靠在这个">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> 游戏编程模式笔记——第十八章 脏标记模式 | 学无止境 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">学无止境</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              游戏编程模式笔记——第十八章 脏标记模式
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-12-15T15:11:36+08:00" content="2017-12-15">
+            2017-12-15
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/游戏通用技术编程/" itemprop="url" rel="index">
+                  <span itemprop="name">游戏通用技术编程</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/12/15/GameProgrammingArchitecture_18/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/12/15/GameProgrammingArchitecture_18/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>“将工作推迟到必要时进行以避免不必要的工作。”</p>
+<h3 id="动机">动机</h3><p>许多游戏都有一个称之为场景图的东西。这是一个庞大的数据结构，包含了游戏世界中所有的物体。渲染引擎使用它来决定将物体绘制到屏幕的什么地方。<br>许多场景图是分层的。场景中的一个物体会绑定在一个父物体上。在这种情况下，它的变换就依赖于其父物体的位置，而不是游戏世界中的一个绝对位置。<br>想象我们的游戏中有一艘海盗船在海上。桅杆的顶部是一个瞭望塔，一个海盗靠在这个瞭望塔上，抓在海盗肩膀上的是一只鹦鹉。这艘船的局部变换标记了它在海中的位置。瞭望塔的变换标记了它在船上的位置，等等。<br>这样，当一个父物体移动时，它的子物体也会随之变动。如果在船移动时我们必须手动调整船上所有物体的变换来防止相对滑动，那会是一件很头疼的事情。<br>但是要真的将海盗绘制到屏幕上，我们需要知道它在世界中的绝对位置。我们将相对于父物体的变换称为这个物体的“局部变换”。为了渲染一个物体，我们需要知道它的“世界变换”。</p>
+<h4 id="局部变换和世界变换">局部变换和世界变换</h4><p>计算一个物体的世界变换是相当直观的——只要从根节点沿着它的父链将变换组合起来就行。<br>鹦鹉世界变换 = 船的局部变换 x 瞭望塔的局部变换 x 海盗的局部变换 x 鹦鹉的局部变换</p>
+<p>我们每帧都需要世界中的每个物体的世界变换，这会成为代码中影响性能的关键所在，保持它们及时更新是棘手的，因为当一个父物体移动，这会影响它自己和它所有的子物体等的世界变化。<br>最简单的途径是在渲染的过程中计算变换。每一帧递归地遍历场景图，计算它们的世界变换并立刻绘制它。<br>但是这是对我们宝贵的CPU资源是一种可怕的浪费。许多物体并不是每一帧都移动，但每一帧都要重计算它们的世界变换是一种多大的浪费。</p>
+<h4 id="缓存世界变换">缓存世界变换</h4><p>一个明显的解决办法是将它“缓存”起来。这看起来很美好，当一个物体确实移动了，简单的方法就是立即刷新它的世界变换。但是不要忘了继承链！当一个父物体移动时，我们需要重计算它的世界变换并递归地计算它所有子物体的世界变换。问题的关键是一个世界变换可能依赖于好几个局部变换。由于我们再每个这些变换时都立刻重计算，所以最后当一帧内有好几个关联的局部变换改变时，我们就将这个变换重新计算了好多遍。</p>
+<h4 id="延时重算">延时重算</h4><p>我们通过将修改局部变换和更新世界变换解耦来解决这个问题。这让我们在单次渲染中修改多个局部变换，然后在所有变动完成之后，在实际渲染器使用之前仅需要计算一次世界变换。<br>要做到这点，我们为每个物体添加一个”flag”。”flag”和”bit”在编程中是同义词——它们都表示单个小单元数据，能够储存两种状态中的一个。我们称之为”true”和false”，有时也叫”set”和”cleared”。我会交叉地使用它们。<br>我们在局部变换改动时设置它。当我们需要这个物体的世界变换时，我们检查这个flag。如果它标记为”set”了，我们计算这个世界变换，然后将这个flag置为”clear”。这个flag代表，”这个世界变换是不是过期了？”由于某些原因，传统上这个”过期的”被称作”脏的”。也就是”脏标记”，”Dirty bit”也是这个模式常见的名字。但是我想我会坚持使用那种看起来没那么”污秽”的名字。<br>只需要一个简单的位数据，这个模式为我们做了不少事：</p>
+<ul>
+<li>它将父链上物体的多个局部变换的改动分解为每个物体的一次重计算。</li>
+<li>它避免了没有移动的物体的重计算。</li>
+<li>一个额外的好处：如果一个物体在渲染之前移除了，那就根本不用计算它的世界变换。</li>
+</ul>
+<h3 id="脏标记模式">脏标记模式</h3><p>一组原始数据随时间变化。一组衍生数据经过一些代价昂贵的操作由这些数据确定。一个脏标记跟踪这个衍生数据是否和原始数据同步。它在原始数据改变时被设置。如果它被设置了，那么当需要衍生数据时，它们就会被重新计算并且标记被清楚。否则就使用缓存的数据。</p>
+<h3 id="使用情境">使用情境</h3><p>相对于其他模式，这个模式解决一个相当特定的问题。同时，就像大多数优化那样，仅当性能问题严重到值得增加代码复杂度时才使用它。<br>脏位标记涉及两个关键词:”计算”和”同步”。在这两种情况下，处理原始数据到衍生数据的过程在时间或其他方面会有很大的开销。<br>当使用这个模式做同步时，派生数据通常在别的地方——也许在磁盘上，也许在网络上的其他机器上——光是简单地把它从A移到B就很费力。<br>这里也有些其他的要求：</p>
+<ul>
+<li>原始数据的修改次数比衍生数据的使用次数多。衍生数据在使用之前会被接下来的原始数据改动而失效，这个模式通过避免处理这些操作来运作。如果你再每次改动原始数据时都立刻需要衍生数据，那么这个模式就没有效果。</li>
+<li>递增地更新数据十分困难。我们假设游戏的小船能运载众多的战利品。我们需要知道所有东西的总重量。我们能够使用这个模式，为总量设置一个脏标记。每当我们增加或者减少战利品时，我们设置这个标记。当我们需要总量时，我们将所有战利品的重量加起来并清除标记。但是一个更简单的方法是保持一个动态的总量。当我们增加或者减少物品时，就从总量上增加或者减去这个物体的重量。像这样保持衍生数据更新时，这种方法要比使用这个模式要好。</li>
+</ul>
+<p>这些要求听起来让人觉得脏标记很少有适合使用的时候，但是你总能发现它能帮上忙的地方。</p>
+<h3 id="使用须知">使用须知</h3><p>即使当你有相当的自信认为这个模式十分适用，这里还是有一些小的瑕疵会让你感到不便。</p>
+<h4 id="延时太长会有代价">延时太长会有代价</h4><p>这个模式把某些耗时的工作推迟到真正需要时才进行，而到有需要时，往往刻不容缓。但是，我们使用这个模式的原因是计算出结果的过程很慢。<br>当工作量大到需要一个能够察觉时间才能完成时，如果游戏直到玩家想要看到结果时才开始计算，这会导致一个不友好的视觉卡顿。<br>另外一个延时的问题是如果某个东西出错，你可能完全无法工作。当你将状态保存在一个更加持久化的形式中时，使用这个模式，你问题会尤其突出。就像文本编辑器，许多程序都仅在文档关闭或者程序退出时才会自动存盘。如果你意外的将电源线揽踢出，那么你的工作就付之东流了。</p>
+<h4 id="必须保证每次状态改动时都设置脏标记">必须保证每次状态改动时都设置脏标记</h4><p>当你获取缓存数据时，棘手的问题是缓存失效——当缓存和原始数据不同步时，什么都不正确了。在这个模式中，它意味着当任何原始数据变动时，都要设置脏标记。<br>在一个地方忘记了，你的程序就会不正确地使用失效的衍生数据。这会导致玩家的困惑和十分难以追踪的bug。当你使用这个模式时，你需要小心，在任何改动原始数据的地方都要设置脏标记。<br>一个解决问题的方法是将原始数据的改动封装起来。任何可能的变动都通过单一API入口来修改，你可以在这里设置脏标记，并且不用担心会有遗漏。</p>
+<h4 id="必须在内存中保存上次的衍生数据">必须在内存中保存上次的衍生数据</h4><p>这个模式会在空间和时间上做平衡。当返回内存中之前计算的数据时，会避免对未修改数据的重计算，这在内存便宜而计算费时的情况下是合算的。当内存比时间更加宝贵时，在需要时计算会比较好。</p>
+<h3 id="示例代码">示例代码</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Transform</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">static</span> Transform <span class="title">origin</span><span class="params">()</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="function">Transform <span class="title">combine</span><span class="params">(Transform&amp; other)</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里我需要的唯一操作就是”combine()”，这样我们可以通过组合父链中所有的局部变换来得到它的世界变换。它还有一个方法用来得到一个“原始”的变换——一个简单的单位矩阵表示没有移动、旋转或者缩放。<br>接下来我们来定义场景图中的物体类。这是我们运用这个模式之前的基础。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> GraphNode</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    GraphNode(Mesh* mesh) : mesh_(mesh), local_(Transform::orign()) &#123;&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Transform local_;</span><br><span class="line">    Mesh* mesh_;</span><br><span class="line"></span><br><span class="line">    GraphNode* children_[MAX_CHILDREN];</span><br><span class="line">    Int numChildren;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>每一个节点包含一个局部变换，描述它相对于父物体的位置。它还有一个mesh，代表这个物体的真正图元（我们允许”mesh_”为”NULL”来处理只是为了组合子物体的不可见节点）。最后每个节点都包含一个可能为空的子物体集合。<br>有了这个，一个“场景图”是一个单一的根节点”GraphNode”，它的子节点(子子节点，等等)就是世界中的所有物体。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GraphNode* graph_ = <span class="keyword">new</span> GraphNode(<span class="literal">NULL</span>);</span><br><span class="line"><span class="comment">// Add children to root graph node...</span></span><br></pre></td></tr></table></figure></p>
+<p>为了绘制一个场景图，我们需要做的就是遍历节点树，从根节点开始，通过正确的世界变换为每个节点图元调用下面的方法。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">renderMesh</span><span class="params">(Mesh* mesh, Transform transform)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<h4 id="未优化的遍历">未优化的遍历</h4><p>我们通过基本的遍历并动态计算世界坐标来渲染场景图。它不会进行优化，但是却很简单。我们为“GraphNode”添加一个新方法。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> GraphNode::render(Transform parentWorld)</span><br><span class="line">&#123;</span><br><span class="line">    Transform world = local_.combine(parentWorld);</span><br><span class="line">    <span class="keyword">if</span>(mesh_) renderMesh(mesh_, world);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; numChildren_; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        children_[i]-&gt;render(world);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样为了绘制整个场景图，我们从空根节点开始渲染就可以了:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">graph_-&gt;render(Transform::orign());</span><br></pre></td></tr></table></figure></p>
+<h4 id="让我们“脏”起来">让我们“脏”起来</h4><p>这份代码做了正确的操作——在正确的地方渲染图元——但并不高效。它每帧都在每个”node”上调用”local_.combine(parentWorld)”。让我们看脏标记模式是如何修正这点的。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> GraphNode</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    GraphNode(Mesh* mesh) : mesh_(mesh), local_(Transform::origin()),dirty_(<span class="literal">true</span>) &#123;&#125;</span><br><span class="line">    <span class="comment">// Other methods...</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Transform world_;</span><br><span class="line">    <span class="keyword">bool</span> dirty_;</span><br><span class="line">    <span class="comment">// Other fields...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>“world<em>“成员缓存了上次计算了的世界变换，”dirty</em>“成员就是脏标记。注意，这个标记用”true”初始化。当我们创建一个新节点时，我们没有计算过它的世界变换。<br>我们需要这个模式的唯一理由是物体能够移动。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> GraphNode::setTransform(Transform local)</span><br><span class="line">&#123;</span><br><span class="line">    local_ = local;</span><br><span class="line">    dirty_ = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里有一个微妙的假设，if检查要比矩阵乘法快。然而在现代CPU上可能会导致分支预测错误，数据局部性模式可以帮助我们避免这些问题。<br>当一个父节点移动时，它所有的子节点的世界坐标都失效了。但是这里，我们不设置它们的脏标记。我们能做到这点，但是这需要递归而且缓慢。相反我们在渲染时做点聪明的事。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> GraphNode::render(Transform parentWorld, <span class="keyword">bool</span> dirty)</span><br><span class="line">&#123;</span><br><span class="line">    dirty |= dirty_;</span><br><span class="line">    <span class="keyword">if</span>(dirty)</span><br><span class="line">    &#123;</span><br><span class="line">        world_ = local_.combine(parentWorld);</span><br><span class="line">        dirty_ = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>( mesh_ ) renderMesh(mesh_, world_);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; numChildren; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        children_[i]-&gt;render(world_, dirty);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里的技巧就是”dirty”参数。如果父链中它之上的任何物体标记为脏，则它被置为”true”。在我们递归的时候用相同的方式通过“parentWorld”渐进地更新世界变换。”dirty”参数跟踪父链变换是否改变。<br>最终结果就是我们想要的：修改一个节点的局部变换只是几条赋值语句，渲染世界时只计算了自上一帧以来最少的变动的世界变换。<br>注意，这里技巧能奏效是因为”render()”是”GraphNode”中唯一需要实时世界变换的操作。如果其他操作访问它，则我们需要做一些不同的操作。</p>
+<h3 id="设计抉择">设计抉择</h3><p>这个模式是相当特定的，所以只需要注意几点。</p>
+<h4 id="何时清除脏标记">何时清除脏标记</h4><p><strong>当需要计算结果时</strong></p>
+<ul>
+<li>当计算结果不使用时，它完全避免了计算。当原始数据变动的频率远大于衍生数据访问的频率时，优化效果更显著。</li>
+<li>如果计算十分耗时，会造成明显的卡顿。把计算工作推迟到玩家需要查看结果时才做会影响游戏体验。这在计算足够快的情况下没什么问题，但是一旦计算十分耗时，则最好提前开始计算。</li>
+</ul>
+<p><strong>在精心设定的检查点</strong><br>有时，在游戏的过程中有一个时间点十分适合做延时计算工作。比如游戏存档。</p>
+<ul>
+<li>这些工作并不影响用户体验。不同于之前的选项，当游戏忙于处理时你可以通过其他东西分散玩家的注意力。</li>
+<li>当工作执行时，你失去了控制权。这和之前一点有些相反。在处理时，你能轻微地控制，保证游戏优雅的处理。</li>
+</ul>
+<p>你“不能确保”玩家真正到达检查点，或者达到任何你设定的标准。如果他们迷失了或者游戏进入了奇怪的状态，你可以将预期的操作进一步延迟。</p>
+<p><strong>在后台</strong><br>通常，你可以在变动的时候启动一个固定的计时器，并在计时器到达时处理之间的所有变动。</p>
+<ul>
+<li>你可以调整工作执行的频率。通过调整定时器的间隔，你可以按照你想要的频率进行处理。</li>
+<li>你可以做更多冗余的工作。如果在定时器期间原始状态的改动很少，那么你最终可以处理大部分没有修改的数据。</li>
+<li>需要支持异步操作。在后台处理数据意味着玩家可以同时做其他事情。这意味着你需要线程或者其他并发支持，以便能够在游戏进行时处理数据。<br>因为玩家有可能同时与你现在处理的原始数据交互，所以你也要考虑并行数据的安全性。</li>
+</ul>
+<h4 id="脏标记追踪的粒度多大">脏标记追踪的粒度多大</h4><p>想象一下我们的海盗游戏允许玩家建造和定制他们的海盗船。船会自动线上保存以便玩家在离线之后能恢复。我们使用脏标记来决定船的哪些甲板被改动了并需要发送到服务器。每一份我们发送给服务器的数据包含了一些船的改动数据和一份元数据，该元数据描述这份改动是在什么地方发生的。<br><strong>更精细的粒度</strong><br>你将甲板上的每一份小木块加上脏标记。</p>
+<ul>
+<li>你只需要处理真正变动了的数据，你将船的真正变动的木块发送给服务器。</li>
+</ul>
+<p><strong>更粗糙的粒度</strong><br>另外，我们可以为每一个甲板关联一个脏标记。在它之上的每份改动将整个甲板标记为脏。</p>
+<ul>
+<li>你最终需要处理未变动的数据。当在甲板上放置一个酒桶时，你需要把整个甲板上的数据发送给服务器。</li>
+<li>存储脏标记消耗更少的内存。添加10个酒桶在甲板上只需要一个位来跟踪他们。</li>
+<li>固定开销花费的时间要更少。当处理修改后的数据时，通常有一套固定的流程要预先处理这些数据。在这个例子中，就是标识船上哪些是改动了的数据。处理块越大，处理块越小，也意味着通用开支越少。</li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/游戏通用技术编程/" rel="tag">#游戏通用技术编程</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/20/GameProgrammingArchitecture_19/" rel="prev">游戏编程模式笔记——第十九章 对象池</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/10/GameProgrammingArchitecture_17/" rel="next">游戏编程模式笔记——第十七章 数据局部性</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2017/12/15/GameProgrammingArchitecture_18/"
+                   data-title="游戏编程模式笔记——第十八章 脏标记模式" data-url="http://yoursite.com/2017/12/15/GameProgrammingArchitecture_18/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/untitled.png" alt="Lian" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Lian</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/LianLi" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/Lian_Li_Key" target="_blank">twitter</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.weibo.com/u/1233518767/home?wvr=5" target="_blank">weibo</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">朋友们的Blog与微博</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://tokrablog.github.io/" target="_blank">六叠一间的唐吉坷德</a>
+              </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://utopia.pursuitus.com/" target="_blank">Ouroboros</a>
+              </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://millieen.github.io/" target="_blank">GloomyStone</a>
+              </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://weibo.com/u/5874448585" target="_blank">蒸汽姬天团</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#动机"><span class="nav-number">1.</span> <span class="nav-text">动机</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#局部变换和世界变换"><span class="nav-number">1.1.</span> <span class="nav-text">局部变换和世界变换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缓存世界变换"><span class="nav-number">1.2.</span> <span class="nav-text">缓存世界变换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#延时重算"><span class="nav-number">1.3.</span> <span class="nav-text">延时重算</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#脏标记模式"><span class="nav-number">2.</span> <span class="nav-text">脏标记模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用情境"><span class="nav-number">3.</span> <span class="nav-text">使用情境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用须知"><span class="nav-number">4.</span> <span class="nav-text">使用须知</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#延时太长会有代价"><span class="nav-number">4.1.</span> <span class="nav-text">延时太长会有代价</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#必须保证每次状态改动时都设置脏标记"><span class="nav-number">4.2.</span> <span class="nav-text">必须保证每次状态改动时都设置脏标记</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#必须在内存中保存上次的衍生数据"><span class="nav-number">4.3.</span> <span class="nav-text">必须在内存中保存上次的衍生数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#示例代码"><span class="nav-number">5.</span> <span class="nav-text">示例代码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#未优化的遍历"><span class="nav-number">5.1.</span> <span class="nav-text">未优化的遍历</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#让我们“脏”起来"><span class="nav-number">5.2.</span> <span class="nav-text">让我们“脏”起来</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设计抉择"><span class="nav-number">6.</span> <span class="nav-text">设计抉择</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#何时清除脏标记"><span class="nav-number">6.1.</span> <span class="nav-text">何时清除脏标记</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#脏标记追踪的粒度多大"><span class="nav-number">6.2.</span> <span class="nav-text">脏标记追踪的粒度多大</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lian</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"lianli"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

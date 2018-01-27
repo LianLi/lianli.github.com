@@ -1,0 +1,741 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+
+
+  <meta name="keywords" content="游戏通用技术编程," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="“为某服务提供一个全局访问入口来避免使用者与该服务具体实现类之间产生耦合。”
+动机使用音频作为例子。每一处需要播放音乐的场景都需要类似如下代码去调用音频系统：12345// Use a static class?AudioSystem::playSound(VERY_LOUD_BANG);// Or maybe a singleton?AudioSystem::instance()-&amp;gt;pla">
+<meta property="og:type" content="article">
+<meta property="og:title" content="游戏编程模式笔记——第十六章 服务定位器">
+<meta property="og:url" content="http://yoursite.com/2017/12/04/GameProgrammingArchitecture_16/index.html">
+<meta property="og:site_name" content="学无止境">
+<meta property="og:description" content="“为某服务提供一个全局访问入口来避免使用者与该服务具体实现类之间产生耦合。”
+动机使用音频作为例子。每一处需要播放音乐的场景都需要类似如下代码去调用音频系统：12345// Use a static class?AudioSystem::playSound(VERY_LOUD_BANG);// Or maybe a singleton?AudioSystem::instance()-&amp;gt;pla">
+<meta property="og:updated_time" content="2018-01-27T02:31:24.551Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="游戏编程模式笔记——第十六章 服务定位器">
+<meta name="twitter:description" content="“为某服务提供一个全局访问入口来避免使用者与该服务具体实现类之间产生耦合。”
+动机使用音频作为例子。每一处需要播放音乐的场景都需要类似如下代码去调用音频系统：12345// Use a static class?AudioSystem::playSound(VERY_LOUD_BANG);// Or maybe a singleton?AudioSystem::instance()-&amp;gt;pla">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> 游戏编程模式笔记——第十六章 服务定位器 | 学无止境 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">学无止境</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              游戏编程模式笔记——第十六章 服务定位器
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-12-04T15:11:36+08:00" content="2017-12-04">
+            2017-12-04
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/游戏通用技术编程/" itemprop="url" rel="index">
+                  <span itemprop="name">游戏通用技术编程</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/12/04/GameProgrammingArchitecture_16/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/12/04/GameProgrammingArchitecture_16/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>“为某服务提供一个全局访问入口来避免使用者与该服务具体实现类之间产生耦合。”</p>
+<h3 id="动机">动机</h3><p>使用音频作为例子。<br>每一处需要播放音乐的场景都需要类似如下代码去调用音频系统：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Use a static class?</span></span><br><span class="line">AudioSystem::playSound(VERY_LOUD_BANG);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Or maybe a singleton?</span></span><br><span class="line">AudioSystem::instance()-&gt;playSound(VERY_LOUD_BANG);</span><br></pre></td></tr></table></figure></p>
+<p>尽管我们实现了想要的目的，但整个过程中却带来了很多耦合。游戏中每一处调用音频系统的地方，都直接引用了具体的AudioSystem类和访问AudioSystem类的机制——使用静态类或者单例。<br>这里有个更好的解决方法：电话簿。每一个想要联系我们的人能够查找名字来得到我们当前的地址。当我们搬家时，我们告诉电话公司，他们更新电话簿，这样每个人都能得到新的地址了。实际上，我们甚至不必给出我们真正的地址。我们能够列出一个邮政信箱，或者其他能够“代表”我们的东西。通过让访问者查询电话簿来找到我们，我们便有了一个方便的可以控制如何查找我们的地方。<br>这就是服务定位器模式的简单介绍——它将一个服务的“是什么”（具体实现类型）和“在什么地方”（我们如何得到它的实例）与需要使用这个服务的代码解耦了。</p>
+<h3 id="服务定位器模式">服务定位器模式</h3><p>一个服务类为一系列操作定义了一个抽象的接口。一个具体的服务提供器实现这个接口。一个单独的服务定位器通过查找一个合适的提供器来提供这个服务的访问，它同时屏蔽了提供器的具体类型来定位这个服务的过程。</p>
+<h3 id="使用情境">使用情境</h3><p>每当你将东西变得全局都能访问的时候，你就是在自找麻烦。对于何时使用服务定位器，我的简单建议就是：谨慎使用。<br>与其给需要使用的地方提供一个全局机制来访问一个对象，不如首先考虑将这个对象传递进去。这极其简单易用，而且将耦合变得直观。这可以满足绝大部分需求。<br>但是有时手动将一个对象传来传去显得毫无理由或者使得代码难以阅读。有些系统，比如日志系统或内存管理系统，不应该是某个模块公开API的一部分。渲染代码的参数必须和渲染有关，而不是像日志系统那样的东西。<br>同样地，它也适用于一些类似功能的单一系统。你的游戏可能只有一个音频设备或者显示系统让玩家与之打交道。传递的参数是一项环境属性，所以将它传递10层函数以便让一个底层的函数能够访问，为代码增加了毫无意义的复杂度。<br>在这些情况下，这个模式能够起到作用。它用起来像一个更灵活、更可配置的单例模式。当被合理地使用时，它能够让你的代码更有弹性，而且几乎没有运行时的损失。（相反使用不当时，它会带来单例模式的所有缺点还有糟糕的运行时开销。）</p>
+<h3 id="使用须知">使用须知</h3><p>服务定位器的关键困难在于，它要有所依赖（连接两份代码），并且在运行时才连接起来。这给予了你弹性，但付出的代价就是阅读代码时比较难以理解依赖的是什么。</p>
+<h4 id="服务必须被定位">服务必须被定位</h4><p>这个模式需要定位服务，那么我们可能需要处理定位失败的情况。幸运的是，我们将讨论一个策略来处理这个问题，并且保证我们在使用的时候始终能得到某个服务。</p>
+<h4 id="服务不知道被谁定位">服务不知道被谁定位</h4><p>定位器是全局可访问的，那么游戏中的任何代码都可可能请求一个服务然后操作它。这意味着这个服务在任何情况下都必须能正确工作。因此如果一个类值希望在某个特定的上下文中被使用，那么避免用这种模式将它暴露给全局是最安全的。</p>
+<h3 id="示例代码">示例代码</h3><h4 id="服务">服务</h4><p>我们从音频API开始。这就是我们服务将要暴露的接口：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Audio</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~Audio() &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">playSound</span><span class="params">(<span class="keyword">int</span> soundID)</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">stopSound</span><span class="params">(<span class="keyword">int</span> soundID)</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function">virutal <span class="keyword">void</span> <span class="title">stopAllSounds</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h4 id="服务提供器">服务提供器</h4><p>我们需要一份具体的实现。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> ConsoleAudio : <span class="keyword">public</span> Audio</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">playSound</span><span class="params">(<span class="keyword">int</span> soundID)</span></span><br><span class="line">    </span>&#123;    </span><br><span class="line">        <span class="comment">// Play sound using console audio api...</span></span><br><span class="line">    &#125; </span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">stopSound</span><span class="params">(<span class="keyword">int</span> soundID)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="comment">// Stop sound using console audio api...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">stopAllSounds</span><span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="comment">// Stop all sounds using console audio api...</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>现在我们有了一个接口和一份实现。剩下的这部分就是服务定位器了——这个类将两者绑在一起。</p>
+<h4 id="简单的定位器">简单的定位器</h4><p>下面的实现是你能够定义的最简单的服务定位器：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Locator</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">static</span> Audio* <span class="title">getAudio</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> service_; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">provide</span><span class="params">(Audio* service)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        service_ = service;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> Audio* service_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>静态函数getAudio()负责定位工作。我们能在代码的任何地方调用它，它能返回一个Audio服务的实例供我们使用。<br>（这里使用的技术叫依赖注入——外部代码负责对这个对象注入它所需要的这个依赖实例）<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Audio *audio = Locator::getAudio();</span><br><span class="line">audio-&gt;playSound(VERY_LOUD_BANG);</span><br></pre></td></tr></table></figure></p>
+<p>它”定位”的方法十分简单——在使用这个服务之前它依赖一些外部代码来注册一个服务提供器。当游戏启动时，它调用类似下面的代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ConsoleAudio* audio = <span class="keyword">new</span> ConsoleAudio();</span><br><span class="line">Locator::provide(audio);</span><br></pre></td></tr></table></figure></p>
+<p>关键需要注意的地方是调用playSound（）的代码对ConsoleAudio具体实现并不知情。它只知道Audio的抽象接口，同样重要的是，甚至定位器本身和具体服务器也没有耦合。<br>这里还有更深一层的解耦——通过服务定位器，Audio接口在绝大多数地方并不知道自己正在被访问。一旦它知道了，它就是一个普通的抽象基类了。这意味着我们可以将这个模式应用到一些已经存在的但并不是围绕这个类设计的类上。和单例不同的是，后者影响了“服务”类本身的设计。（这也叫“时序耦合”——两份单独的代码必须按正确的顺序来调用来保证程序正确工作）</p>
+<h4 id="空服务">空服务</h4><p>它有一个较大的缺陷：如果我们尝试在一个服务器注册之前使用它，那么它会返回一个NULL。如果调用代码没有检查这一点，游戏就会崩溃。<br>这里有一个称之为“空对象（NULL Object）”的设计模式来解决这个问题。基本的思想是当我们查找或者创建对象失败需要返回“NULL”时，会返回一个实现同样接口的特殊对象作为代替。它的实现就是什么也不做，但是它能让获得这个对象的代码正确运行下去，就好像它获得了一个“真正的”对象一样。<br>为了使用它，我们定义另外一个“null”服务提供器。<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class NULLAudio : public Audio</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">    virtual void playSound(int soundID)</span><br><span class="line">    virtual void stopSound(int soundID)</span><br><span class="line">    virtual void stopAllSounds()</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>它实现了服务接口，但是实际上什么也不做，你可能注意到，我们返回一个引用而不是一个指针，因为在Cpp中，一个引用(理论上)永远不可能为NULL，返回一个引用可以提示使用者它可以期望任何时候都返回一个有效的对象。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Locator</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">initialize</span><span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        service_ = &amp;nullService_;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> Audio&amp; getAudio &#123; <span class="keyword">return</span> *service_; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">provide</span><span class="params">(Audio* service)</span></span><br><span class="line">    </span>&#123;    </span><br><span class="line">        <span class="comment">// Recert to null service.</span></span><br><span class="line">        <span class="keyword">if</span>( service == <span class="literal">NULL</span>) service = &amp;nullService_;</span><br><span class="line"></span><br><span class="line">        service_ = service;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> Audio* service_;</span><br><span class="line">    <span class="keyword">static</span> NullAudio nullService_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>调用代码永远也不会知道一个“真”的服务器没有被找到，它也不必担心处理NULL。它保证始终返回一个有效的对象。<br>这也可以用在希望查找服务失败的情况下。如果我们想要暂时禁用一个系统，那么限制能轻易地做到：很简单，不为这个服务注册服务提供器，然后定位器将默认返回一个空服务提供器。</p>
+<h4 id="日志装饰器">日志装饰器</h4><p>让我们来讨论另外一项这个模式的优雅之处——装饰的服务。<br>在开发中，一小段有价值的事件日志能够让你估摸出在游戏引擎外表之下发生了什么。典型的解决方法是调用一些log()函数。遗憾的是，它用另一个问题替代了前一个问题——现在我们有太多日志了。<br>理想状态下，我们能够选择性开启要关心的事件日志，并在游戏最终构建时，没有任何日志。如果将不同系统的条件日志作为服务暴露出去，那么我们可以使用装饰器模式来解决这个问题。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> LoggedAudio : <span class="keyword">public</span> Audio</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    LoggedAudio(Audio &amp;wrapped) : wrapped_(wrapped) &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">playSound</span><span class="params">(<span class="keyword">int</span> soundID)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="built_in">log</span>(<span class="string">"play sound"</span>);</span><br><span class="line">        wrapped_.playSound(soundID);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">stopSound</span><span class="params">(<span class="keyword">int</span> soundID)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="built_in">log</span>(<span class="string">"stop sound"</span>);</span><br><span class="line">        wrapped_.stopSound(soundID);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">stopAllSounds</span><span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="built_in">log</span>(<span class="string">"stop all sounds"</span>);</span><br><span class="line">        wrapped_.stopAllSounds();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">log</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* message)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="comment">// Code to log message...</span></span><br><span class="line">    &#125;</span><br><span class="line">    Audio &amp;wrapped_;  </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>它包装了另外一个音频提供器并暴露了同样的接口。它将实际的音频操作转发给内联的服务提供器，但是它同时记录了每次音频调用。如果一个程序需要开启音频日志，它可以这样调用代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">enableAudioLogging</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">// Decorate the existing service.</span></span><br><span class="line">    Audio *service = <span class="keyword">new</span> LoggedAudio(</span><br><span class="line">        Locator::getAudio());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Swap it in.</span></span><br><span class="line">    Locator::provide(service);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="设计决策">设计决策</h3><h4 id="服务是如何被定位的">服务是如何被定位的</h4><p><strong>外部代码注册</strong></p>
+<ul>
+<li>它简单快捷。getAudio()函数简单地返回一个指针，它通常被编译内联，所以我们得到了一个良好的抽象层而且几乎没有性能损失。</li>
+<li>我们控制提供器如何被构建。在外部构建代码可以根据当前上下文环境控制应该构建怎么样的注册代码。</li>
+<li>我们可以在游戏运行的时候更换服务器。我们可能在最终的游戏中不会使用到这点，但是在开发中这是一个很贴心的技巧。</li>
+<li>定位器依赖外部代码。这是个缺点，访问服务的代码都假设其他代码已经注册过这个服务了，如果没有执行初始化，游戏要么崩溃，要么服务会神秘地无法工作。</li>
+</ul>
+<p><strong>在编译时绑定</strong><br>这里的想法是使用预编译处理宏，使得“定位”这个工作实际上发生在编译器。像这样：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Locator</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">static</span> Audio&amp; <span class="title">getAudio</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> service_; &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="preprocessor">#<span class="keyword">if</span> DEBUG</span></span><br><span class="line">    <span class="keyword">static</span> DebugAudio service_;</span><br><span class="line">    <span class="preprocessor">#<span class="keyword">else</span></span></span><br><span class="line">    <span class="keyword">static</span> ReleaseAudio service_;</span><br><span class="line">    <span class="preprocessor">#<span class="keyword">endif</span></span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>像这样定位服务器意味着:</p>
+<ul>
+<li>它十分快速。</li>
+<li>你能保证服务可用。既然定位器现在拥有服务并在编译期选择它，我们就能保证如果游戏编译，则不必担心服务不可用。</li>
+<li>你不能方便地更改服务提供器。这是主要的缺点。因为绑定发在在编译期，所以任何时候你想要变动服务，就必须重新编译并且重启游戏。</li>
+</ul>
+<p><strong>在运行时配置</strong><br>当服务被请求时，定位器通过一些运行时的操作来捕获被请求服务的真实实现。<br>通常来说，这表示加载一份配置文件来标志服务提供器，然后使用反射来在运行期实例化这个类。这为我们做了一些事情。</p>
+<ul>
+<li>我们不需重编译就能切换服务提供器。这要比编译期绑定更具有弹性。但是比不上一个注册的服务提供器，后者实际上能在游戏运行的时候更换服务提供器。</li>
+<li>非程序员能够更换服务提供器。</li>
+<li>一份代码能够同时支持多份配置。因为定位过程完全移出代码库，所以能够使用同样的代码同时支持多个服务配置文件。</li>
+<li>不像前几个解决方案，这方案比较复杂且十分重量级。你必须创建某个配置系统，很可能会写代码去加载解析文件，并通常做某些操作来定位服务。花在写这些代码上的时间就不能用来写别的游戏特性了。</li>
+<li>定位服务需要时间。使用运行期配置意味着你在定位服务时耗费CPU周期。</li>
+</ul>
+<h4 id="当服务不能被定位时发生了什么">当服务不能被定位时发生了什么</h4><p><strong>让使用者处理</strong><br>最简单的解决办法是转移责任。如果定位器找不到服务，那它就返回NULL。这意味着：</p>
+<ul>
+<li>它让使用者决定如何处理查找失败，让调用者来决定正确的对应方法。</li>
+<li>服务使用者必须处理查找失败。如果潜在的地方有一次没有做错误检测，我们的游戏就可能会崩溃。</li>
+</ul>
+<p><strong>终止游戏</strong><br>我们不能证明服务在编译期能始终有效，但这并不意味着我们不能声明可用性是定位器运行的一部分。要做到这一点，最简单的方法是使用一个断言：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Locator</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">static</span> Audio&amp; <span class="title">getAudio</span><span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        Audio* service = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="comment">// Code here to locate service...</span></span><br><span class="line">        </span><br><span class="line">        assert(service != <span class="literal">NULL</span>);</span><br><span class="line">        <span class="keyword">return</span> *service;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>assert调用并没有解决服务查找失败的问题，但是它明确了这是谁的问题。通过在这里使用断言，我们认为，”定位服务失败是定位器的一个bug“。<br>那么，这对我们有什么用呢？</p>
+<ul>
+<li>使用者不需要处理一个丢失的服务。我们使服务使用者免除了很多不必要的麻烦。</li>
+<li>如果服务没有被找到，游戏将会中断。在极少的情况下，如果服务真的没有被找到，则游戏会关闭，在bug修复之前，这对任何人来说都是一个拖累，对于大型开发团队来说，当这样的错误出现时，你会增加一些痛苦的程序员的停工时间。</li>
+</ul>
+<p><strong>返回一个空服务</strong><br>我们在简单代码中展示了这种优雅的实现。使用它意味着：</p>
+<ul>
+<li>使用者不需要处理丢失的服务，简化了使用服务的代码。</li>
+<li>当服务不可用时，游戏还能继续。好处是允许游戏在没查找到服务的时候也能运行，它的缺点就是，在非特意的丢失服务时难以跟踪。<br>在大点的团队中，推荐使用空服务。</li>
+</ul>
+<h4 id="服务的作用域多大">服务的作用域多大</h4><p>另外一种选择是限制它的访问到某个类和它的依赖类中，比如:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Base</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Methods to locate service and set service...</span></span><br><span class="line">protect:</span><br><span class="line">    <span class="comment">// Derived classes can use service</span></span><br><span class="line">    <span class="function"><span class="keyword">static</span> Audio&amp; <span class="title">getAudio</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> *service_; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> Audio* service_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>通过这点，访问服务被定向到继承了Base的类中。它们各自都有几点优势：<br><strong>如果是全局访问</strong></p>
+<ul>
+<li>它鼓励整个代码库使用同一个服务。大部分服务都趋向是独立的。通过允许整个代码库访问同一个服务，我们能够避免在代码中因为得不到一个“真正”的服务而随机初始化它们各自的提供器。</li>
+<li>我们对何时何地使用服务完全失去了控制。这是将事物全局化付出的代价——任何人都能访问。</li>
+</ul>
+<p><strong>如果访问被限制到类中</strong></p>
+<ul>
+<li>我们控制了耦合。这是主要的优势。通过将服务限制到继承树的一个分支上，我们能确保系统该解耦的地方解耦了。</li>
+<li>它可能导致重复的工作。如果有好几个不相干的类确实需要访问服务，那么它们需要有各自的引用。任何定位和注册服务的工作在这些类都要重复地处理。</li>
+</ul>
+<p>我的一般原则是，如果服务被限制在游戏的一个单独域中，那么就把服务的作用域限制到类。比如，获取网络访问的服务就可能被限制在联网的类中。而更广泛使用的服务，比如日志服务应该是全局的。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/游戏通用技术编程/" rel="tag">#游戏通用技术编程</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/10/GameProgrammingArchitecture_17/" rel="prev">游戏编程模式笔记——第十七章 数据局部性</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/04/GameProgrammingArchitecture_15/" rel="next">游戏编程模式笔记——第十五章 事件队列</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2017/12/04/GameProgrammingArchitecture_16/"
+                   data-title="游戏编程模式笔记——第十六章 服务定位器" data-url="http://yoursite.com/2017/12/04/GameProgrammingArchitecture_16/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/untitled.png" alt="Lian" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Lian</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/LianLi" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/Lian_Li_Key" target="_blank">twitter</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.weibo.com/u/1233518767/home?wvr=5" target="_blank">weibo</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">朋友们的Blog与微博</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://tokrablog.github.io/" target="_blank">六叠一间的唐吉坷德</a>
+              </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://utopia.pursuitus.com/" target="_blank">Ouroboros</a>
+              </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://millieen.github.io/" target="_blank">GloomyStone</a>
+              </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://weibo.com/u/5874448585" target="_blank">蒸汽姬天团</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#动机"><span class="nav-number">1.</span> <span class="nav-text">动机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务定位器模式"><span class="nav-number">2.</span> <span class="nav-text">服务定位器模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用情境"><span class="nav-number">3.</span> <span class="nav-text">使用情境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用须知"><span class="nav-number">4.</span> <span class="nav-text">使用须知</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#服务必须被定位"><span class="nav-number">4.1.</span> <span class="nav-text">服务必须被定位</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务不知道被谁定位"><span class="nav-number">4.2.</span> <span class="nav-text">服务不知道被谁定位</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#示例代码"><span class="nav-number">5.</span> <span class="nav-text">示例代码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#服务"><span class="nav-number">5.1.</span> <span class="nav-text">服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务提供器"><span class="nav-number">5.2.</span> <span class="nav-text">服务提供器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#简单的定位器"><span class="nav-number">5.3.</span> <span class="nav-text">简单的定位器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#空服务"><span class="nav-number">5.4.</span> <span class="nav-text">空服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#日志装饰器"><span class="nav-number">5.5.</span> <span class="nav-text">日志装饰器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设计决策"><span class="nav-number">6.</span> <span class="nav-text">设计决策</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#服务是如何被定位的"><span class="nav-number">6.1.</span> <span class="nav-text">服务是如何被定位的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#当服务不能被定位时发生了什么"><span class="nav-number">6.2.</span> <span class="nav-text">当服务不能被定位时发生了什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务的作用域多大"><span class="nav-number">6.3.</span> <span class="nav-text">服务的作用域多大</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lian</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"lianli"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

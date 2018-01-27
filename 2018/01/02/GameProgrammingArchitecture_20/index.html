@@ -1,0 +1,729 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+
+
+  <meta name="keywords" content="游戏通用技术编程," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="“将对象存储在根据位置组织的数据结构中来高效地定位它们。”
+动机游戏世界具有空间感，对象则分布于空间之中。这一点从多方面展现出了游戏世界：一个明显的例子就是物理——对象的移动、碰撞和相互影响。这意味着你的游戏引擎通常需要解决这个问题：“对象的附近有什么物体？”如果在每一帧中它不得不对此进行反复检测的话，那么它可能成为性能瓶颈。
+战场上的部队假设我们在制作一款即时策略游戏。对立阵营的上百个单位将在战">
+<meta property="og:type" content="article">
+<meta property="og:title" content="游戏编程模式笔记——第二十章 空间分区">
+<meta property="og:url" content="http://yoursite.com/2018/01/02/GameProgrammingArchitecture_20/index.html">
+<meta property="og:site_name" content="学无止境">
+<meta property="og:description" content="“将对象存储在根据位置组织的数据结构中来高效地定位它们。”
+动机游戏世界具有空间感，对象则分布于空间之中。这一点从多方面展现出了游戏世界：一个明显的例子就是物理——对象的移动、碰撞和相互影响。这意味着你的游戏引擎通常需要解决这个问题：“对象的附近有什么物体？”如果在每一帧中它不得不对此进行反复检测的话，那么它可能成为性能瓶颈。
+战场上的部队假设我们在制作一款即时策略游戏。对立阵营的上百个单位将在战">
+<meta property="og:updated_time" content="2018-01-27T02:40:09.623Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="游戏编程模式笔记——第二十章 空间分区">
+<meta name="twitter:description" content="“将对象存储在根据位置组织的数据结构中来高效地定位它们。”
+动机游戏世界具有空间感，对象则分布于空间之中。这一点从多方面展现出了游戏世界：一个明显的例子就是物理——对象的移动、碰撞和相互影响。这意味着你的游戏引擎通常需要解决这个问题：“对象的附近有什么物体？”如果在每一帧中它不得不对此进行反复检测的话，那么它可能成为性能瓶颈。
+战场上的部队假设我们在制作一款即时策略游戏。对立阵营的上百个单位将在战">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> 游戏编程模式笔记——第二十章 空间分区 | 学无止境 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">学无止境</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              游戏编程模式笔记——第二十章 空间分区
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2018-01-02T15:11:36+08:00" content="2018-01-02">
+            2018-01-02
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/游戏通用技术编程/" itemprop="url" rel="index">
+                  <span itemprop="name">游戏通用技术编程</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2018/01/02/GameProgrammingArchitecture_20/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2018/01/02/GameProgrammingArchitecture_20/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>“将对象存储在根据位置组织的数据结构中来高效地定位它们。”</p>
+<h3 id="动机">动机</h3><p>游戏世界具有空间感，对象则分布于空间之中。这一点从多方面展现出了游戏世界：一个明显的例子就是物理——对象的移动、碰撞和相互影响。<br>这意味着你的游戏引擎通常需要解决这个问题：“对象的附近有什么物体？”如果在每一帧中它不得不对此进行反复检测的话，那么它可能成为性能瓶颈。</p>
+<h4 id="战场上的部队">战场上的部队</h4><p>假设我们在制作一款即时策略游戏。对立阵营的上百个单位将在战场上相互厮杀。勇士们需要知道该攻击他们附近的哪个敌人，简单的方式处理就是查看每一个单位看看他们彼此距离的远近。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">handleMelee</span><span class="params">(Unit* units[], <span class="keyword">int</span> numUnits)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>( <span class="keyword">int</span> a = <span class="number">0</span>; a &lt; numUnits - <span class="number">1</span>; a++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> b = a + <span class="number">1</span>; b &lt; numUnits; b++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(units[a]-&gt;position() == units[b]-&gt;position())</span><br><span class="line">            &#123;</span><br><span class="line">                handleAttack(units[a], units[b]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里我们用了一个双重循环，这意味着我们每一帧成对检验的次数随着单位个数的平方增加。每增加一个额外的单位，都要与前面的所有单位进行比较。当单位数目非常大时，局面便会失控。</p>
+<h4 id="绘制战线">绘制战线</h4><p>我们所处的困境在于单位数组无秩序可循。为了找到某位置附近的单位，我们不得不遍历整个数组。现在，设想将游戏简化一下。我们将战场想象成1维战场线，而不是2维的战场。<br>在这种情况下，我们通过单位在战场线上的位置来将数组排序，可以让事情变得更简单点。一旦我们做到了这点，我们便可以使用类似二分查找的方式来寻找附近的单位而不是遍历扫描整个数组。<br>我们来总结一下：如果我们将对象根据它们的位置信息来组织并存储为一个数据结构，我们就能更快地查找到它们。这个模式便是将这个想法应用到了1维以上的空间。</p>
+<h3 id="空间分区模式">空间分区模式</h3><p>对于一组对象而言，每一个对象在空间都有一个位置。将对象存储在一个根据对象的位置来组织的数据结构中，该数据结构可以让你高效地查询位于或靠近某处的对象。当对象的位置变化时，应更新该空间数据结构以便可以继续这样查找对象。</p>
+<h3 id="使用情境">使用情境</h3><p>这是一个用来存储活跃的、移动的游戏对象以及静态图像和游戏世界的几何形状等对象的常见模式。复杂的游戏常常有多个空间分区来应对不同类型的存储内容。<br>该模式的基本要求是你有一组对象，每个对象都具备某种位置信息，而你因为要根据位置做大量的查询来查找对象从而遇到了性能问题。</p>
+<h3 id="使用须知">使用须知</h3><p>空间分区将O(n)或者O(n^2)复杂度的操作拆解为更易于管理的结构。对象越多，模式的价值就越大。相反，如果你的n值很小，则可能不值得使用该模式。<br>由于该模式要根据对象的位置来组织对象，故对象位置的改变就变得难以处理了。你必须重新组织数据结构来跟踪物体的新位置，这会增加代码的复杂性并产生额外的CPU周期开销，你必须确保这么做是值得的。<br>空间分区会使用额外的内存来保存数据结构。就像许多的优化一样，它是以空间换取速度的。如果你的内存比时钟周期更吃紧的话，这可能是个亏本生意。</p>
+<h3 id="示例代码">示例代码</h3><h4 id="一张方格纸">一张方格纸</h4><p>设想一下战场的整个区域。现在，往上铺一张方格大小固定的网，就像盖张方格纸那样。我们用这些网格中的单元格来取代一维数组以存储单位。每个单元格存储哪些处于其边界之内的单元列表。<br>我们在处理战斗时，只考虑在同一个单元格内的单位。我们不会将每个单位与游戏中的其他单位一一比较，取而代之的是，我们已经将战场划分成了一堆更小的小型战场，每一个小战场里的单位要少很多。</p>
+<h4 id="相连单位的网格">相连单位的网格</h4><p>首先，做些准备工作。下面是Unit类：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Unit</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">friend</span> <span class="keyword">class</span> Grid;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Unit(Grid* grid, <span class="keyword">double</span> x, <span class="keyword">double</span> y) : grid_(grid), x_(x), y_(y) &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">move</span><span class="params">(<span class="keyword">double</span> x, <span class="keyword">double</span> y)</span></span>;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">double</span> x_, y_;</span><br><span class="line">    Grid* grid_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>我们将Grid作为友元类，就像我们看到的，当一个单位的位置发生改变时，我们不得不对网格进行处理确保一切都正常地更新。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Grid</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Grid()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Clear the grid.</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> x = <span class="number">0</span>; x &lt; NUM_CELLS; x++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> y = <span class="number">0</span>; y &lt; NUM_CELLS; y++)</span><br><span class="line">            &#123;</span><br><span class="line">                cells_[x][y] = <span class="literal">NULL</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> NUM_CELLS = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">int</span> CELL_SIZE = <span class="number">20</span>;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Unit* cells_[NUM_CELLS][NUM_CELLS];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>注意到每一个单元格都是指向一个unit的指针。下面我们将用next和prev指针来扩展Unit:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Unit</span><br><span class="line">&#123;</span><br><span class="line"><span class="comment">// Previous code...</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Unit* prev_;</span><br><span class="line">    Unit* next_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>这下我们能用一个双重链表来组织Unit以取代数组了，网格中的每个单元都会指向单元格之内Unit列表的第一个Unit，而其后每个Unit都有指针用来指向列表中之前和之后的Unit。我们很快就能明白为什么要这么做。</p>
+<h4 id="进入战场">进入战场</h4><p>我们需要做的第一件事就是要确保单位被创建时就被置入网格之中。我们在Unit类的构造函数中处理:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Unit::Unit(Grid* grid, <span class="keyword">double</span> x, <span class="keyword">double</span> y)</span><br><span class="line"> : grid_(grid), x_(x), y_(y), prev_(<span class="literal">NULL</span>), next_(<span class="literal">NULL</span>)</span><br><span class="line">&#123;</span><br><span class="line">    grid_-&gt;add(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>add()方法实现如下:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Grid::add(Unit* unit)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Determine which grid cell it's in.</span></span><br><span class="line">    <span class="keyword">int</span> cellX = (<span class="keyword">int</span>)(unit-&gt;x_ / Grid::CELL_SIZE);</span><br><span class="line">    <span class="keyword">int</span> cellY = (<span class="keyword">int</span>)(unit-&gt;y_ / Grid::CELL_SIZE);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Add to the front of list for the cell it's in.</span></span><br><span class="line">    unit-&gt;prev_ = <span class="literal">NULL</span>;</span><br><span class="line">    unit-&gt;next_ = cells_[cellX][cellY];</span><br><span class="line">    cells_[cellX][cellY] = unit;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>( unit-&gt;next_ != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        unit-&gt;next_-&gt;prev_ = unit;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们找到单位所处的单元格然后将它添加到链表的前面。如果单位列表已经存在，则将 其后的单位与之链接起来。</p>
+<h4 id="刀光剑影的战斗">刀光剑影的战斗</h4><p>当所有单位被置入单元格后，我们便让它们开始相互攻击。在Grid类中，处理战斗的主要函数如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Grid::handleMelee()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> x = <span class="number">0</span>; x &lt; NUM_CELLS; x++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> y = <span class="number">0</span>; y &lt; NUM_CELLS_; y++)</span><br><span class="line">        &#123;</span><br><span class="line">            handleCell(cells_[x][y]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>正如你所见，我们确实已经将大战场切分成了一些孤立的小规模冲突。每个单元格处理战斗函数如下:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Grid::handleCell(Unit* unit)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">while</span>( unit != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        Unit* other = unit-&gt;next_;</span><br><span class="line">        <span class="keyword">while</span>( other != <span class="literal">NULL</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>( unit-&gt;x_ == other-&gt;x_ &amp;&amp; unit-&gt;y_ == other-&gt;y_)</span><br><span class="line">            &#123;</span><br><span class="line">                handleAttack(unit, other);</span><br><span class="line">            &#125;</span><br><span class="line">            other = other-next_;</span><br><span class="line">        &#125;</span><br><span class="line">        unit = unit-&gt;next_;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>看上去我们这么做使得性能变得更差了。我们将单元格遍历一个双重嵌套循环遍成了遍历三重嵌套循环。但这里的窍门是，这两个内部循环现在都只在小数目的单元内进行遍历，这将足以抵消外部循环遍历单元格的开销。不过这尤其取决于我们单元格的颗粒度。单元格尺寸过小，则外部循环将开始对性能产生影响。<br>唯一的区别是，我们不再需要比较战斗中的所有对方单位——只是比较在同一个单元格内、足够接近的单位。这便是优化的核心所在。</p>
+<h4 id="冲锋陷阵">冲锋陷阵</h4><p>我们已经解决了性能问题，但却遇到了一个新的问题：单位现在都呆在单元格里面。如果将单位从它所在的单元格移动出去，那么这个单元格中的其他单位将不会再看到这个单位，而其他任何单位也不会再看到。<br>为了修正这个问题，我们还需要在单位每次移动的时候做一点工作。如果单位越过了单元格的边界线，则需要将单位从单元格移除掉并且添加到新的单元格中。首先，我们给Unit类添加一个方法来改变它的位置：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Unit::move(<span class="keyword">double</span> x, <span class="keyword">double</span> y)</span><br><span class="line">&#123;</span><br><span class="line">    grid_-&gt;move(<span class="keyword">this</span>, x, y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>从调用的角度上看，这段代码可以被计算机控制单位的AI代码调用，也可以被玩家控制单位的用户输入代码调用。它所做的就是将控制权交给网格类，网格类的move方法如下:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Grid::move(Unit* unit, <span class="keyword">double</span> x, <span class="keyword">double</span> y)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// See which cell it was in.</span></span><br><span class="line">    <span class="keyword">int</span> oldCellX = (<span class="keyword">int</span>)(unit-&gt;x_ / Grid::CELL_SIZE);</span><br><span class="line">    <span class="keyword">int</span> oldCellY = (<span class="keyword">int</span>)(unit-&gt;y_ / Grid::CELL_SIZE);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// See which cell it's moving to.</span></span><br><span class="line">    <span class="keyword">int</span> cellX = (<span class="keyword">int</span>)(x / Grid::CELL_SIZE);</span><br><span class="line">    <span class="keyword">int</span> cellY = (<span class="keyword">int</span>)(y / Grid::CELL_SIZE);</span><br><span class="line"></span><br><span class="line">    unit-&gt;x_ = x;</span><br><span class="line">    unit-&gt;y_ = y;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// If it didn't change cells. we're done.</span></span><br><span class="line">    <span class="keyword">if</span> (oldCellX == cellX &amp;&amp; oldCellY == cellY) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Unlink it from the list of its old cell.</span></span><br><span class="line">    <span class="keyword">if</span>( unit-&gt;prev_ != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        unit-&gt;prev-&gt;next_ = unit-&gt;next_;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>( unit-&gt;next_ != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        unit-&gt;next_-&gt;prev_ = unit-&gt;prev_;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// If it's the head of a list, remove it.</span></span><br><span class="line">    <span class="keyword">if</span>(cells_[oldCellX][oldCellY] == unit)</span><br><span class="line">    &#123;</span><br><span class="line">        cells_[oldCellX][oldCellY] = unit-&gt;next_;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Add it back to the grid at its new cell.</span></span><br><span class="line">    add(unit);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们首先检查单位是否越过了单元格的边界。如果没有，那么只需要更新单位的位置就完成了。<br>如果单位离开了所在的单元格，那么我们将它从单元格的链表中移除掉，然后将之添加回网格中恰当的单元格里。就像添加一个新单位一样，这样会将单位插入到新单元格的单位链表之中。<br>这就是为什么我们会使用一个双重链表——我们通过设定少量几个指针就可以非常快速地从链表中添加和移除单位。在每一帧有着大量的单位移动时，这样就显得非常重要。</p>
+<h4 id="近在咫尺，短兵相接">近在咫尺，短兵相接</h4><p>对于更逼真的游戏来说，通常要考虑到攻击距离：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(distance(unit, other) &lt; ATTACK_DISTANCE)</span><br><span class="line">&#123;</span><br><span class="line">    handleAttack(unit, other);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当进入攻击范围时，我们需要考虑到一种边界情况：在不同的单元格内的单位也可以足够靠近从而相互作用。<br>为了处理这种情况，我们不仅需要比较相同单元格的单位，还要比较相邻单元格的单位。为此，首先我们将handleCell()的内部循环拆分出来。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Grid::handleUnit(Unit* unit, Unit* other)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">while</span>(other != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(distance(unit, other) &lt; ATTACK_DISTANCE)</span><br><span class="line">        &#123;</span><br><span class="line">            handleAttack(unit, other);</span><br><span class="line">        &#125;</span><br><span class="line">        other = other-&gt;next_;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>现在我们的函数对一个单一的单位与另一链表的其他单位逐个判断是否有相互作用。然后我们用handleCell()这么做:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Grid::handleCell(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span><br><span class="line">&#123;</span><br><span class="line">    Unit* unit = cells_[x][y];</span><br><span class="line">    <span class="keyword">while</span>( unit != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Handle other units in this cell.</span></span><br><span class="line">        handleUnit(unit, unit-&gt;next_);</span><br><span class="line">        unit = unit-&gt;next_;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意，我们将单元格的坐标也传入了进去，而不只是单位链表。眼下，这个和上面的例子做的事情没有什么不同，但我们将会稍微扩展一下:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Grid::handleCell(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span><br><span class="line">&#123;</span><br><span class="line">    Unit* unit = cells_[x][y];</span><br><span class="line">    <span class="keyword">while</span>( unit != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Handle other units in this cell.</span></span><br><span class="line">        handleUnit(unit, unit-&gt;next_);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Also try the neighboring cells.</span></span><br><span class="line">        <span class="keyword">if</span> (x &gt; <span class="number">0</span>) handleUnit(unit, cells_[x - <span class="number">1</span>][y]);</span><br><span class="line">        <span class="keyword">if</span>( y &gt; <span class="number">0</span>) handleUnit(unit, cells_[x][y - <span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">if</span>( x &gt; <span class="number">0</span> &amp;&amp; y &gt; <span class="number">0</span>)</span><br><span class="line">            handleUnit(unit, cells_[x - <span class="number">1</span>][y - <span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">if</span>( x &gt; <span class="number">0</span> &amp;&amp; y &lt; NUM_CELLS - <span class="number">1</span>)</span><br><span class="line">            handleUnit(unit, cells_[x - <span class="number">1</span>][y + <span class="number">1</span>]);</span><br><span class="line">        unit = unit-&gt;next_;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>handleUnit()函数用来处理当前单位和相邻8个单元格其中4个单元格之内的战斗。如果在相邻单元格中的任何单位离当前单位的攻击半径足够近，它将会处理战斗。<br>我们只查看一半相邻的单元格，这与之前的原因一样，因为内部循环是从当前单位开始的——为了避免对同对单元比较两次。</p>
+<h3 id="设计决策">设计决策</h3><h4 id="分层是层级的还是扁平的">分层是层级的还是扁平的</h4><p>在网格例子中，我们将网格划分成了一个单一扁平的单元格集合。与此相反，层级空间分区则是将空间划分成几个区域。然后，如果这些区域中仍然包含着许多的对象，就会继续划分。这个递归过程持续到每个区域的对象数目都少于某个约定的最大对象数量为止。<br><strong>如果它是一个扁平的分区</strong></p>
+<ul>
+<li>相对简单。扁平的数据结构相对来说更易于推理和实现。</li>
+<li>内存使用量恒定。由于添加新对象不需要创建新的分区，所以空间分区使用的内存通常可以提前确定。</li>
+<li>当对象改变位置时可以更为快速地更新。当一个对象移动时，数据结构需要更新以便在新的位置找到对象。使用层级空间分区，这可能意味着调整层次结构中的若干层。</li>
+</ul>
+<p><strong>如果它是一个层级的分区</strong></p>
+<ul>
+<li>它可以更有效地处理空白的空间。想象一下，在我们前面的例子中，如果战场的一整侧是空白的，那么就会产生大量的空白单元格，而我们不得不在每帧中为他们分配内存并进行遍历。<br>因为层级空间不会细分稀疏区域，所以一个大的空白空间仍然是一个单独的分区，而不是大量细小的分区。</li>
+<li>它在处理对象稠密区域时更为有效。这是硬币的另一面：如果你有一堆对象成群的在一起，非层级分区是低效的。你最终会有一个包含着许多对象的、可能根本没有分区的分割。层级分区将会自适应地将其细分成更小的分区，使得你一次只需考虑少数几个对象。</li>
+</ul>
+<h4 id="分区依赖于对象集合吗">分区依赖于对象集合吗</h4><p>在我们的示例代码中，网格的间距是预先固定的，并且我们将单位放置了单元格中。其他的分区方案是自适应的，它们根据实际的对象集合及其世界总的位置来选择分区的边界。<br>我们的目标是实现一个均衡的分区，每一个分区都有大致相同的对象个数以获得最佳的性能。以我们的网格为例考虑下，如果所有单位都集中在了战场的一个角落，那么它们将会处在同一个单元格内，找寻单位间攻击的代码又会回到原来我们要试图解决的O(n^2)问题这一原点。<br><strong>如果分区依赖于对象</strong></p>
+<ul>
+<li>对象可以被逐步地添加。添加一个对象意味着要找到正确的分区并且将对象放置进去，所以你可以在不影响性能的情况下一次性完成这个动作。</li>
+<li>对象可以快速地移动。对于固定的分区，移动一个单位意味着将单位从一个单元格中移除然后添加到另外一个单元格。如果分区边界本身基于对象集合来改变，那么移动对象会引起边界的移动，从而可能需要大量的其他对象移动至其他分区。</li>
+<li>分区可以不平衡。当然，这么做的硬伤在于你对最终呈现的非均匀分区的掌控力会很薄弱。如果对象拥挤在一起，那么你会因为在空白区域浪费了内存而令而令其性能变得很糟糕。<br>这很类似于红黑树或者AVL树这样的二叉搜索树。</li>
+</ul>
+<p><strong>如果分区自适应于对象集合</strong><br>像二叉空间分割(BSPs)和k-d树(k-d trees)这样的空间分区方式会递归地将世界分割开来，以使得每部分包含着数目几乎相同的对象。要做到这点，在选取要进行分区的层级前，你必须计算每个阵营包含的对象数目。边界体积层次结构（Bounding volume hierarchies）是空间分区中的另外一种类型，用于优化世界中的特定对象集合。</p>
+<ul>
+<li>你可以确保分区间的平衡。这不仅仅带来优秀的性能表现，而且会是持续稳定的表现：如果每个分区有着相同数量的对象，你便可以确保对世界中的任意分区的查询时间开销均等。当需要维持稳定的帧速率时，这种稳定性比原始性能更为重要。</li>
+<li>对整个对象集合进行一次性的分区时更为高效。当对象集合影响到边界时，最好在分区之前对所有对象进行审视。这就是为什么这种类型的分区越来越多地应用于游戏过程中保持不变的事物诸如美术和静态几何。</li>
+<li>如果分区不依赖于对象，而层级却依赖于对象。</li>
+</ul>
+<p><strong>四叉树</strong>同时具备了固定分区和自适应性分区的优良性质。<br>四叉树从将整个空间作为一个单一的分区开始。如果空间中对象的数目超过了某一个阈值，则空间便被切分成四个较小的正方形。这些正方形的边界是固定的：它们总是将空间对半切分。<br>然后对于四个正方形中的每一个而言，我们重复同样的过程，递归下去直到每一个正方形内部只有少量的对象。由于我们只是递归地将高密度对象区域切分开，因此这个分区会自适应于对象集合，但分区是不会移动的。</p>
+<ul>
+<li>可以逐步地添加对象。添加一个新对象意味着要寻找合适的区域并且放置进去。如果对象放入区域时超过了最大对象数，那么该区域会被继续细分。在区域中的其他对象也会被分到更细小的区域中去。而这需要一些工作，但工作量是固定的：你要移动的对象始终要比最大的对象数少。添加单个对象也不会触发一次以上的拆分工作。<br>删除对象同样简单。你将对象从它所在的区域中移除，如果它的父区域的对象总数低于了一个阈值，那么你就可以合并这些细分的区域。</li>
+<li>对象可以快速地移动。这个当然，和上面一样。“移动”一个对象只是一次添加和一次删除，两者在四叉树下速度很快。</li>
+<li>分区是平衡的。由于任何给定的区域中的对象数目都比最大对象数要小，因此即使对象聚集在一起，也不会容纳着大量对象的单一分区。</li>
+</ul>
+<h4 id="对象只存储在分区中吗">对象只存储在分区中吗</h4><p>你可以将空间分区看作是游戏中对象存活的地方，或者你可以只将它看作是二级缓存，相比直接有对象列表的集合而言，查询能够更快速。<br><strong>如果它是对象唯一存储的地方</strong><br>这避免了两个集合的内存开销和复杂性。当然，将东西存成一份比两份的代价要小。另外如果你有两个集合，那么你必须确保集合间的同步。每次当一个对象被创建或者被删除时，将不得不从两者中对其进行添加或者删除。<br><strong>如果存在存储对象的另外一个集合</strong><br>遍历所有的对象会更为快速。如果问题中对象是“存活”的并且它们需要做一些处理，则你可能会发现自己要频繁地访问每一个对象，无论对象的位置在哪。试想一下，在我们前面的例子中，大部分单元格都是空的。遍历网格中所有单元各来找到哪些非空单元格是在浪费时间。第二个仅用于存储对象的集合令你可以直接对全部对象进行遍历。你有两个数据结构，其中一个针对每个用例进行了优化。</p>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/游戏通用技术编程/" rel="tag">#游戏通用技术编程</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/20/GameProgrammingArchitecture_19/" rel="next">游戏编程模式笔记——第十九章 对象池</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2018/01/02/GameProgrammingArchitecture_20/"
+                   data-title="游戏编程模式笔记——第二十章 空间分区" data-url="http://yoursite.com/2018/01/02/GameProgrammingArchitecture_20/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/untitled.png" alt="Lian" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Lian</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/LianLi" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/Lian_Li_Key" target="_blank">twitter</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.weibo.com/u/1233518767/home?wvr=5" target="_blank">weibo</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">朋友们的Blog与微博</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://tokrablog.github.io/" target="_blank">六叠一间的唐吉坷德</a>
+              </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://utopia.pursuitus.com/" target="_blank">Ouroboros</a>
+              </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://millieen.github.io/" target="_blank">GloomyStone</a>
+              </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://weibo.com/u/5874448585" target="_blank">蒸汽姬天团</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#动机"><span class="nav-number">1.</span> <span class="nav-text">动机</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#战场上的部队"><span class="nav-number">1.1.</span> <span class="nav-text">战场上的部队</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#绘制战线"><span class="nav-number">1.2.</span> <span class="nav-text">绘制战线</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#空间分区模式"><span class="nav-number">2.</span> <span class="nav-text">空间分区模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用情境"><span class="nav-number">3.</span> <span class="nav-text">使用情境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用须知"><span class="nav-number">4.</span> <span class="nav-text">使用须知</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#示例代码"><span class="nav-number">5.</span> <span class="nav-text">示例代码</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#一张方格纸"><span class="nav-number">5.1.</span> <span class="nav-text">一张方格纸</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#相连单位的网格"><span class="nav-number">5.2.</span> <span class="nav-text">相连单位的网格</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#进入战场"><span class="nav-number">5.3.</span> <span class="nav-text">进入战场</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#刀光剑影的战斗"><span class="nav-number">5.4.</span> <span class="nav-text">刀光剑影的战斗</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#冲锋陷阵"><span class="nav-number">5.5.</span> <span class="nav-text">冲锋陷阵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#近在咫尺，短兵相接"><span class="nav-number">5.6.</span> <span class="nav-text">近在咫尺，短兵相接</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设计决策"><span class="nav-number">6.</span> <span class="nav-text">设计决策</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#分层是层级的还是扁平的"><span class="nav-number">6.1.</span> <span class="nav-text">分层是层级的还是扁平的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分区依赖于对象集合吗"><span class="nav-number">6.2.</span> <span class="nav-text">分区依赖于对象集合吗</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对象只存储在分区中吗"><span class="nav-number">6.3.</span> <span class="nav-text">对象只存储在分区中吗</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lian</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"lianli"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,740 @@
+<!doctype html>
+<html class="theme-next use-motion ">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.4.5.1"/>
+
+
+
+
+  <meta name="keywords" content="游戏通用技术编程," />
+
+
+
+
+
+  <link rel="shorticon icon" type="image/x-icon" href="/favicon.ico?v=0.4.5.1" />
+
+
+<meta name="description" content="通过创建一个类来支持新类型的灵活创建，其每个实例都代表一个不同的对象类型。
+动机设想我们在开发一款奇幻RPG游戏。我们的任务是为凶狠的怪物群编写代码，它们会追杀我们主角。怪物具有一系列属性：生命值、攻击力、图形效果、声音表现等，但我们仅以生命值和攻击力为例。设计师告诉我们怪物的种类繁多，怪物的种类决定着怪物的初始生命值以及攻击字符串。
+经典的面向对象方案我们得到了一个Monster基类，其他怪物从">
+<meta property="og:type" content="article">
+<meta property="og:title" content="游戏编程模式笔记——第十四章 组件模式">
+<meta property="og:url" content="http://yoursite.com/2017/10/23/GameProgrammingArchitecture_14/index.html">
+<meta property="og:site_name" content="学无止境">
+<meta property="og:description" content="通过创建一个类来支持新类型的灵活创建，其每个实例都代表一个不同的对象类型。
+动机设想我们在开发一款奇幻RPG游戏。我们的任务是为凶狠的怪物群编写代码，它们会追杀我们主角。怪物具有一系列属性：生命值、攻击力、图形效果、声音表现等，但我们仅以生命值和攻击力为例。设计师告诉我们怪物的种类繁多，怪物的种类决定着怪物的初始生命值以及攻击字符串。
+经典的面向对象方案我们得到了一个Monster基类，其他怪物从">
+<meta property="og:updated_time" content="2018-01-27T02:27:17.805Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="游戏编程模式笔记——第十四章 组件模式">
+<meta name="twitter:description" content="通过创建一个类来支持新类型的灵活创建，其每个实例都代表一个不同的对象类型。
+动机设想我们在开发一款奇幻RPG游戏。我们的任务是为凶狠的怪物群编写代码，它们会追杀我们主角。怪物具有一系列属性：生命值、攻击力、图形效果、声音表现等，但我们仅以生命值和攻击力为例。设计师告诉我们怪物的种类繁多，怪物的种类决定着怪物的初始生命值以及攻击字符串。
+经典的面向对象方案我们得到了一个Monster基类，其他怪物从">
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var CONFIG = {
+    scheme: '',
+    sidebar: 'hide'
+  };
+</script>
+
+  <title> 游戏编程模式笔记——第十四章 组件模式 | 学无止境 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <!--[if lte IE 8]>
+  <div style=' clear: both; height: 59px; padding:0 0 0 15px; position: relative;margin:0 auto;'>
+    <a href="http://windows.microsoft.com/en-US/internet-explorer/products/ie/home?ocid=ie6_countdown_bannercode">
+      <img src="http://7u2nvr.com1.z0.glb.clouddn.com/picouterie.jpg" border="0" height="42" width="820"
+           alt="You are using an outdated browser. For a faster, safer browsing experience, upgrade for free today or use other browser ,like chrome firefox safari."
+           style='margin-left:auto;margin-right:auto;display: block;'/>
+    </a>
+  </div>
+<![endif]-->
+  
+
+
+
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><h1 class="site-meta">
+  <span class="logo-line-before"><i></i></span>
+  <a href="/" class="brand" rel="start">
+      <span class="logo">
+        <i class="icon-next-logo"></i>
+      </span>
+      <span class="site-title">学无止境</span>
+  </a>
+  <span class="logo-line-after"><i></i></span>
+</h1>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon icon-next-home"></i> <br />
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            <i class="menu-item-icon icon-next-categories"></i> <br />
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            <i class="menu-item-icon icon-next-about"></i> <br />
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            <i class="menu-item-icon icon-next-archives"></i> <br />
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            <i class="menu-item-icon icon-next-tags"></i> <br />
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content"> 
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      
+      
+        <h1 class="post-title" itemprop="name headline">
+          
+          
+            
+              游戏编程模式笔记——第十四章 组件模式
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          发表于
+          <time itemprop="dateCreated" datetime="2017-10-23T15:11:36+08:00" content="2017-10-23">
+            2017-10-23
+          </time>
+        </span>
+
+        
+          <span class="post-category" >
+            &nbsp; | &nbsp; 分类于
+            
+              <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                <a href="/categories/游戏通用技术编程/" itemprop="url" rel="index">
+                  <span itemprop="name">游戏通用技术编程</span>
+                </a>
+              </span>
+
+              
+              
+
+            
+          </span>
+        
+
+        
+          
+            <span class="post-comments-count">
+              &nbsp; | &nbsp;
+              <a href="/2017/10/23/GameProgrammingArchitecture_14/#comments" itemprop="discussionUrl">
+                <span class="post-comments-count ds-thread-count" data-thread-key="2017/10/23/GameProgrammingArchitecture_14/" itemprop="commentsCount"></span>
+              </a>
+            </span>
+          
+        
+      </div>
+    </header>
+
+    <div class="post-body">
+
+      
+      
+
+      
+        <span itemprop="articleBody"><p>通过创建一个类来支持新类型的灵活创建，其每个实例都代表一个不同的对象类型。</p>
+<h3 id="动机">动机</h3><p>设想我们在开发一款奇幻RPG游戏。我们的任务是为凶狠的怪物群编写代码，它们会追杀我们主角。怪物具有一系列属性：生命值、攻击力、图形效果、声音表现等，但我们仅以生命值和攻击力为例。<br>设计师告诉我们怪物的种类繁多，怪物的种类决定着怪物的初始生命值以及攻击字符串。</p>
+<h4 id="经典的面向对象方案">经典的面向对象方案</h4><p>我们得到了一个Monster基类，其他怪物从Monster派生（参考继承里面的is a结构）。<br>很快事情陷入了泥沼。设计师最终设计了上百个种族，我们发现自己的时间几乎投入到了编写那短短7行代码长的派生类以及反复地重新编译。更糟糕的是——设计师想要调整代码中已经有的种族。</p>
+<h4 id="一种类型一个类">一种类型一个类</h4><p>站在较高的层面上看，我们要解决的问题非常简单。游戏中有一堆不同的怪物，我们想让它们共享一些特性。我们通过将它们定义成相同的“种类”来实现，而这个种类就决定了其攻击的伤害表现。<br>游戏中每只怪物实例都将属性某一种派生的怪物种族。种族越多，类继承树就越大。这显然是个问题：添加新的种族意味着添加新的代码，而且每个种族不得不按照自己的类型来编译。<br>这么做是奏效的，但并非唯一的选择。我们可以重构我们的代码，使得每个怪物都“has a”种类。我们仅声明单个Monster类和单个Breed类，而不是从Monster派生出各个种族。<br>就两个类。注意这里没有任何派生，在这个系统里，游戏中的每个怪物是一个简单的Monster类的实例。Breed类包含了同一种族的所有怪物之间共享的信息：初始生命值和攻击字符串。<br>为了将怪物与种族关联起来，我们让每个Monster实例化一个包含了其种族信息的Breed对象的引用。为了获得攻击字符串，一个怪物只需要在这个引用上调用一个方法。Breed类本质上定义了怪物的“类型”。每个种族实例都是一个对象，代表着不同的概念类型，而这个模式的名字就是：类型对象。</p>
+<h3 id="类型对象模式">类型对象模式</h3><p>定义一个类型对象类和一个持有类型对象类。每个类型对象的实例表示一个不同的逻辑类型。每个持有类型对象类的实例引用一个描述其类型的类型对象。<br>实例数据被存储在持有类型对象的实例中，而所有同概念类型所共享的数据和行为被存储在类型对象中。引用同一个类型对象的对象之间能表现出“同类”的性状。这让我们可以在相似对象集合中共享数据和行为，这与类派生的作用有几分相似，但却无需硬编码出一批派生类。</p>
+<h3 id="使用情境">使用情境</h3><p>当你需要定义一系列不同“种类”的东西，但又不想把那些种类硬编码进你的类型系统时，本模式都适用。尤其是当下面任何一项成立的时候：</p>
+<ul>
+<li>你不知道将来会有什么类型</li>
+<li>你需要在不重新编译或修改代码的情况下，修改或添加新的类型。</li>
+</ul>
+<h3 id="使用须知">使用须知</h3><p>这个模式旨在将“类型”的定义从严格生硬的代码语言转移到灵活却弱化了行为的内存对象中。灵活性是好的，但是把类型转移到数据里仍有所失。</p>
+<h4 id="类型对象必须手动追踪">类型对象必须手动追踪</h4><p>使用类型对象模式，我们不但要负责管理内存中的怪物，还要管理他们的类型，我们得保证只要有怪物存在，其对应的种族对象就应该被实例化并驻留于内存。一旦创建新的怪物，我们就必须确保它是一个有效种族示例的引用来进行正确的初始化。</p>
+<h4 id="为每个类型定义行为更困难">为每个类型定义行为更困难</h4><p>当我们改用类型对象的时候，我们用成员变量代替了方法重写。不再是派生出怪物类然后重写父类的方法来异化攻击字符串，而是定义另一个种族来存储攻击字符串。<br>这使得通过类型对象去定义类型相关的数据非常容易，但是定义类型相关的行为却很难。如假设不同的怪物种类需要采用不同的AI算法，那么使用这种模式将面临很大的挑战。<br>有几种方法可以跨越这个限制。一个简单的方法是创建一个固定的预定义行为集合，让类型对象的数据从中任选其一。我们可以定义函数来实现每种行为，然后我们可以在种类里放一个指向特定方法的指针与AI算法关联。<br>另一个更强大、更彻底的解决方法是支持在数据中定义行为。解释器模式和字节码模式都可以编译代表行为的对象。如果我们能读取数据文件并提供给上述任意一种来实现，行为定义就完全脱离了出来。而被放进数据文件内容中。</p>
+<h3 id="示例">示例</h3><p>首先从Breed类开始：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Breed</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Breed(<span class="keyword">int</span> health, <span class="keyword">const</span> <span class="keyword">char</span>* attack)</span><br><span class="line">    : health_(health), attack_(attack)</span><br><span class="line">    &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getHealth</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> health_; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">const</span> <span class="keyword">char</span>* <span class="title">getAttack</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> attack_; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> health_; <span class="comment">//Starting health;</span></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span>* attack_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>我们来看看怪物如何使用它:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Monster</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Monster(Breed&amp; breed) </span><br><span class="line">    : health_(breed.getHealth()),</span><br><span class="line">    breed_(breed) &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">const</span> <span class="keyword">char</span>* <span class="title">getAttack</span><span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> breed_.getAttack();</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// Current health.</span></span><br><span class="line">    <span class="keyword">int</span> health_;</span><br><span class="line">    Breed&amp; breed_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>当我们构造一个怪物时，我们给它一个种族对象的引用。由此定义怪物的种族，取代之前的派生关系。<br>这段简单的代码是这个模式的核心思想。以下内容则都是额外的好处。</p>
+<h4 id="构造函数：让类型对象更加像类型">构造函数：让类型对象更加像类型</h4><p>我们通常不会分配一段空内存然后给它一个类型。面向对象的思想是调用类自身的构造函数，由它负责为我们创建新的实例。<br>我们可以将这个模式应用到类型对象上面：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Breed</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">Monster* <span class="title">newMonster</span><span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Monster(*<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Previous Breed code...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>使用它们的类：（其实就是工厂模式）<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Monster</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">friend</span> <span class="keyword">class</span> Breed;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">const</span> <span class="keyword">char</span>* <span class="title">getAttack</span><span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> breed_.getAttack();</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Monster(Breed&amp; breed)</span><br><span class="line">    : health_(breed.getHealth()),</span><br><span class="line">    breed_(breed) &#123;&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> health_;</span><br><span class="line">    Breed&amp; breed_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>关键的区别是Breed类里面的newMonster()函数。它是一个“构造器”工厂方法。在我们的原始实现中，创建一个怪物的过程是这样的：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Monster* monster = <span class="keyword">new</span> Monster(someBreed);</span><br></pre></td></tr></table></figure></p>
+<p>在修改过后，它看起来是这样的：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Monster* monster = someBreed.newMonster();</span><br></pre></td></tr></table></figure></p>
+<p>为什么要这么做呢？创建一个对象分为两步：分配内存和初始化。Monster的构造函数让我们能够做所有的初始化操作。在例子中所做的仅仅是保存了一个种族的引用，但如果是完整的游戏，还需要加载图形、初始化怪物AI并进行其他设定工作。<br>但是这都发送在内存分配之后。我们在怪物的构造函数被调用前，就已经获得一种用于容纳它的内存。在游戏里，我们也希望能控制对象创建的这一环节：通常使用一些自定义内存分配器或者对象池模式来控制对象在内存中存在的位置和时机。<br>在Breed里定义一个“构造函数”让我们有地方实现这套逻辑。取代简单new操作的是，newMonster()函数能在控制权被移交至初始化函数前，从一个池或者自定义堆栈里获取内存。把此逻辑放进唯一能创建怪物的Breed里，就保证了所有的怪物都由我们预想的内存管理体系经手。</p>
+<h4 id="通过继承共享数据">通过继承共享数据</h4><p>我们的游戏最终会有上千个种族，每个都包含大量属性，调整一个种类，设计师可能需要面临海量的数据。<br>一个有效的方法是仿造多个怪物通过种族共享特性的方式，让种族之间也能够共享特性。就像我们在开篇的面向对象那样，我们可以通过派生来实现。只是，我们不采用语言本身的派生机制，而是自己在类型里实现它。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Breed</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Breed(Breed *parent, <span class="keyword">int</span> health, <span class="keyword">const</span> <span class="keyword">char</span>* attack) :</span><br><span class="line">    parent_(parent),health_(health),attack_(attack)</span><br><span class="line">    &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getHealth</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">const</span> <span class="keyword">char</span>* <span class="title">getAttack</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Breed* parent_;</span><br><span class="line">    <span class="keyword">int</span>        health_;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span>* attack_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>当我们构造一个种族时，先为它传入一个基种族。我们可以传入NULL来表示它没有祖先。<br>为使其更实用，子种族需要明确哪些特性从父类继承，哪些特性由自己重写和特化。以我们的例子打比方，子种族只继承基种族中的非零生命值以及非NULL的攻击字符串。<br>实现方式有两种，一种是在属性每次被请求的时候执行代理调用，像这样：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> Breed::getHealth()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Override.</span></span><br><span class="line">    <span class="keyword">if</span>(health_ != <span class="number">0</span> || parent == <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span> health_;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// Inherit.</span></span><br><span class="line">    <span class="keyword">return</span> parent_-&gt;getHealth();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这么做的好处是，即使在运行时修改了种类、去掉种类继承或者去掉对某个特性的继承，它仍能够正常运作。但另一方面，它会占用更多的内存（必须保留一个指向父级的指针），而且更慢。因为为查找某个特性，它必须在派生链上进行遍历。<br>如果我们能够确保基种类的属性不会改变，那么一个更快的解决方法是在构造时采用继承。这也被称为“复制”代理，因为我们在创建一个类型时把继承的特性复制到了这个类型内部。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Breed(Breed* parent, <span class="keyword">int</span> health, <span class="keyword">const</span> <span class="keyword">char</span>* attack) </span><br><span class="line">: health_(health), attack_(attack)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Inherit non-overriden attributes.</span></span><br><span class="line">    <span class="keyword">if</span> (parent != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(health == <span class="number">0</span>) health_ = parent-&gt;getHealth();</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span>(attack == <span class="literal">NULL</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            attack_ = parent-&gt;getAttack();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意我们不再需要基类中的属性了。一旦构造结束，我们就可以忘掉基类，因为它的属性已经被拷贝了下来。要访问一个种族的特性，现在只需要返回它自身的字段。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getHealth</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> health_; &#125;</span><br></pre></td></tr></table></figure></p>
+<p>随着种族数量和每个种族内部属性的增加，这能够节省很多时间。</p>
+<h3 id="设计决策">设计决策</h3><h4 id="类型对象应该封装还是暴露">类型对象应该封装还是暴露</h4><p>Monster类有一个对种类的引用，但这个引用不是公开的。外部代码无法直接访问到怪物的种族。从代码库的角度来说，怪物实时上是无类型的，而他们持有种类这个事只是个实现细节。<br>我们可以做个修改，让Monster类返回它的种族：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Monster</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">Breed&amp; <span class="title">getBreed</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> breed_; &#125;</span><br><span class="line">    <span class="comment">// Existing code...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>这么做改变了Monster的设计。如此每只怪物都有所属种类这件事就在API中可见了。不管采用哪种设计都是有优点的。<br><strong>如果类型对象被封装</strong></p>
+<ul>
+<li>类型对象模式的复杂性对代码库的其他部分不可见，它成为了持有类型对象才需关心的实现细节。</li>
+<li>持有类型对象的类可以有选择性地重写类型对象的行为。如果外部代码调用了种族上的API，我们就没有办法重写类型对象的行为了。我们得给类型对象暴露的所有内容提供转发函数。这部分工作是枯燥的。</li>
+</ul>
+<p><strong>如果类型对象被公开</strong></p>
+<ul>
+<li>外部代码在没有持有类型对象类实例的情况下就能访问类型对象。</li>
+<li>类型对象现在是对象公共API的一部分。通过暴露类型对象，我们拓宽了对象的API，把类型对象提供的所有东西都包含了进来。</li>
+</ul>
+<h4 id="持有类型对象如何创建">持有类型对象如何创建</h4><ul>
+<li>构造对象并传入类型对象<br>外部可以控制内存分配。因为调用代码自己负责构造这两个对象，所以它能够控制其内存位置，如果我们想把对象用于不同的内存情景（不同的分配器、分配在堆栈上等），这种设计就完全支持。</li>
+<li>在类型对象上调用“构造”函数<br>类型对象控制内存分配。如果我们不想让用户选择对象的内存位置，则类型对象上的工厂可以做到这一点，如果我们希望确保所有的对象都来自同一个特定的对象池或者内存分配器，那这么做就很有用。</li>
+</ul>
+<h3 id="类型能否改变">类型能否改变</h3><p>目前为止，我们假定对象一旦创建完成，就与其类型对象绑定，并从不再改变。对象的类型伴随着它的整个生命周期。而这并非必须。我们可以让对象动态改变类型。<br><strong>类型不变</strong></p>
+<ul>
+<li>无论编码还是理解起来都更简单。在概念层面上，“类型”是大多数人都不希望改变的东西。此方案正是基于这一假定。</li>
+<li>易于调试。</li>
+</ul>
+<p><strong>类型可变</strong></p>
+<ul>
+<li>减少对象创建。如果我们能改变类型，简单赋值就完事了，否则只能创建新的实例。</li>
+<li>做约束时要更加小心。对象和其类型之间存在相对紧的耦合，如果允许改变种族，那么我们就需要确保现有对象能符合新类型的要求。当我们修改类型时，我们可能会需要执行一些验证代码来保证对象现在的状态对新类型来说有意义。</li>
+</ul>
+<h4 id="支持何种类型的派生">支持何种类型的派生</h4><p><strong>没有派生</strong></p>
+<ul>
+<li>简单</li>
+<li>可能会导致重复劳动。</li>
+</ul>
+<p><strong>单继承</strong></p>
+<ul>
+<li>仍然相对简单。它看起来是强大和简介之间不错的平衡点。</li>
+<li>属性查找会更慢。要获得类型对象中的特定属性我们需要在派生链中找到其类型。</li>
+</ul>
+<p><strong>多重派生</strong></p>
+<ul>
+<li>能避免绝大多数的数据重复。通过一个好的多继承系统，用户能够创建一个几乎没有冗余的继承体系。我们可以避免大量的复制粘贴。</li>
+<li>复杂。多重派生难以理解或说明。</li>
+</ul>
+</span>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/游戏通用技术编程/" rel="tag">#游戏通用技术编程</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/04/GameProgrammingArchitecture_15/" rel="prev">游戏编程模式笔记——第十五章 事件队列</a>
+            
+          </div>
+
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/02/GameProgrammingArchitecture_13/" rel="next">游戏编程模式笔记——第十三章 类型对象</a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+ </div>
+
+        
+
+        
+          <div class="comments" id="comments">
+            
+              <div class="ds-thread" data-thread-key="2017/10/23/GameProgrammingArchitecture_14/"
+                   data-title="游戏编程模式笔记——第十四章 组件模式" data-url="http://yoursite.com/2017/10/23/GameProgrammingArchitecture_14/">
+              </div>
+            
+          </div>
+        
+      </div>
+
+      
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" src="/uploads/untitled.png" alt="Lian" itemprop="image"/>
+          <p class="site-author-name" itemprop="name">Lian</p>
+        </div>
+        <p class="site-description motion-element" itemprop="description"></p>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          <div class="site-state-item site-state-categories">
+            <a href="/categories">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">分类</span>
+              </a>
+          </div>
+
+          <div class="site-state-item site-state-tags">
+            <a href="/tags">
+              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-name">标签</span>
+              </a>
+          </div>
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/LianLi" target="_blank">github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/Lian_Li_Key" target="_blank">twitter</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.weibo.com/u/1233518767/home?wvr=5" target="_blank">weibo</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+            <p class="site-author-name">朋友们的Blog与微博</p>
+            
+              <span class="links-of-author-item">
+              <a href="http://tokrablog.github.io/" target="_blank">六叠一间的唐吉坷德</a>
+              </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://utopia.pursuitus.com/" target="_blank">Ouroboros</a>
+              </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://millieen.github.io/" target="_blank">GloomyStone</a>
+              </span>
+            
+              <span class="links-of-author-item">
+              <a href="http://weibo.com/u/5874448585" target="_blank">蒸汽姬天团</a>
+              </span>
+            
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator"></div>
+          <div class="post-toc">
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#动机"><span class="nav-number">1.</span> <span class="nav-text">动机</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#经典的面向对象方案"><span class="nav-number">1.1.</span> <span class="nav-text">经典的面向对象方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一种类型一个类"><span class="nav-number">1.2.</span> <span class="nav-text">一种类型一个类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类型对象模式"><span class="nav-number">2.</span> <span class="nav-text">类型对象模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用情境"><span class="nav-number">3.</span> <span class="nav-text">使用情境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用须知"><span class="nav-number">4.</span> <span class="nav-text">使用须知</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#类型对象必须手动追踪"><span class="nav-number">4.1.</span> <span class="nav-text">类型对象必须手动追踪</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#为每个类型定义行为更困难"><span class="nav-number">4.2.</span> <span class="nav-text">为每个类型定义行为更困难</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#示例"><span class="nav-number">5.</span> <span class="nav-text">示例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#构造函数：让类型对象更加像类型"><span class="nav-number">5.1.</span> <span class="nav-text">构造函数：让类型对象更加像类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过继承共享数据"><span class="nav-number">5.2.</span> <span class="nav-text">通过继承共享数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设计决策"><span class="nav-number">6.</span> <span class="nav-text">设计决策</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#类型对象应该封装还是暴露"><span class="nav-number">6.1.</span> <span class="nav-text">类型对象应该封装还是暴露</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#持有类型对象如何创建"><span class="nav-number">6.2.</span> <span class="nav-text">持有类型对象如何创建</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类型能否改变"><span class="nav-number">7.</span> <span class="nav-text">类型能否改变</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#支持何种类型的派生"><span class="nav-number">7.1.</span> <span class="nav-text">支持何种类型的派生</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner"> <div class="copyright" >
+  
+  &copy; &nbsp; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="icon-next-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Lian</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT
+  </a>
+</div>
+
+
+ </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+    
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"lianli"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+    
+     
+     
+  	<script src="/js/ua-parser.min.js"></script>
+  	<script src="/js/hook-duoshuo.js"></script>
+  
+
+    
+  
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/fancy-box.js?v=0.4.5.1"></script>
+
+
+  <script type="text/javascript" src="/js/helpers.js?v=0.4.5.1"></script>
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/js/motion_global.js?v=0.4.5.1" id="motion.global"></script>
+
+
+
+
+  <script type="text/javascript" src="/js/nav-toggle.js?v=0.4.5.1"></script>
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+<script type="text/javascript" src="/js/bootstrap.scrollspy.js?v=0.4.5.1" id="bootstrap.scrollspy.custom"></script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 0.4 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    var $tocContent = $('.post-toc-content');
+    if (isDesktop() && CONFIG.sidebar === 'post') {
+      if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+        displaySidebar();
+      }
+    }
+  });
+</script>
+
+
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      if (CONFIG.sidebar === 'always') {
+        displaySidebar();
+      }
+      if (isMobile()) {
+        FastClick.attach(document.body);
+      }
+    });
+  </script>
+
+  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/lazyload.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      $("#posts").find('img').lazyload({
+        placeholder: "/images/loading.gif",
+        effect: "fadeIn"
+      });
+    });
+  </script>
+</body>
+</html>
